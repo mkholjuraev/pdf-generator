@@ -1,0 +1,76 @@
+{
+  "name": "ls",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "react-scripts build",
+    "dev:run": "nodemon ./server/index.js",
+    "dev:watch": "npx concurrently \"npm run watch\" \"npm run dev:run\"",
+    "start": "react-scripts start",
+    "watch": "npm-watch"
+  },
+  "watch": {
+    "build": {
+      "patterns": [
+        "src"
+      ],
+      "extensions": "js,jsx"
+    }
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@babel/core": "^7.15.0",
+    "@babel/preset-env": "^7.15.0",
+    "@babel/preset-react": "^7.14.5",
+    "@babel/register": "^7.15.3",
+    "@patternfly/react-charts": "6.15.20",
+    "@patternfly/react-core": "^4.147.0",
+    "@patternfly/react-table": "^4.29.37",
+    "atob": "^2.1.2",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-react": "^6.24.1",
+    "body-parser": "^1.19.0",
+    "concurrently": "^6.2.1",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "express-fileupload": "^1.2.1",
+    "file": "^0.2.2",
+    "file-saver": "^2.0.5",
+    "filereader": "^0.10.3",
+    "ignore-styles": "^5.0.1",
+    "os": "^0.1.2",
+    "puppeteer": "^10.2.0",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-hot-loader": "^4.13.0",
+    "react-json-chart-builder": "^1.4.0",
+    "react-router-dom": "^5.3.0",
+    "react-scripts": "^4.0.3",
+    "regenerator-runtime": "^0.13.9",
+    "source-map-support": "^0.5.19",
+    "styled-components": "^5.3.1",
+    "winston": "^3.3.3"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.12",
+    "npm-watch": "^0.11.0",
+    "react-scripts": "^4.0.3",
+    "source-map-support": "^0.5.19"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
