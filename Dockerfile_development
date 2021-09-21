@@ -13,12 +13,15 @@ RUN yum install -y bzip2 fontconfig nss.x86_64 pango.x86_64 libXcomposite.x86_64
 
 ADD package.json /src
 
-RUN npm install
+# RUN npm cache clean --force
+
+# Development env option --unsafe-perm to override 'Access Denied' errors on the volumes
+# Prod env will not need this option
+RUN npm install --unsafe-perm
 
 ADD . /src
 
-RUN mkdir build
+# Do not build it for development env since we anyway build the assets in the container
+# Required for Production env only
+# RUN npm run build
 
-RUN npm run build
-
-RUN mkdir pdfs

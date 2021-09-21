@@ -7,4 +7,5 @@ npm-debug.log
 .bash_history
 package-lock.json
 Dockerfile
+Dockerfile_development
 
