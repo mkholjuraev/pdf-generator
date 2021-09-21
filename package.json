@@ -7,6 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "react-scripts build",
     "dev:run": "nodemon ./server/index.js",
+    "prod:run": "node ./server/index.js",
     "dev:watch": "npx concurrently \"npm run watch\" \"npm run dev:run\"",
     "start": "react-scripts start",
     "watch": "npm-watch"
