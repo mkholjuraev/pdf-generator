@@ -1,0 +1,86 @@
+apiVersion: v1
+kind: Template
+metadata:
+  name: pdf-generator
+objects:
+
+- apiVersion: v1
+  kind: Secret
+  metadata:
+    name: pdf-generator-ephemeral
+  type: Opaque
+  data:
+    CLIENT_ACCESS_TOKEN: ''
+
+- apiVersion: cloud.redhat.com/v1alpha1
+  kind: ClowdApp
+  metadata:
+    name: pdf-generator
+  spec:
+    envName: ${ENV_NAME}
+    featureFlags: true
+    deployments:
+    - name: api
+      minReplicas: ${{REPLICAS}}
+      web: true
+      podSpec:
+        image: ${IMAGE}:${IMAGE_TAG}
+        resources:
+          limits:
+            cpu: 500m
+            memory: ${MEMORY_LIMIT}
+          requests:
+            cpu: 100m
+            memory: ${MEMORY_REQUEST}
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: 8000
+            scheme: HTTP
+          initialDelaySeconds: 10
+        env:
+          - name: CLOWDER_ENABLED
+            value: ${CLOWDER_ENABLED}
+          - name: PDF_GENERATOR_URL
+            value: ${PDF_GENERATOR_URL}
+          - name: PDF_GENERATOR_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: ${PDF_GENERATOR_SECRET_NAME}
+                key: CLIENT_ACCESS_TOKEN
+          - name: API_PREFIX
+            value: ${API_PREFIX}
+          - name: LOG_LEVEL
+            value: ${LOG_LEVEL}
+
+parameters:
+- description: Number of API replicas
+  name: REPLICAS
+  value: '1'
+- descripton: pdf generator image name
+  name: IMAGE
+  value: "quay.io/cloudservices/pdf-generator"
+- description: pdf generator Image tag
+  name: IMAGE_TAG
+  required: true
+  value: latest
+- description: Clowder ENV
+  name: ENV_NAME
+  required: true
+- description: Clowder enabled flag
+  name: CLOWDER_ENABLED
+  value: 'True'
+- description: Memory request
+  name: MEMORY_REQUEST
+  value: 2Gi
+- description: Memory limit
+  name: MEMORY_LIMIT
+  value: 4Gi
+- descript: PDF Generator API url
+  name: PDF_GENERATOR_URL
+  value: ''
+- description: PDF Generator secret name
+  name: PDF_GENERATOR_SECRET_NAME
+  value: pdf-generator-ephemeral
+- description: log level
+  name: LOG_LEVEL
