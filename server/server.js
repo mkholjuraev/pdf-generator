@@ -13,7 +13,6 @@ const path = require('path');
 const atob = require('atob');
 const os = require('os');
 const https = require('https');
-const bodyParser = require('body-parser');
 const puppeteer = require('puppeteer');
 
 const defaultOptions = {
@@ -35,11 +34,9 @@ app.use(fileUpload({
     tempFileDir : os.tmpdir(),
 }));
 
-// parse application/json
-app.use(bodyParser.json())
+app.use(express.json()); // body parser is deprecated
 
 app.use(express.static(path.resolve(__dirname, '..', 'build')));
-
 
 const { createLogger, format, transports } = require('winston');
 const { combine, timestamp, label, printf } = format;
@@ -59,7 +56,7 @@ const logger = createLogger({
 
 const APIPrefix = '/api/tower-analytics/v1';
 
-app.get('/*', (req, res) => {
+app.get(['/', '/example', '/report'], (req, res) => {
   const context = {};
   const app = ReactDOMServer.renderToString(
     <StaticRouter location={req.url} context={context}>
@@ -165,6 +162,13 @@ const generatePdfFromHtml = async (req, res, report_name, render_component, api_
         }
 };
 
+// `/healthz` route required for Readiness/Liveness probe in Stage/Prod
+app.get('/healthz', (req, res) => {
+    const indexHtml = path.resolve('./build/index.html');
+    if (fs.existsSync(indexHtml)) {
+        return res.status(200).send('Build assets available');
+    }
+});
 
 app.post(`${APIPrefix}/generate_pdf/`, (req, res) => {
     const rhIdentity = req.headers['x-rh-identity'];
