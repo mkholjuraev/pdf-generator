@@ -4,14 +4,6 @@ metadata:
   name: pdf-generator
 objects:
 
-- apiVersion: v1
-  kind: Secret
-  metadata:
-    name: pdf-generator-ephemeral
-  type: Opaque
-  data:
-    CLIENT_ACCESS_TOKEN: ''
-
 - apiVersion: cloud.redhat.com/v1alpha1
   kind: ClowdApp
   metadata:
@@ -43,11 +35,6 @@ objects:
             value: ${CLOWDER_ENABLED}
           - name: PDF_GENERATOR_URL
             value: ${PDF_GENERATOR_URL}
-          - name: PDF_GENERATOR_TOKEN
-            valueFrom:
-              secretKeyRef:
-                name: ${PDF_GENERATOR_SECRET_NAME}
-                key: CLIENT_ACCESS_TOKEN
           - name: API_PREFIX
             value: ${API_PREFIX}
           - name: LOG_LEVEL
