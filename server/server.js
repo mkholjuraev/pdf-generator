@@ -12,7 +12,7 @@ import logger from './logger';
 import App from '../src/App';
 import generatePdf from '../browser';
 
-const PORT = process.env.PORT || 8888;
+const PORT = process.env.PORT || 8000;
 const APIPrefix = '/api/tower-analytics/v1';
 
 const app = express();
