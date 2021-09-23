@@ -18,6 +18,7 @@ const APIPrefix = '/api/tower-analytics/v1';
 const app = express();
 app.use(cors());
 app.use(express.json()); // body parser is deprecated
+app.use(express.static(path.resolve(__dirname, '..', 'build')));
 
 app.use('^/$', (_req, res, _next) => {
   fs.readFile(path.resolve('./build/index.html'), 'utf-8', (err, data) => {
@@ -34,8 +35,6 @@ app.use('^/$', (_req, res, _next) => {
     );
   });
 });
-
-app.use(express.static(path.resolve(__dirname, '..', 'build')));
 
 app.post(`${APIPrefix}/generate_pdf/`, async (req, res) => {
   const rhIdentity = req.headers['x-rh-identity'];
