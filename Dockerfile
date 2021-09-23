@@ -6,13 +6,19 @@ RUN yum remove -y nodejs npm
 RUN yum install -y nodejs
 RUN yum install -y bzip2 fontconfig nss.x86_64 pango.x86_64 libXcomposite.x86_64 libXcursor.x86_64 libXdamage.x86_64 libXext.x86_64 libXi.x86_64 libXtst.x86_64 cups-libs.x86_64 libXScrnSaver.x86_64 libXrandr.x86_64 GConf2.x86_64 alsa-lib.x86_64 atk.x86_64 gtk3.x86_64 libdrm libgbm libxshmfence
 
-USER 1001
 WORKDIR /src
 ADD package.json /src
 RUN npm install
-ADD . /src
+
+# To address: Babel could not write cache to file:
+# /src/node_modules/.cache/@babel/register/.babel.7.15.5.development.json
+# seen in ephemeral env only
+RUN mkdir -m 777 node_modules/.cache
+
 RUN mkdir build
-RUN npm run build
 RUN mkdir pdfs
-EXPOSE 8888
+ADD . /src
+RUN npm run build
+
+EXPOSE 8000
 CMD ["node", "./server/index.js"]
