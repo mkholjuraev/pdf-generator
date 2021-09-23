@@ -103,13 +103,13 @@ const generatePdfFromHtml = async (req, res, report_name, render_component, api_
     let url = '';
         switch(render_component) {
           case 'Example':
-            url = 'http://localhost:8060/example';
+            url = `http://localhost:${port}/example`;
             break;
           case 'Report':
-            url = 'http://localhost:8060/report';
+            url = `http://localhost:${port}/report`;
             break;
           default:
-            url = 'http://localhost:8060/';
+            url = `http://localhost:${port}/`;
         }
         const ssrResponse = await page.goto(url, { waitUntil: 'networkidle2' });
         await page.waitForSelector('#root');
@@ -117,7 +117,7 @@ const generatePdfFromHtml = async (req, res, report_name, render_component, api_
         const timeStamp = Date.now();
         const pdfFilename = `report_${timeStamp}.pdf`;
 
-        const absolutePathPdfFile = `${path.resolve(__dirname, '..', 'pdfs')}/${pdfFilename}`;
+        const absolutePathPdfFile = `${os.tmpdir()}/${pdfFilename}`;
 
         await page.pdf({
           path: absolutePathPdfFile,
