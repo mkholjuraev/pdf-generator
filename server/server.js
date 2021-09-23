@@ -18,10 +18,6 @@ const APIPrefix = '/api/tower-analytics/v1';
 const app = express();
 app.use(cors());
 app.use(express.json()); // body parser is deprecated
-app.use(fileUpload({
-  useTempFiles : true,
-  tempFileDir : os.tmpdir(),
-}));
 
 app.use('^/$', (_req, res, _next) => {
   fs.readFile(path.resolve('./build/index.html'), 'utf-8', (err, data) => {
