@@ -2,9 +2,7 @@ import express from 'express';
 import fs from 'fs';
 import path from 'path';
 import cors from 'cors';
-import fileUpload from 'express-fileupload';
 import atob from 'atob';
-import os from 'os';
 
 import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
