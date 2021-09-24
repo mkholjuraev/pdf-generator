@@ -7,6 +7,13 @@ import {
   ChartThemeColor,
 } from 'react-json-chart-builder';
 
+const slug = 'hosts_changed_by_job_template';
+
+const name = 'Hosts changed by job template';
+
+const description =
+  'The number of hosts changed by a job template in a specified time window.\n\nYou can use this report to find discrepancies in the host change rate at a particular time, helping you drill down to when and why hosts were unreachable at a particular time.';
+
 const tableHeaders = [
   { key: 'id', value: 'ID' },
   { key: 'name', value: 'Template name' },
@@ -17,17 +24,21 @@ const tableHeaders = [
   },
 ];
 
-const schema = [
+const schemaFnc = (
+  label,
+  y,
+  xTickFormat
+) => [
   {
     id: 1,
     kind: ChartKind.wrapper,
     type: ChartTopLevelType.chart,
     parent: null,
     props: {
-      height: 400,
+      height: 530,
       padding: {
-        top: 10,
-        right: 100,
+        top: 0,
+        bottom: -20,
       },
       domainPadding: {
         y: 25,
@@ -36,12 +47,12 @@ const schema = [
     },
     xAxis: {
       label: 'Date',
-      tickFormat: 'formatDateAsDayMonth',
+      tickFormat: xTickFormat,
     },
     yAxis: {
       tickFormat: 'formatNumberAsK',
       showGrid: true,
-      label: 'Total unique hosts',
+      label,
       style: {
         axisLabel: {
           padding: 55,
@@ -53,9 +64,9 @@ const schema = [
       params: {},
     },
     legend: {
-      interactive: true,
-      orientation: ChartLegendOrientation.vertical,
-      position: ChartLegendPosition.right,
+      interactive: false,
+      orientation: ChartLegendOrientation.horizontal,
+      position: ChartLegendPosition.bottom,
     },
   },
   {
@@ -69,15 +80,18 @@ const schema = [
       parent: 0,
       props: {
         x: 'created_date',
-        y: 'total_unique_host_count',
+        y,
       },
     },
   },
 ];
 
 const reportParams = {
+  slug,
   tableHeaders,
-  schema,
+  name,
+  description,
+  schemaFnc,
 };
 
 export default reportParams;

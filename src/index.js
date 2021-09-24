@@ -1,13 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {BrowserRouter} from 'react-router-dom';
 import App from './App';
 
 ReactDOM.render(
-    <BrowserRouter>
-      <App
-        reportName={window.reportName}
-        apiData={{...JSON.parse(window.apiData)}}
-      />
-    </BrowserRouter>,
-    document.getElementById('root'));
+  <App {...JSON.parse(window.customPupeteerParams)} />,
+  document.getElementById('root')
+);
