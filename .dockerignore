@@ -1,11 +1,6 @@
 .idea
 node_modules
 build
-dist
-pdfs
 npm-debug.log
 .bash_history
-package-lock.json
 Dockerfile
-Dockerfile_development
-
