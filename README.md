@@ -1,6 +1,6 @@
-# pdf-generation-service
+# pdf-generation
 
-`pdf-generation-service` is a NodeJS based service that is responsible for generating a PDF Report.
+`pdf-generation` is a NodeJS based service that is responsible for generating a PDF Report.
 
 
 
