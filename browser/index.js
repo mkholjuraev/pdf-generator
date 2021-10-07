@@ -1,9 +1,23 @@
 const puppeteer = require('puppeteer');
 const { v4: uuidv4 } = require('uuid');
 const os = require('os');
+const fs = require('fs');
+const path = require('path');
+
+import { getImg } from './helpers';
 
 const A4Width = 210;
 const A4Height = 297;
+
+const margins = {
+  top: '1.5cm',
+  bottom: '1cm',
+  right: '1cm',
+  left: '1cm'
+};
+// Get margin off and make it bigger resolution
+const pageWidth = (A4Height - 20) * 4;
+const pageHeight = (A4Width - 26) * 4;
 
 const setWindowProperty = (page, name, value) =>
   page.evaluateOnNewDocument(`
@@ -25,9 +39,9 @@ const generatePdf = async (url, data) => {
   const browser = await puppeteer.launch({ args: ['--no-sandbox', '--disable-gpu']});
   const page = await browser.newPage();
 
-  await page.setViewport({ width: A4Height * 5 - 20, height: A4Width * 5 - 10 });
+  await page.setViewport({ width: pageWidth, height: pageHeight });
   
-  await setWindowProperty(page, 'customPupeteerParams', JSON.stringify(data));
+  await setWindowProperty(page, 'customPupeteerParams', JSON.stringify({...data, pageWidth, pageHeight}));
 
   const pageStatus = await page.goto(url, { waitUntil: 'networkidle2' });
   if (!pageStatus.ok()) {
@@ -39,12 +53,10 @@ const generatePdf = async (url, data) => {
     format: 'A4',
     printBackground: true,
     landscape: true,
-    margin: {
-      top: '0.5cm',
-      bottom: '0.5cm',
-      right: '1cm',
-      left: '1cm'
-    }
+    margin: margins,
+    displayHeaderFooter: true,
+    headerTemplate: fs.readFileSync(path.resolve('./src/headerTemplate.html')).toString().replace(/<img class="logo" \/>/g, getImg('../public/logo.svg')),
+    footerTemplate: '<div/>',
   });
 
   await browser.close();

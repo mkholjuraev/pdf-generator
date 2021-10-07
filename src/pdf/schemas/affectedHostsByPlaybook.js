@@ -35,10 +35,10 @@ const schemaFnc = (
     type: ChartTopLevelType.chart,
     parent: null,
     props: {
-      height: 530,
+      height: 500,
       padding: {
-        top: 0,
-        bottom: -20,
+        top: 70,
+        right: 100,
       },
       domainPadding: {
         y: 25,
@@ -65,8 +65,8 @@ const schemaFnc = (
     },
     legend: {
       interactive: false,
-      orientation: ChartLegendOrientation.horizontal,
-      position: ChartLegendPosition.bottom,
+      orientation: ChartLegendOrientation.vertical,
+      position: ChartLegendPosition.right,
     },
   },
   {

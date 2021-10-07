@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import ChartBuilder, { functions } from 'react-json-chart-builder';
 
-import { Card, CardBody, CardHeaderMain, CardTitle } from '@patternfly/react-core';
+import { CardBody, CardHeaderMain, CardTitle } from '@patternfly/react-core';
 import {
   TableComposable,
   TableVariant,
@@ -15,6 +15,7 @@ import {
 } from '@patternfly/react-table';
 
 import { getText, getOthersStyle } from './helpers';
+import PageCard from '../Components/PageCard';
 
 const Tr = styled(PFTr)`
   & td:first-child {
@@ -31,6 +32,8 @@ const Subtitle = styled(CardTitle)`
   text-align: center;
   font-weight: 100;
   padding-bottom: 0;
+  max-width: 75%;
+  margin: auto;
 `;
 
 const customFunctions = (data) => ({
@@ -40,38 +43,44 @@ const customFunctions = (data) => ({
 
 const Report = ({
   tableHeaders = [],
-  data = { meta: {}, items: [] },
+  data = { meta: { legend: [] } },
   schema,
   name,
-  description
+  description,
 }) => (
-  <Card isPlain>
-    <CardHeaderMain>
-      <Title>{name}</Title>
-      <Subtitle>{description}</Subtitle>
-    </CardHeaderMain>
-    <CardBody>
-      <ChartBuilder schema={schema} functions={customFunctions(data)} />
-      <TableComposable aria-label="Report Table" variant={TableVariant.compact}>
-        <Thead>
-          <Tr>
-            {tableHeaders.map(({ key, value }) => (
-              <Th modifier="wrap" key={key}>{value}</Th>
-            ))}
-          </Tr>
-        </Thead>
-        <Tbody>
-          {data.meta?.legend.map((item) => (
-            <Tr key={item.id} style={getOthersStyle(item, 'id')}>
-              {tableHeaders.map(({ key }) => (
-                <Td key={`${item.id}-${key}`}>{getText(item, key)}</Td>
+  <>
+    <PageCard>
+      <CardHeaderMain>
+        <Title style={{ color: 'red' }}>{name}</Title>
+        <Subtitle>{description}</Subtitle>
+      </CardHeaderMain>
+      <CardBody>
+        <ChartBuilder schema={schema} functions={customFunctions(data)} />
+      </CardBody>
+    </PageCard>
+    <PageCard>
+      <CardBody>
+        <TableComposable aria-label="Report Table" variant={TableVariant.compact}>
+          <Thead>
+            <Tr>
+              {tableHeaders.map(({ key, value }) => (
+                <Th modifier="wrap" key={key}>{value}</Th>
               ))}
             </Tr>
-          ))}
-        </Tbody>
-      </TableComposable>
-    </CardBody>
-  </Card>
+          </Thead>
+          <Tbody>
+            {data.meta.legend.map((item) => (
+              <Tr key={item.id} style={getOthersStyle(item, 'id')}>
+                {tableHeaders.map(({ key }) => (
+                  <Td key={`${item.id}-${key}`}>{getText(item, key)}</Td>
+                ))}
+              </Tr>
+            ))}
+          </Tbody>
+        </TableComposable>
+      </CardBody>
+    </PageCard>
+  </>
 );
 
 export default Report;
