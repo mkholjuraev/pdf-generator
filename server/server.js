@@ -9,6 +9,7 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import logger from './logger';
 import App from '../src/App';
 import generatePdf from '../browser';
+import reports from '../src/pdf/schemas';
 
 const PORT = process.env.PORT || 8000;
 const APIPrefix = '/api/tower-analytics/v1';
@@ -48,8 +49,18 @@ app.post(`${APIPrefix}/generate_pdf/`, async (req, res) => {
     const pathToPdf = await generatePdf(url, req.body);
     const pdfFilename = pathToPdf.split('/').pop();
 
+    if (!reports.find(({ slug }) => slug === res.req.body.slug)) {
+      const error_dict = {}
+      error_dict['code'] = 404
+      error_dict['reason'] = 'PDF layout is not implemented for this report yet'
+      throw (error_dict)
+    }
+
     if (!fs.existsSync(pathToPdf)) {
-      throw new Error(`${pdfFilename} does not exist on the server.`);
+      const error_dict = {}
+      error_dict['code'] = 500
+      error_dict['reason'] = `${pdfFilename} does not exist on the server.`
+      throw (error_dict)
     }
 
     logger.info(`${pdfFilename} has been created.`, { tenant });
@@ -57,7 +68,10 @@ app.post(`${APIPrefix}/generate_pdf/`, async (req, res) => {
 
     res.status(200).sendFile(pathToPdf, err => {
       if (err) {
-        throw new Error(`Sending of ${pdfFilename} failed: ${err}`, { tenant });
+        const error_dict = {}
+        error_dict['code'] = 500
+        error_dict['reason'] = (`Sending of ${pdfFilename} failed: ${err}`, { tenant })
+        throw (error_dict)
       }
       
       fs.unlink(pathToPdf, err => {
@@ -69,8 +83,8 @@ app.post(`${APIPrefix}/generate_pdf/`, async (req, res) => {
     });
 
   } catch (error) {
-    logger.error(`${error}`, { tenant });
-    res.status(500).json({ error });
+      logger.error(error.reason);
+      res.status(error.code).send(error.reason);
   }
 });
 
