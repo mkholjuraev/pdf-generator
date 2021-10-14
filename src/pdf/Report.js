@@ -1,40 +1,20 @@
 import React from 'react';
-import styled from 'styled-components';
-
 import ChartBuilder, { functions } from 'react-json-chart-builder';
 
-import { CardBody, CardHeaderMain, CardTitle } from '@patternfly/react-core';
+import { CardBody, CardHeaderMain } from '@patternfly/react-core';
+import { getText } from './helpers';
+import PageCard from '../Components/PageCard';
 import {
+  CardTitle,
+  CardSubtitle,
   TableComposable,
   TableVariant,
   Tbody,
   Td,
   Th,
   Thead,
-  Tr as PFTr,
-} from '@patternfly/react-table';
-
-import { getText, getOthersStyle } from './helpers';
-import PageCard from '../Components/PageCard';
-
-const Tr = styled(PFTr)`
-  & td:first-child {
-    width: 0;
-  }
-`;
-
-const Title = styled(CardTitle)`
-  font-size: 1.5rem;
-  text-align: center;
-`;
-
-const Subtitle = styled(CardTitle)`
-  text-align: center;
-  font-weight: 100;
-  padding-bottom: 0;
-  max-width: 75%;
-  margin: auto;
-`;
+  Tr,
+} from '../Components/StyledPatternfly/';
 
 const customFunctions = (data) => ({
   ...functions,
@@ -51,8 +31,8 @@ const Report = ({
   <>
     <PageCard>
       <CardHeaderMain>
-        <Title style={{ color: 'red' }}>{name}</Title>
-        <Subtitle>{description}</Subtitle>
+        <CardTitle>{name}</CardTitle>
+        <CardSubtitle>{description}</CardSubtitle>
       </CardHeaderMain>
       <CardBody>
         <ChartBuilder schema={schema} functions={customFunctions(data)} />
@@ -70,7 +50,7 @@ const Report = ({
           </Thead>
           <Tbody>
             {data.meta.legend.map((item) => (
-              <Tr key={item.id} style={getOthersStyle(item, 'id')}>
+              <Tr key={item.id}>
                 {tableHeaders.map(({ key }) => (
                   <Td key={`${item.id}-${key}`}>{getText(item, key)}</Td>
                 ))}

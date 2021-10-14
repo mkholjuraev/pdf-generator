@@ -1,23 +1,24 @@
+import { getImg } from './helpers';
+
 const puppeteer = require('puppeteer');
 const { v4: uuidv4 } = require('uuid');
 const os = require('os');
 const fs = require('fs');
 const path = require('path');
 
-import { getImg } from './helpers';
 
 const A4Width = 210;
 const A4Height = 297;
 
 const margins = {
-  top: '1.5cm',
-  bottom: '1cm',
+  top: '2cm',
+  bottom: '2cm',
   right: '1cm',
   left: '1cm'
 };
 // Get margin off and make it bigger resolution
 const pageWidth = (A4Height - 20) * 4;
-const pageHeight = (A4Width - 26) * 4;
+const pageHeight = (A4Width - 40) * 4;
 
 const setWindowProperty = (page, name, value) =>
   page.evaluateOnNewDocument(`
