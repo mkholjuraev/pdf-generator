@@ -10,13 +10,18 @@ import logger from './logger';
 import App from '../src/App';
 import generatePdf from '../browser';
 import reports from '../src/pdf/schemas';
+import {
+  PDFNotImplementedError,
+  PDFNotFoundError,
+  SendingFailedError,
+} from './errors';
 
 const PORT = process.env.PORT || 8000;
 const APIPrefix = '/api/tower-analytics/v1';
 
 const app = express();
 app.use(cors());
-app.use(express.json()); // body parser is deprecated
+app.use(express.json());
 app.use(express.static(path.resolve(__dirname, '..', 'build')));
 
 app.use('^/$', (_req, res, _next) => {
@@ -47,44 +52,35 @@ app.post(`${APIPrefix}/generate_pdf/`, async (req, res) => {
 
   try {
     const pathToPdf = await generatePdf(url, req.body);
-    const pdfFilename = pathToPdf.split('/').pop();
+    const pdfFileName = pathToPdf.split('/').pop();
 
-    if (!reports.find(({ slug }) => slug === res.req.body.slug)) {
-      const error_dict = {}
-      error_dict['code'] = 404
-      error_dict['reason'] = 'PDF layout is not implemented for this report yet'
-      throw (error_dict)
+    if (!reports.find(({ slug }) => slug === req.body.slug)) {
+      throw new PDFNotImplementedError();
     }
 
     if (!fs.existsSync(pathToPdf)) {
-      const error_dict = {}
-      error_dict['code'] = 500
-      error_dict['reason'] = `${pdfFilename} does not exist on the server.`
-      throw (error_dict)
+      throw PDFNotFoundError(pdfFileName);
     }
 
-    logger.info(`${pdfFilename} has been created.`, { tenant });
-    logger.info(`Sending ${pdfFilename} to the client.`, { tenant });
+    logger.info(`${pdfFileName} has been created.`, { tenant });
+    logger.info(`Sending ${pdfFileName} to the client.`, { tenant });
 
     res.status(200).sendFile(pathToPdf, err => {
       if (err) {
-        const error_dict = {}
-        error_dict['code'] = 500
-        error_dict['reason'] = (`Sending of ${pdfFilename} failed: ${err}`, { tenant })
-        throw (error_dict)
+        throw SendingFailedError(pdfFileName, err);
       }
       
       fs.unlink(pathToPdf, err => {
         if (err) {
-          logger.warn(`Failed to unlink ${pdfFilename}: ${err}`, { tenant });
+          logger.warn(`Failed to unlink ${pdfFileName}: ${err}`, { tenant });
         }
-        logger.info(`${pdfFilename} finished downloading.`, { tenant });
+        logger.info(`${pdfFileName} finished downloading.`, { tenant });
       });
     });
 
   } catch (error) {
-      logger.error(error.reason);
-      res.status(error.code).send(error.reason);
+      logger.error(error.code + ': ' + error.message);
+      res.status(error.code).send(error.message);
   }
 });
 
