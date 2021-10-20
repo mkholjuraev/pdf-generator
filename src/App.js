@@ -19,6 +19,7 @@ const App = ({ label, y, xTickFormat, slug, data, pageWidth, pageHeight }) => {
         schema={report.schemaFnc(label, y, xTickFormat)}
         name={report.name}
         description={report.description}
+        ExpandRowsComponent={report.ExpandRowsComponent ?? null}
       />
     </PageOptionsContext.Provider>
   );

@@ -20,26 +20,48 @@ const Report = ({
   schema,
   name,
   description,
-}) => (
-  <>
-    <PageCard>
-      <CardHeaderMain>
-        <CardTitle>{name}</CardTitle>
-        <CardSubtitle>{description}</CardSubtitle>
-      </CardHeaderMain>
-      <CardBody>
-        <ChartBuilder schema={schema} functions={customFunctions(data)} />
-      </CardBody>
-    </PageCard>
+  ExpandRowsComponent = null,
+}) => {
+  /* If the table is expanded render each row in its own page */
+  const getTable = () => {
+    if (ExpandRowsComponent)
+      return data.meta.legend.map((item) => (
+        <PageCard>
+          <CardBody>
+            <Table
+              legend={[item]}
+              headers={tableHeaders}
+              ExpandRowsComponent={ExpandRowsComponent}
+            />
+          </CardBody>
+        </PageCard>
+      ));
+    
     <PageCard>
       <CardBody>
         <Table
           legend={data.meta.legend}
-          headers={tableHeaders}  
+          headers={tableHeaders}
+          ExpandRowsComponent={ExpandRowsComponent}
         />
       </CardBody>
     </PageCard>
-  </>
-);
+  }
+
+  return (
+    <>
+      <PageCard>
+        <CardHeaderMain>
+          <CardTitle>{name}</CardTitle>
+          <CardSubtitle>{description}</CardSubtitle>
+        </CardHeaderMain>
+        <CardBody>
+          <ChartBuilder schema={schema} functions={customFunctions(data)} />
+        </CardBody>
+      </PageCard>
+      {getTable()}
+    </>
+  );
+};
 
 export default Report;

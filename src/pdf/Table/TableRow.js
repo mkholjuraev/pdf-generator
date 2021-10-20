@@ -7,25 +7,15 @@ const TableRow = ({
   headers,
   ExpandRowsComponent,
 }) => {
-  const isExpanded = true;
-
   return (
     <>
       <Tr>
-        {ExpandRowsComponent && (
-          <Td
-            expand={{
-              rowIndex: +legendEntry.id,
-              isExpanded,
-            }}
-          />
-        )}
         {headers.map(({ key }) => (
           <Td key={`${legendEntry.id}-${key}`}>{getText(legendEntry, key)}</Td>
         ))}
       </Tr>
       {ExpandRowsComponent && (
-        <ExpandRowsComponent isExpanded={isExpanded} item={legendEntry} />
+        <ExpandRowsComponent item={legendEntry} />
       )}
     </>
   );

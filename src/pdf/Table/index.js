@@ -18,7 +18,6 @@ const ReportTable = ({
   <TableComposable aria-label="Report Table" variant={TableVariant.compact}>
     <Thead>
       <Tr>
-        {ExpandRowsComponent && <Th />}
         {headers.map(({ key, value }) => (
           <Th key={key} data-testid={key}>{value}</Th>
         ))}
