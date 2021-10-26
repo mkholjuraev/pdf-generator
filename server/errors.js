@@ -18,3 +18,10 @@ export class SendingFailedError {
     this.message = `Sending of ${pdfFileName} failed: ${error}`;
   }
 };
+
+export class PDFRequestError {
+  constructor(error) {
+    this.code = 500;
+    this.message = `Error fetching data: ${error}`;
+  }
+};

@@ -14,6 +14,7 @@
     "atob": "^2.1.2",
     "cors": "^2.8.5",
     "express": "^4.17.1",
+    "http": "^0.0.1-security",
     "ignore-styles": "^5.0.1",
     "os": "^0.1.2",
     "puppeteer": "^10.2.0",
