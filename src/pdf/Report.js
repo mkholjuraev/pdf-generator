@@ -2,19 +2,12 @@ import React from 'react';
 import ChartBuilder, { functions } from 'react-json-chart-builder';
 
 import { CardBody, CardHeaderMain } from '@patternfly/react-core';
-import { getText } from './helpers';
 import PageCard from '../Components/PageCard';
 import {
   CardTitle,
   CardSubtitle,
-  TableComposable,
-  TableVariant,
-  Tbody,
-  Td,
-  Th,
-  Thead,
-  Tr,
-} from '../Components/StyledPatternfly/';
+} from '../Components/StyledPatternfly';
+import Table from './Table';
 
 const customFunctions = (data) => ({
   ...functions,
@@ -27,40 +20,48 @@ const Report = ({
   schema,
   name,
   description,
-}) => (
-  <>
+  ExpandRowsComponent = null,
+}) => {
+  /* If the table is expanded render each row in its own page */
+  const getTable = () => {
+    if (ExpandRowsComponent)
+      return data.meta.legend.map((item) => (
+        <PageCard>
+          <CardBody>
+            <Table
+              legend={[item]}
+              headers={tableHeaders}
+              ExpandRowsComponent={ExpandRowsComponent}
+            />
+          </CardBody>
+        </PageCard>
+      ));
+    
     <PageCard>
-      <CardHeaderMain>
-        <CardTitle>{name}</CardTitle>
-        <CardSubtitle>{description}</CardSubtitle>
-      </CardHeaderMain>
       <CardBody>
-        <ChartBuilder schema={schema} functions={customFunctions(data)} />
+        <Table
+          legend={data.meta.legend}
+          headers={tableHeaders}
+          ExpandRowsComponent={ExpandRowsComponent}
+        />
       </CardBody>
     </PageCard>
-    <PageCard>
-      <CardBody>
-        <TableComposable aria-label="Report Table" variant={TableVariant.compact}>
-          <Thead>
-            <Tr>
-              {tableHeaders.map(({ key, value }) => (
-                <Th modifier="wrap" key={key}>{value}</Th>
-              ))}
-            </Tr>
-          </Thead>
-          <Tbody>
-            {data.meta.legend.map((item) => (
-              <Tr key={item.id}>
-                {tableHeaders.map(({ key }) => (
-                  <Td key={`${item.id}-${key}`}>{getText(item, key)}</Td>
-                ))}
-              </Tr>
-            ))}
-          </Tbody>
-        </TableComposable>
-      </CardBody>
-    </PageCard>
-  </>
-);
+  }
+
+  return (
+    <>
+      <PageCard>
+        <CardHeaderMain>
+          <CardTitle>{name}</CardTitle>
+          <CardSubtitle>{description}</CardSubtitle>
+        </CardHeaderMain>
+        <CardBody>
+          <ChartBuilder schema={schema} functions={customFunctions(data)} />
+        </CardBody>
+      </PageCard>
+      {getTable()}
+    </>
+  );
+};
 
 export default Report;

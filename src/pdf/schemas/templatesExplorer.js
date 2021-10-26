@@ -5,6 +5,8 @@ import {
   ChartThemeColor,
 } from 'react-json-chart-builder';
 
+import ExpandedRow from '../../Components/TemplateExplorerExpandedRow';
+
 const slug = 'templates_explorer';
 
 const name = 'Templates explorer';
@@ -90,6 +92,7 @@ const reportParams = {
   description,
   tableHeaders,
   schemaFnc,
+  ExpandRowsComponent: ExpandedRow,
 };
 
 export default reportParams;
