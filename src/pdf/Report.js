@@ -37,15 +37,17 @@ const Report = ({
         </PageCard>
       ));
     
-    <PageCard>
-      <CardBody>
-        <Table
-          legend={data.meta.legend}
-          headers={tableHeaders}
-          ExpandRowsComponent={ExpandRowsComponent}
-        />
-      </CardBody>
-    </PageCard>
+    return (
+      <PageCard>
+        <CardBody>
+          <Table
+            legend={data.meta.legend}
+            headers={tableHeaders}
+            ExpandRowsComponent={ExpandRowsComponent}
+          />
+        </CardBody>
+      </PageCard>
+    );
   }
 
   return (
