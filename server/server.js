@@ -61,7 +61,8 @@ app.post(`${APIPrefix}/generate_pdf/`, async (req, res) => {
     protocol: 'http:',
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'x-rh-identity': rhIdentity
     }
   }
 
