@@ -20,9 +20,6 @@ import {
 const PORT = process.env.PORT || 8000;
 const APIPrefix = '/api/tower-analytics/v1';
 
-const FASTAPI_HOST = process.env.FASTAPI_HOST || 'fastapi';
-const FASTAPI_PORT = process.env.FASTAPI_PORT || 8080;
-
 const app = express();
 app.use(cors());
 app.use(express.json());
@@ -55,8 +52,8 @@ app.post(`${APIPrefix}/generate_pdf/`, async (req, res) => {
   const url = `http://localhost:${PORT}`;
   const {offset, limit, sort_options, sort_order} = req.body.queryParams
   const options = {
-    hostname: FASTAPI_HOST,
-    port: FASTAPI_PORT,
+    hostname: req.body.apiHost,
+    port: req.body.apiPort,
     path: `${req.body.endpointUrl}?offset=${offset}&limit=${limit}&sort_by=${sort_options}:${sort_order}`,
     protocol: 'http:',
     method: 'POST',
