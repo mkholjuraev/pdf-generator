@@ -39,10 +39,6 @@ objects:
             value: ${API_PREFIX}
           - name: LOG_LEVEL
             value: ${LOG_LEVEL}
-          - name: FASTAPI_HOST
-            value: ${FASTAPI_HOST}
-          - name: FASTAPI_PORT
-            value: ${FASTAPI_PORT}
 
 parameters:
 - description: Number of API replicas
@@ -75,7 +71,3 @@ parameters:
   value: pdf-generator-ephemeral
 - description: log level
   name: LOG_LEVEL
-- description: FastAPI Host
-  name: FASTAPI_HOST
-- description: FastAPI Port
-  name: FASTAPI_PORT
