@@ -4,7 +4,7 @@
 # Options that must be configured by app owner
 # --------------------------------------------
 APP_NAME="pdf-generator"  # name of app-sre "application" folder this component lives in
-COMPONENT_NAME="pdf-generator-clowdapp"  # name of app-sre "resourceTemplate" in deploy.yaml for this component
+COMPONENT_NAME="pdf-generator"  # name of app-sre "resourceTemplate" in deploy.yaml for this component
 IMAGE="quay.io/cloudservices/pdf-generator"
 
 IQE_PLUGINS=
