@@ -5,7 +5,7 @@ import hostsByOrganization from './hostsByOrganization';
 import templatesExplorer from './templatesExplorer';
 import jobsTasksByOrganization from './jobsTasksByOrganization';
 import mostUsedModules from './mostUsedModules';
-import moduleUsagebyOrganization from './moduleUsagebyOrganization';
+import moduleUsageByOrganization from './moduleUsageByOrganization';
 import moduleUsageByJobTemplate from './moduleUsageByJobTemplate';
 import moduleUsageByTask from './moduleUsageByTask';
 
@@ -17,7 +17,7 @@ const reports = [
   templatesExplorer,
   jobsTasksByOrganization,
   mostUsedModules,
-  moduleUsagebyOrganization,
+  moduleUsageByOrganization,
   moduleUsageByJobTemplate,
   moduleUsageByTask,
 ];
