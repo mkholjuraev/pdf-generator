@@ -72,6 +72,8 @@ const schemaFnc = (
         interactive: false,
         orientation: ChartLegendOrientation.vertical,
         position: ChartLegendPosition.right,
+        turncateAt: 18,
+        wrapText: true,
       },
     },
     {
