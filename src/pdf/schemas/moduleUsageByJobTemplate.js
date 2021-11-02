@@ -1,31 +1,33 @@
 import {
   ChartKind,
-  ChartTopLevelType,
   ChartType,
+  ChartLegendOrientation,
+  ChartLegendPosition,
+  ChartTopLevelType,
   ChartThemeColor,
 } from 'react-json-chart-builder';
 
-import ExpandedRow from '../../Components/TemplateExplorerExpandedRow';
+const slug = 'module_usage_by_job_template';
 
-const slug = 'templates_explorer';
-
-const name = 'Templates explorer';
+const name = 'Module usage by job template';
 
 const description =
-  'An overview of the job templates that have ran across your Ansible cluster.\n\nYou can use this report to review the status of a particular job template across its job runs, giving you an overview of the times a template fails a job run, a host, or a task. You can also review the host and task status for tasks that fail the most, allowing you to identify any bottlenecks or problems with the templates you are running.';
+  'The number of job template and task runs for a specified set of Ansible modules, grouped by job template.\n\nYou can use this report to find which job templates are using particular modules, helping you to check things like adoption of purpose-built modules for particular templates.';
 
 const tableHeaders = [
   { key: 'id', value: 'ID' },
   { key: 'name', value: 'Template name' },
-  { key: 'total_count', value: 'Total jobs count' },
-  { key: 'successful_count', value: 'Successful jobs count' },
-  { key: 'failed_count', value: 'Failed jobs count' },
+  { key: 'host_task_count', value: 'Tasks count' },
+  { key: 'host_task_changed_count', value: 'Changed tasks count' },
+  { key: 'host_task_ok_count', value: 'Successful tasks count' },
+  { key: 'host_task_failed_count', value: 'Failed tasks count' },
+  { key: 'host_task_unreachable_count', value: 'Unreachable tasks count' }
 ];
 
 const schemaFnc = (
   label,
   y,
-  _xTickFormat
+  xTickFormat,
 ) => [
     {
       id: 1,
@@ -33,26 +35,24 @@ const schemaFnc = (
       type: ChartTopLevelType.chart,
       parent: null,
       props: {
-        height: 400,
+        height: 500,
         padding: {
           top: 70,
-          right: 100,
+          left: 100,
         },
         domainPadding: {
           y: 25,
-          x: 85,
         },
         themeColor: ChartThemeColor.multiOrdered,
       },
       xAxis: {
-        label: 'Template',
+        label: 'Date',
+        tickFormat: xTickFormat,
         style: {
           axisLabel: {
-            padding: 55,
+            padding: 50,
           },
         },
-        // It is using names instead of dates so no need for formatting.
-        // tickFormat: xTickFormat,
       },
       yAxis: {
         tickFormat: 'formatNumberAsK',
@@ -60,13 +60,18 @@ const schemaFnc = (
         label,
         style: {
           axisLabel: {
-            padding: 60,
+            padding: 55,
           },
         },
       },
       api: {
         url: '',
         params: {},
+      },
+      legend: {
+        interactive: false,
+        orientation: ChartLegendOrientation.vertical,
+        position: ChartLegendPosition.right,
       },
     },
     {
@@ -76,10 +81,10 @@ const schemaFnc = (
       template: {
         id: 0,
         kind: ChartKind.simple,
-        type: ChartType.bar,
+        type: ChartType.line,
         parent: 0,
         props: {
-          x: 'name',
+          x: 'created_date',
           y,
         },
       },
@@ -92,7 +97,6 @@ const reportParams = {
   description,
   tableHeaders,
   schemaFnc,
-  ExpandRowsComponent: ExpandedRow,
 };
 
 export default reportParams;
