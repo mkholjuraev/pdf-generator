@@ -20,6 +20,7 @@ RUN mkdir -m 777 node_modules/.cache
 RUN mkdir build
 
 RUN npm run build
+RUN npm install cypress
 
 EXPOSE 8000
 CMD ["node", "./server/index.js"]
