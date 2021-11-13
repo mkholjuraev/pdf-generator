@@ -437,6 +437,7 @@ const params = window.customPupeteerParams ?? JSON.stringify({
       }
     ]
   },
+  extraData: [],
   label: 'Total unique hosts',
   y: 'total_unique_host_count',
   xTickFormat: 'formatDateAsDayMonth',
