@@ -5,7 +5,7 @@ import {
   ChartThemeColor,
 } from 'react-json-chart-builder';
 
-import ExpandedRow from '../../Components/TemplateExplorerExpandedRow';
+import ExpandedRow from '../../Components/ReportComponents/DefaultReport/Components/TemplateExplorerExpandedRow';
 
 const slug = 'templates_explorer';
 
@@ -22,69 +22,63 @@ const tableHeaders = [
   { key: 'failed_count', value: 'Failed jobs count' },
 ];
 
-const schemaFnc = (
-  label,
-  y,
-  _xTickFormat
-) => [
-    {
-      id: 1,
-      kind: ChartKind.wrapper,
-      type: ChartTopLevelType.chart,
-      parent: null,
+const schemaFnc = (label, y) => [
+  {
+    id: 1,
+    kind: ChartKind.wrapper,
+    type: ChartTopLevelType.chart,
+    parent: null,
+    props: {
+      height: 400,
+      padding: {
+        top: 70,
+        right: 100,
+      },
+      domainPadding: {
+        y: 25,
+        x: 85,
+      },
+      themeColor: ChartThemeColor.multiOrdered,
+    },
+    xAxis: {
+      label: 'Template',
+      style: {
+        axisLabel: {
+          padding: 55,
+        },
+      },
+    },
+    yAxis: {
+      tickFormat: 'formatNumberAsK',
+      showGrid: true,
+      label,
+      style: {
+        axisLabel: {
+          padding: 60,
+        },
+      },
+    },
+    api: {
+      url: '',
+      params: {},
+    },
+  },
+  {
+    id: 2,
+    kind: ChartKind.group,
+    parent: 1,
+    template: {
+      id: 0,
+      kind: ChartKind.simple,
+      type: ChartType.bar,
+      parent: 0,
       props: {
-        height: 400,
-        padding: {
-          top: 70,
-          right: 100,
-        },
-        domainPadding: {
-          y: 25,
-          x: 85,
-        },
-        themeColor: ChartThemeColor.multiOrdered,
-      },
-      xAxis: {
-        label: 'Template',
-        style: {
-          axisLabel: {
-            padding: 55,
-          },
-        },
-        // It is using names instead of dates so no need for formatting.
-        // tickFormat: xTickFormat,
-      },
-      yAxis: {
-        tickFormat: 'formatNumberAsK',
-        showGrid: true,
-        label,
-        style: {
-          axisLabel: {
-            padding: 60,
-          },
-        },
-      },
-      api: {
-        url: '',
-        params: {},
+        x: 'name',
+        y,
       },
     },
-    {
-      id: 2,
-      kind: ChartKind.group,
-      parent: 1,
-      template: {
-        id: 0,
-        kind: ChartKind.simple,
-        type: ChartType.bar,
-        parent: 0,
-        props: {
-          x: 'name',
-          y,
-        },
-      },
-    },
-  ];
+  },
+];
 
 const reportParams = {
   slug,

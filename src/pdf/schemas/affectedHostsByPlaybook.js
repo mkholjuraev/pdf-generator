@@ -24,11 +24,7 @@ const tableHeaders = [
   },
 ];
 
-const schemaFnc = (
-  label,
-  y,
-  xTickFormat
-) => [
+const schemaFnc = (label, y, xTickFormat) => [
   {
     id: 1,
     kind: ChartKind.wrapper,
