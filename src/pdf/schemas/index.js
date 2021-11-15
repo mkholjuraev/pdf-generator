@@ -8,6 +8,7 @@ import mostUsedModules from './mostUsedModules';
 import moduleUsageByOrganization from './moduleUsageByOrganization';
 import moduleUsageByJobTemplate from './moduleUsageByJobTemplate';
 import moduleUsageByTask from './moduleUsageByTask';
+import automationCalculator from './automationCalculator';
 
 const reports = [
   affectedHostsByPlaybook,
@@ -20,9 +21,10 @@ const reports = [
   moduleUsageByOrganization,
   moduleUsageByJobTemplate,
   moduleUsageByTask,
+  automationCalculator,
 ];
 
 export const getReport = (searchSlug) =>
-  reports.find(({ slug }) => slug === searchSlug) ?? reports[0];
+  reports.find(({ slug }) => slug === searchSlug);
 
 export default reports;

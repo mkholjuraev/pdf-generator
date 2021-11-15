@@ -7,6 +7,11 @@ import PageOptionsContext from './PageOptionsContext';
 const App = ({ label, y, xTickFormat, slug, data, extraData, pageWidth, pageHeight }) => {
   const report = getReport(slug);
 
+  if (!report) {
+    // This should happen only in development.
+    throw new Error(`The report (${slug}) is not implemented.`);
+  }
+
   useEffect(() => {
     document.title = report.name;
   }, [report]);
