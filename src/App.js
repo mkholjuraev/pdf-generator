@@ -4,7 +4,7 @@ import Report from './pdf/Report';
 import { getReport } from './pdf/schemas/index';
 import PageOptionsContext from './PageOptionsContext';
 
-const App = ({ label, y, xTickFormat, slug, data, pageWidth, pageHeight }) => {
+const App = ({ label, y, xTickFormat, slug, data, extraData, pageWidth, pageHeight }) => {
   const report = getReport(slug);
 
   useEffect(() => {
@@ -16,6 +16,7 @@ const App = ({ label, y, xTickFormat, slug, data, pageWidth, pageHeight }) => {
       <Report
         tableHeaders={report.tableHeaders}
         data={data}
+        extraData={extraData}
         schema={report.schemaFnc(label, y, xTickFormat)}
         name={report.name}
         description={report.description}
