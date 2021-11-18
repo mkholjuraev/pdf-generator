@@ -59,10 +59,18 @@ app.post(`${APIPrefix}/generate_pdf/`, async (req, res) => {
     }
     const queryParams = req.body.queryParams
     const fastApiUrl = `http://${req.body.apiHost}:${req.body.apiPort}${req.body.endpointUrl}?&sort_by=${sort_options}:${sort_order}`
+    const headers = {
+      'Content-Type': 'application/json',
+      'x-rh-identity': rhIdentity
+    };
 
     // get data for current report displayed in UI
     const promise = async () => {
-      return await axios.post(`${fastApiUrl}&offset=${offset}&limit=${limit}`, queryParams)
+      return await axios.post(
+        `${fastApiUrl}&offset=${offset}&limit=${limit}`,
+        queryParams,
+        {headers: headers}
+      )
       .then(async (response) => {
         return response.data
       })
@@ -83,7 +91,11 @@ app.post(`${APIPrefix}/generate_pdf/`, async (req, res) => {
       // get extra data
       const promises = [];
       for(let i=0; i<promiseCount; i++) {
-        promises.push(axios.post(`${fastApiUrl}&offset=${newOffset}&limit=25`, {...excludeOthers, ...queryParams}))
+        promises.push(axios.post(
+          `${fastApiUrl}&offset=${newOffset}&limit=25`,
+          {...excludeOthers, ...queryParams},
+          {headers: headers}
+        ))
         newOffset += 25
       }
       const allPromises = async () => {
