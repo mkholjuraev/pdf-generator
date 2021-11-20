@@ -131,19 +131,21 @@ const TableExpandedRow = ({ item }) => {
             <GridItem span={12}>{taskStatusGridItem}</GridItem>
             <GridItem span={12}>
               <Flex>
-                <FlexItem>
-                  <p>
-                    <strong>Most failed tasks</strong>
-                  </p>
-                  {item.most_failed_tasks &&
-                    item.most_failed_tasks.map((task) =>
-                      taskInfo(task).map(({ label, value }) => (
-                        <p key={label}>
-                          <strong>{label}:</strong> {value}
-                        </p>
-                      ))
-                    )}
-                </FlexItem>
+                {item.most_failed_tasks && item.most_failed_tasks.length > 0 && (
+                  <FlexItem>
+                    <p>
+                      <strong>Most failed tasks</strong>
+                    </p>
+                    {item.most_failed_tasks &&
+                      item.most_failed_tasks.map((task) =>
+                        taskInfo(task).map(({ label, value }) => (
+                          <p key={label}>
+                            <strong>{label}:</strong> {value}
+                          </p>
+                        ))
+                      )}
+                  </FlexItem>
+                )}
                 <FlexItem align={{ default: 'alignRight' }}>
                   {expandedInfo(item).map(({ label, value }) => (
                     <p

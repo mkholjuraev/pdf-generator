@@ -14,6 +14,7 @@ const customFunctions = (data) => ({
 const Report = ({
   tableHeaders = [],
   data = { meta: { legend: [] } },
+  extraData = { meta: { legend: [] } },
   schema,
   name,
   description,
@@ -22,28 +23,62 @@ const Report = ({
   /* If the table is expanded render each row in its own page */
   const getTable = () => {
     if (ExpandRowsComponent)
-      return data.meta.legend.map((item) => (
-        <PageCard key={item.id}>
+      return (
+        <>
+          {data.meta.legend.map((item, idx) => (
+            <PageCard key={idx}>
+              <CardBody>
+                <Table
+                  legend={[item]}
+                  headers={tableHeaders}
+                  ExpandRowsComponent={ExpandRowsComponent}
+                />
+              </CardBody>
+            </PageCard>
+          ))}
+          {extraData && (
+            <PageCard>
+              <CardHeaderMain>
+                <CardTitle>{`${
+                  extraData.meta.legend.length < 100
+                    ? `All ${extraData.meta.legend.length} items`
+                    : `Top 100 of ${data.meta.count}`
+                }`}</CardTitle>
+              </CardHeaderMain>
+              <CardBody>
+                <Table legend={extraData.meta.legend} headers={tableHeaders} />
+              </CardBody>
+            </PageCard>
+          )}
+        </>
+      );
+
+    return (
+      <>
+        <PageCard>
           <CardBody>
             <Table
-              legend={[item]}
+              legend={data.meta.legend}
               headers={tableHeaders}
               ExpandRowsComponent={ExpandRowsComponent}
             />
           </CardBody>
         </PageCard>
-      ));
-
-    return (
-      <PageCard>
-        <CardBody>
-          <Table
-            legend={data.meta.legend}
-            headers={tableHeaders}
-            ExpandRowsComponent={ExpandRowsComponent}
-          />
-        </CardBody>
-      </PageCard>
+        {extraData && (
+          <PageCard>
+            <CardHeaderMain>
+              <CardTitle>{`${
+                extraData.meta.legend.length < 100
+                  ? `All ${extraData.meta.legend.length} items`
+                  : `Top 100 of ${data.meta.count}`
+              }`}</CardTitle>
+            </CardHeaderMain>
+            <CardBody>
+              <Table legend={extraData.meta.legend} headers={tableHeaders} />
+            </CardBody>
+          </PageCard>
+        )}
+      </>
     );
   };
 
