@@ -139,6 +139,12 @@ const AutomationCalculator: FunctionComponent<Props> = ({
         <CardBody>
           <Grid hasGutter>
             <GridItem span={12}>{renderRight()}</GridItem>
+          </Grid>
+        </CardBody>
+      </PageCard>
+      <PageCard>
+        <CardBody>
+          <Grid hasGutter>
             <GridItem span={12}>{renderLeft()}</GridItem>
           </Grid>
         </CardBody>
