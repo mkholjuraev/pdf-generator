@@ -1,12 +1,8 @@
 import React from 'react';
-import { Td, Tr } from '../../Components/StyledPatternfly/';
+import { Td, Tr } from '../../../StyledPatternfly';
 import { getText } from '../helpers';
 
-const TableRow = ({
-  legendEntry,
-  headers,
-  ExpandRowsComponent,
-}) => {
+const TableRow = ({ legendEntry, headers, ExpandRowsComponent }) => {
   return (
     <>
       <Tr>
@@ -14,9 +10,7 @@ const TableRow = ({
           <Td key={`${legendEntry.id}-${key}`}>{getText(legendEntry, key)}</Td>
         ))}
       </Tr>
-      {ExpandRowsComponent && (
-        <ExpandRowsComponent item={legendEntry} />
-      )}
+      {ExpandRowsComponent && <ExpandRowsComponent item={legendEntry} />}
     </>
   );
 };

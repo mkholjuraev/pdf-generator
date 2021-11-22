@@ -34,7 +34,7 @@ RUN wget "https://ftp.redhat.com/pub/redhat/rhel/rhel-8-beta/appstream/x86_64/Pa
 RUN dnf install -y /tmp/*.rpm
 
 # RUN npm install using package-lock.json
-RUN npm ci
+RUN npm ci --also=dev
 
 # To address: Babel could not write cache to file:
 # /src/node_modules/.cache/@babel/register/.babel.7.15.5.development.json

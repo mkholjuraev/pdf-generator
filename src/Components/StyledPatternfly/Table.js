@@ -1,8 +1,8 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 import * as Table from '@patternfly/react-table';
 import {
   global_disabled_color_300,
-  global_Color_400
+  global_Color_400,
 } from '@patternfly/react-tokens';
 
 export * from '@patternfly/react-table';

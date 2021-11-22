@@ -6,20 +6,18 @@ import {
   Th,
   Thead,
   Tr,
-} from '../../Components/StyledPatternfly/';
+} from '../../../StyledPatternfly';
 
 import TableRow from './TableRow';
 
-const ReportTable = ({
-  legend,
-  headers,
-  ExpandRowsComponent = null,
-}) => (
+const ReportTable = ({ legend, headers, ExpandRowsComponent = null }) => (
   <TableComposable aria-label="Report Table" variant={TableVariant.compact}>
     <Thead>
       <Tr>
         {headers.map(({ key, value }) => (
-          <Th key={key} data-testid={key}>{value}</Th>
+          <Th key={key} data-testid={key}>
+            {value}
+          </Th>
         ))}
       </Tr>
     </Thead>
