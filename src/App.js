@@ -4,7 +4,16 @@ import reportMapper, { REPORT_LAYOUTS } from './Components/ReportComponents';
 import { getReport } from './pdf/schemas/index';
 import PageOptionsContext from './PageOptionsContext';
 
-const App = ({ label, y, xTickFormat, slug, data, extraData, pageWidth, pageHeight }) => {
+const App = ({
+  label,
+  y,
+  xTickFormat,
+  slug,
+  data,
+  extraData,
+  pageWidth,
+  pageHeight,
+}) => {
   const report = getReport(slug);
 
   if (!report) {
