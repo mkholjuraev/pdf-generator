@@ -5,7 +5,7 @@ import {
   CardBody,
   Grid,
   GridItem,
-  CardHeaderMain,
+  // CardHeaderMain,
   Flex,
   FlexItem,
   Title,
@@ -132,17 +132,8 @@ const AutomationCalculator: FunctionComponent<Props> = ({
   return (
     <>
       <PageCard>
-        <CardHeaderMain>
-          <CardTitle>{name}</CardTitle>
-          <CardSubtitle>{description}</CardSubtitle>
-        </CardHeaderMain>
-        <CardBody>
-          <Grid hasGutter>
-            <GridItem span={12}>{renderRight()}</GridItem>
-          </Grid>
-        </CardBody>
-      </PageCard>
-      <PageCard>
+        <CardTitle>{name}</CardTitle>
+        <CardSubtitle>{description}</CardSubtitle>
         <CardBody>
           <Grid hasGutter>
             <GridItem span={12}>{renderLeft()}</GridItem>
@@ -150,6 +141,11 @@ const AutomationCalculator: FunctionComponent<Props> = ({
         </CardBody>
       </PageCard>
       <PageCard>
+        <CardBody>
+          <Grid hasGutter>
+            <GridItem span={12}>{renderRight()}</GridItem>
+          </Grid>
+        </CardBody>
         <TemplatesTable data={api.items} />
       </PageCard>
     </>
