@@ -9,6 +9,7 @@ import moduleUsageByOrganization from './moduleUsageByOrganization';
 import moduleUsageByJobTemplate from './moduleUsageByJobTemplate';
 import moduleUsageByTask from './moduleUsageByTask';
 import automationCalculator from './automationCalculator';
+import aa21OnboardingReport from './aa21OnboardingReport';
 
 const reports = [
   affectedHostsByPlaybook,
@@ -22,6 +23,7 @@ const reports = [
   moduleUsageByJobTemplate,
   moduleUsageByTask,
   automationCalculator,
+  aa21OnboardingReport,
 ];
 
 export const getReport = (searchSlug) =>
