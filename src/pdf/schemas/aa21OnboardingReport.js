@@ -19,10 +19,6 @@ const tableHeaders = [
   { key: 'id', value: 'ID' },
   { key: 'name', value: 'Template name' },
   { key: 'host_task_count', value: 'Tasks count' },
-  { key: 'host_task_changed_count', value: 'Changed tasks count' },
-  { key: 'host_task_ok_count', value: 'Successful tasks count' },
-  { key: 'host_task_failed_count', value: 'Failed tasks count' },
-  { key: 'host_task_unreachable_count', value: 'Unreachable tasks count' },
 ];
 
 const schemaFnc = (label, y, xTickFormat) => [
