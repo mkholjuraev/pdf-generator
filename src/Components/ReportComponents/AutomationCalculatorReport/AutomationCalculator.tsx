@@ -136,16 +136,12 @@ const AutomationCalculator: FunctionComponent<Props> = ({
         <CardSubtitle>{description}</CardSubtitle>
         <CardBody>
           <Grid hasGutter>
+            <GridItem span={12}>{renderRight()}</GridItem>
             <GridItem span={12}>{renderLeft()}</GridItem>
           </Grid>
         </CardBody>
       </PageCard>
       <PageCard>
-        <CardBody>
-          <Grid hasGutter>
-            <GridItem span={12}>{renderRight()}</GridItem>
-          </Grid>
-        </CardBody>
         <TemplatesTable data={api.items} />
       </PageCard>
     </>
