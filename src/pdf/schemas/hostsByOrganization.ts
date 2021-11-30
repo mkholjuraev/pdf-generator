@@ -6,6 +6,7 @@ import {
   ChartTopLevelType,
   ChartThemeColor,
 } from 'react-json-chart-builder';
+import { ReportSchema, SchemaFnc } from '../types';
 
 const slug = 'hosts_by_organization';
 
@@ -24,7 +25,7 @@ const tableHeaders = [
   },
 ];
 
-const schemaFnc = (label, y, xTickFormat) => [
+const schemaFnc: SchemaFnc = (label, y, xTickFormat) => [
   {
     id: 1,
     kind: ChartKind.wrapper,
@@ -89,7 +90,7 @@ const schemaFnc = (label, y, xTickFormat) => [
   },
 ];
 
-const reportParams = {
+const reportParams: ReportSchema = {
   slug,
   name,
   description,

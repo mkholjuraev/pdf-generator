@@ -7,7 +7,9 @@ export type SchemaFnc = (
   xTickFormat: string
 ) => ChartSchemaElement[];
 
-export type TableHeaders = { key: string; label: string }[];
+export type TableHeaders = { key: string; value: string }[];
+
+export type ExpandRowsComponentType = React.ComponentType<any>;
 
 export interface ReportSchema {
   slug: string;
@@ -15,6 +17,6 @@ export interface ReportSchema {
   name: string;
   description: string;
   schemaFnc: SchemaFnc;
-  ExpandRowsComponent?: React.ComponentType<any>;
+  ExpandRowsComponent?: ExpandRowsComponentType;
   componentName?: REPORT_LAYOUTS;
 }

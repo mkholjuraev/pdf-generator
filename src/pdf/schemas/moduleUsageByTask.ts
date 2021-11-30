@@ -6,6 +6,7 @@ import {
   ChartTopLevelType,
   ChartThemeColor,
 } from 'react-json-chart-builder';
+import { ReportSchema, SchemaFnc } from '../types';
 
 const slug = 'module_usage_by_task';
 
@@ -24,7 +25,7 @@ const tableHeaders = [
   { key: 'host_task_unreachable_count', value: 'Unreachable tasks count' },
 ];
 
-const schemaFnc = (label, y, xTickFormat) => [
+const schemaFnc: SchemaFnc = (label, y, xTickFormat) => [
   {
     id: 1,
     kind: ChartKind.wrapper,
@@ -89,7 +90,7 @@ const schemaFnc = (label, y, xTickFormat) => [
   },
 ];
 
-const reportParams = {
+const reportParams: ReportSchema = {
   slug,
   name,
   description,

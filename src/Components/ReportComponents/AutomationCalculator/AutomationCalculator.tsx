@@ -77,8 +77,9 @@ const updateDeltaCost = (
 const computeTotalSavings = (data: Template[]): number =>
   data.reduce((sum, curr) => sum + curr.delta, 0);
 
-interface Props extends Omit<ComponentProps, 'data'> {
+interface Props extends Omit<ComponentProps, 'data' | 'extraData'> {
   data: ApiReturnType;
+  extraData?: ApiReturnType;
 }
 
 const AutomationCalculator: FunctionComponent<Props> = ({

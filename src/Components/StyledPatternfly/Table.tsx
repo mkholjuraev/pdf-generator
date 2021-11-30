@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC } from 'react';
 import styled from 'styled-components';
 import * as Table from '@patternfly/react-table';
 import {
@@ -22,12 +22,15 @@ export const Tr = styled(Table.Tr)`
   }
 `;
 
-const ThStyled = styled(Table.Th)`
+const ThWrap: FC<Omit<Table.ThProps, 'ref'>> = ({ ...props }) => (
+  <Table.Th modifier="wrap" {...props} />
+);
+
+export const Th = styled(ThWrap)`
   /* font-size: 9px !important; */
   color: #4f4c4d;
   font-weight: bold;
 `;
-export const Th = (props) => <ThStyled modifier="wrap" {...props} />;
 
 export const Td = styled(Table.Td)`
   /* font-size: 9px !important; */

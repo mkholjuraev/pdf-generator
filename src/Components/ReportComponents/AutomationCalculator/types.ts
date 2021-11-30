@@ -1,3 +1,5 @@
+import { ApiReturnType as ChartApiReturnType } from 'react-json-chart-builder';
+
 export interface Template {
   name: string;
   id: number;
@@ -19,7 +21,6 @@ export interface Template {
   [key: string]: string | number | boolean;
 }
 
-export interface ApiReturnType {
-  response_type: string;
+export interface ApiReturnType extends Omit<ChartApiReturnType, 'items'> {
   items: Template[];
 }

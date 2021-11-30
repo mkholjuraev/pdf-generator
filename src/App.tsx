@@ -1,10 +1,22 @@
-import React, { useEffect } from 'react';
+import React, { FC, useEffect } from 'react';
 import '@patternfly/react-core/dist/styles/base.css';
 import reportMapper, { REPORT_LAYOUTS } from './Components/ReportComponents';
 import { getReport } from './pdf/schemas/index';
 import PageOptionsContext from './PageOptionsContext';
+import { ApiReturnType } from 'react-json-chart-builder';
 
-const App = ({
+interface Props {
+  label: string;
+  y: string;
+  xTickFormat: string;
+  slug: string;
+  data: ApiReturnType;
+  extraData: ApiReturnType;
+  pageWidth: number;
+  pageHeight: number;
+}
+
+const App: FC<Props> = ({
   label,
   y,
   xTickFormat,
@@ -36,7 +48,7 @@ const App = ({
         schema={report.schemaFnc(label, y, xTickFormat)}
         name={report.name}
         description={report.description}
-        ExpandRowsComponent={report.ExpandRowsComponent ?? null}
+        ExpandRowsComponent={report.ExpandRowsComponent}
       />
     </PageOptionsContext.Provider>
   );

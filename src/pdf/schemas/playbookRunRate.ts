@@ -1,18 +1,19 @@
 import {
   ChartKind,
+  ChartLegendOrientation,
+  ChartLegendPosition,
   ChartTopLevelType,
   ChartType,
   ChartThemeColor,
 } from 'react-json-chart-builder';
+import { ReportSchema, SchemaFnc } from '../types';
 
-import ExpandedRow from '../../Components/ReportComponents/DefaultReport/Components/TemplateExplorerExpandedRow';
+const slug = 'job_template_run_rate';
 
-const slug = 'templates_explorer';
-
-const name = 'Templates explorer';
+const name = 'Job template run rate';
 
 const description =
-  'An overview of the job templates that have ran across your Ansible cluster.\n\nYou can use this report to review the status of a particular job template across its job runs, giving you an overview of the times a template fails a job run, a host, or a task. You can also review the host and task status for tasks that fail the most, allowing you to identify any bottlenecks or problems with the templates you are running.';
+  'The number of times a job template has ran in a specified time window.\n\nYou can use this report to be able to tell which playbooks are running most frequently, allowing you to see which groups in your organization are running Ansible the most.';
 
 const tableHeaders = [
   { key: 'id', value: 'ID' },
@@ -22,31 +23,26 @@ const tableHeaders = [
   { key: 'failed_count', value: 'Failed jobs count' },
 ];
 
-const schemaFnc = (label, y) => [
+const schemaFnc: SchemaFnc = (label, y, xTickFormat) => [
   {
     id: 1,
     kind: ChartKind.wrapper,
     type: ChartTopLevelType.chart,
     parent: null,
     props: {
-      height: 400,
+      height: 500,
       padding: {
         top: 70,
         right: 100,
       },
       domainPadding: {
         y: 25,
-        x: 85,
       },
       themeColor: ChartThemeColor.multiOrdered,
     },
     xAxis: {
-      label: 'Template',
-      style: {
-        axisLabel: {
-          padding: 55,
-        },
-      },
+      label: 'Date',
+      tickFormat: xTickFormat,
     },
     yAxis: {
       tickFormat: 'formatNumberAsK',
@@ -54,13 +50,20 @@ const schemaFnc = (label, y) => [
       label,
       style: {
         axisLabel: {
-          padding: 60,
+          padding: 55,
         },
       },
     },
     api: {
       url: '',
       params: {},
+    },
+    legend: {
+      interactive: false,
+      orientation: ChartLegendOrientation.vertical,
+      position: ChartLegendPosition.right,
+      turncateAt: 18,
+      wrapText: true,
     },
   },
   {
@@ -70,23 +73,22 @@ const schemaFnc = (label, y) => [
     template: {
       id: 0,
       kind: ChartKind.simple,
-      type: ChartType.bar,
+      type: ChartType.line,
       parent: 0,
       props: {
-        x: 'name',
+        x: 'created_date',
         y,
       },
     },
   },
 ];
 
-const reportParams = {
+const reportParams: ReportSchema = {
   slug,
+  tableHeaders,
   name,
   description,
-  tableHeaders,
   schemaFnc,
-  ExpandRowsComponent: ExpandedRow,
 };
 
 export default reportParams;

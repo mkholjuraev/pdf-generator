@@ -6,25 +6,23 @@ import {
   ChartTopLevelType,
   ChartThemeColor,
 } from 'react-json-chart-builder';
+import { ReportSchema, SchemaFnc } from '../types';
 
-const slug = 'module_usage_by_job_template';
+const slug = 'aa_2_1_onboarding';
 
-const name = 'Module usage by job template';
+const name = 'AA 2.1 Onboarding Report';
 
-const description =
-  'The number of job template and task runs for a specified set of Ansible modules, grouped by job template.\n\nYou can use this report to find which job templates are using particular modules, helping you to check things like adoption of purpose-built modules for particular templates.';
+const description = `This report shows templates that utilize certain module types that have been identified to pose potential problems when migrating to AAP 2.1.
+
+  You can use this report to determine the last job run of these templates, as well as a link into the Controller instance where the template is defined.`;
 
 const tableHeaders = [
   { key: 'id', value: 'ID' },
   { key: 'name', value: 'Template name' },
   { key: 'host_task_count', value: 'Tasks count' },
-  { key: 'host_task_changed_count', value: 'Changed tasks count' },
-  { key: 'host_task_ok_count', value: 'Successful tasks count' },
-  { key: 'host_task_failed_count', value: 'Failed tasks count' },
-  { key: 'host_task_unreachable_count', value: 'Unreachable tasks count' },
 ];
 
-const schemaFnc = (label, y, xTickFormat) => [
+const schemaFnc: SchemaFnc = (label, y, xTickFormat) => [
   {
     id: 1,
     kind: ChartKind.wrapper,
@@ -89,7 +87,7 @@ const schemaFnc = (label, y, xTickFormat) => [
   },
 ];
 
-const reportParams = {
+const reportParams: ReportSchema = {
   slug,
   name,
   description,

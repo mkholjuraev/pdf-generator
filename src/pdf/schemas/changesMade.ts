@@ -6,22 +6,25 @@ import {
   ChartType,
   ChartThemeColor,
 } from 'react-json-chart-builder';
+import { ReportSchema, SchemaFnc } from '../types';
 
-const slug = 'jobs_and_tasks_by_organization';
+const slug = 'changes_made_by_job_template';
 
-const name = 'Jobs/Tasks by organization';
+const name = 'Changes made by job template';
 
 const description =
-  'The number of job template and task runs, grouped by organizations from Ansible Controller.\n\nYou can use this report to find which organizations are running the most Ansible jobs.';
+  'The total count of changes made by each job template in a specified time window.\n\nYou can use this report to ensure the correct number of changes are made per hostname, as well as see which job templates are doing the most changes to your infrastructure.';
 
 const tableHeaders = [
   { key: 'id', value: 'ID' },
-  { key: 'name', value: 'Organization name' },
-  { key: 'total_count', value: 'Total jobs count' },
-  { key: 'host_task_count', value: 'Tasks count' },
+  { key: 'name', value: 'Template name' },
+  { key: 'host_count', value: 'Host count' },
+  { key: 'changed_host_count', value: 'Changed host count' },
+  { key: 'host_task_changed_count', value: 'Changed task count' },
+  { key: 'host_task_count', value: 'Task count' },
 ];
 
-const schemaFnc = (label, y, xTickFormat) => [
+const schemaFnc: SchemaFnc = (label, y, xTickFormat) => [
   {
     id: 1,
     kind: ChartKind.wrapper,
@@ -81,11 +84,11 @@ const schemaFnc = (label, y, xTickFormat) => [
   },
 ];
 
-const reportParams = {
+const reportParams: ReportSchema = {
   slug,
+  tableHeaders,
   name,
   description,
-  tableHeaders,
   schemaFnc,
 };
 

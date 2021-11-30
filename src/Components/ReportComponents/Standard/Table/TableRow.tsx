@@ -1,8 +1,16 @@
-import React from 'react';
+import React, { FC } from 'react';
+import { ExpandRowsComponentType, TableHeaders } from '../../../../pdf/types';
 import { Td, Tr } from '../../../StyledPatternfly';
 import { getText } from '../helpers';
+import { LegendEntry } from '../types';
 
-const TableRow = ({ legendEntry, headers, ExpandRowsComponent }) => {
+interface Props {
+  legendEntry: LegendEntry;
+  headers: TableHeaders;
+  ExpandRowsComponent?: ExpandRowsComponentType;
+}
+
+const TableRow: FC<Props> = ({ legendEntry, headers, ExpandRowsComponent }) => {
   return (
     <>
       <Tr>

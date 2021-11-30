@@ -1,27 +1,28 @@
 import {
   ChartKind,
-  ChartType,
   ChartLegendOrientation,
   ChartLegendPosition,
   ChartTopLevelType,
+  ChartType,
   ChartThemeColor,
 } from 'react-json-chart-builder';
+import { ReportSchema, SchemaFnc } from '../types';
 
-const slug = 'aa_2_1_onboarding';
+const slug = 'jobs_and_tasks_by_organization';
 
-const name = 'AA 2.1 Onboarding Report';
+const name = 'Jobs/Tasks by organization';
 
-const description = `This report shows templates that utilize certain module types that have been identified to pose potential problems when migrating to AAP 2.1.
-
-  You can use this report to determine the last job run of these templates, as well as a link into the Controller instance where the template is defined.`;
+const description =
+  'The number of job template and task runs, grouped by organizations from Ansible Controller.\n\nYou can use this report to find which organizations are running the most Ansible jobs.';
 
 const tableHeaders = [
   { key: 'id', value: 'ID' },
-  { key: 'name', value: 'Template name' },
+  { key: 'name', value: 'Organization name' },
+  { key: 'total_count', value: 'Total jobs count' },
   { key: 'host_task_count', value: 'Tasks count' },
 ];
 
-const schemaFnc = (label, y, xTickFormat) => [
+const schemaFnc: SchemaFnc = (label, y, xTickFormat) => [
   {
     id: 1,
     kind: ChartKind.wrapper,
@@ -31,7 +32,7 @@ const schemaFnc = (label, y, xTickFormat) => [
       height: 500,
       padding: {
         top: 70,
-        left: 100,
+        right: 100,
       },
       domainPadding: {
         y: 25,
@@ -41,11 +42,6 @@ const schemaFnc = (label, y, xTickFormat) => [
     xAxis: {
       label: 'Date',
       tickFormat: xTickFormat,
-      style: {
-        axisLabel: {
-          padding: 50,
-        },
-      },
     },
     yAxis: {
       tickFormat: 'formatNumberAsK',
@@ -86,7 +82,7 @@ const schemaFnc = (label, y, xTickFormat) => [
   },
 ];
 
-const reportParams = {
+const reportParams: ReportSchema = {
   slug,
   name,
   description,

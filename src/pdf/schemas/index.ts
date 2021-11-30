@@ -10,8 +10,9 @@ import moduleUsageByJobTemplate from './moduleUsageByJobTemplate';
 import moduleUsageByTask from './moduleUsageByTask';
 import automationCalculator from './automationCalculator';
 import aa21OnboardingReport from './aa21OnboardingReport';
+import { ReportSchema } from '../types';
 
-const reports = [
+const reports: ReportSchema[] = [
   affectedHostsByPlaybook,
   changesMade,
   playbookRunRate,
@@ -26,7 +27,7 @@ const reports = [
   aa21OnboardingReport,
 ];
 
-export const getReport = (searchSlug) =>
+export const getReport = (searchSlug: string): ReportSchema | undefined =>
   reports.find(({ slug }) => slug === searchSlug);
 
 export default reports;

@@ -1,24 +1,34 @@
-import React from 'react';
-import ChartBuilder, { functions } from 'react-json-chart-builder';
+import React, { FC } from 'react';
+import ChartBuilder, {
+  ApiReturnType,
+  functions,
+} from 'react-json-chart-builder';
 
 import { CardBody, CardHeaderMain } from '@patternfly/react-core';
 import PageCard from '../../PageCard';
 import { CardTitle, CardSubtitle } from '../../StyledPatternfly';
 import Table from './Table';
+import { ComponentProps } from '../types';
+import { DataType } from './types';
 
-const customFunctions = (data) => ({
+const customFunctions = (data: DataType) => ({
   ...functions,
-  fetchFnc: () => Promise.resolve(data),
+  fetchFnc: () => Promise.resolve(data as unknown as ApiReturnType),
 });
 
-const Report = ({
+interface Props extends Omit<ComponentProps, 'data' | 'extraData'> {
+  data: DataType;
+  extraData?: DataType;
+}
+
+const Report: FC<Props> = ({
   tableHeaders = [],
-  data = { meta: { legend: [] } },
-  extraData = { meta: { legend: [] } },
+  data,
+  extraData,
   schema,
   name,
   description,
-  ExpandRowsComponent = null,
+  ExpandRowsComponent = undefined,
 }) => {
   /* If the table is expanded render each row in its own page */
   const getTable = () => {

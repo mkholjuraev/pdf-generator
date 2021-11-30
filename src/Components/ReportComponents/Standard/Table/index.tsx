@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { FC } from 'react';
+import { ExpandRowsComponentType, TableHeaders } from '../../../../pdf/types';
 import {
   TableComposable,
   TableVariant,
@@ -7,10 +8,17 @@ import {
   Thead,
   Tr,
 } from '../../../StyledPatternfly';
+import { LegendEntry } from '../types';
 
 import TableRow from './TableRow';
 
-const ReportTable = ({ legend, headers, ExpandRowsComponent = null }) => (
+interface Props {
+  legend: LegendEntry[];
+  headers: TableHeaders;
+  ExpandRowsComponent?: ExpandRowsComponentType;
+}
+
+const ReportTable: FC<Props> = ({ legend, headers, ExpandRowsComponent }) => (
   <TableComposable aria-label="Report Table" variant={TableVariant.compact}>
     <Thead>
       <Tr>
