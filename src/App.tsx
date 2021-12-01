@@ -1,9 +1,9 @@
 import React, { FC, useEffect } from 'react';
 import '@patternfly/react-core/dist/styles/base.css';
-import reportMapper, { REPORT_LAYOUTS } from './Components/ReportComponents';
+import reportMapper, { ReportLayout } from './Components/ReportComponents';
 import { getReport } from './pdf/schemas/index';
 import PageOptionsContext from './PageOptionsContext';
-import { ApiReturnType } from 'react-json-chart-builder';
+import { ApiReturnType } from './Components/ChartHelpers/types';
 
 interface Props {
   label: string;
@@ -37,7 +37,7 @@ const App: FC<Props> = ({
     document.title = report.name;
   }, [report]);
 
-  const Report = reportMapper(report?.componentName ?? REPORT_LAYOUTS.DEFAULT);
+  const Report = reportMapper(report?.componentName ?? ReportLayout.Standard);
 
   return (
     <PageOptionsContext.Provider value={{ pageWidth, pageHeight }}>

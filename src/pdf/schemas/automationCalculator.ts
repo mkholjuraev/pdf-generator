@@ -3,7 +3,7 @@ import {
   ChartTopLevelType,
   ChartType,
 } from 'react-json-chart-builder';
-import { REPORT_LAYOUTS } from '../../Components/ReportComponents';
+import { ReportLayout } from '../../Components/ReportComponents';
 import { TableHeaders, ReportSchema, SchemaFnc } from '../types';
 
 const slug = 'automation_calculator';
@@ -60,28 +60,25 @@ const schemaFnc: SchemaFnc = () => [
         },
       },
     },
-    api: {
-      url: '',
-      params: {},
-    },
   },
   {
     id: 2,
     kind: ChartKind.group,
     parent: 1,
-    template: {
-      id: 0,
-      kind: ChartKind.simple,
-      type: ChartType.bar,
-      parent: 0,
-      props: {
-        x: 'name',
-        y: 'delta',
-      },
-      tooltip: {
-        standalone: true,
-        labelName: 'Saving',
-      },
+    template: 3,
+  },
+  {
+    id: 3,
+    kind: ChartKind.simple,
+    type: ChartType.bar,
+    parent: 0,
+    props: {
+      x: 'name',
+      y: 'delta',
+    },
+    tooltip: {
+      standalone: true,
+      labelName: 'Saving',
     },
   },
 ];
@@ -92,7 +89,7 @@ const reportParams: ReportSchema = {
   name,
   description,
   schemaFnc,
-  componentName: REPORT_LAYOUTS.AUTOMATION_CALCULATOR,
+  componentName: ReportLayout.AutomationCalculator,
 };
 
 export default reportParams;

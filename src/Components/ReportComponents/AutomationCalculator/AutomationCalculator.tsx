@@ -5,7 +5,6 @@ import {
   CardBody,
   Grid,
   GridItem,
-  // CardHeaderMain,
   Flex,
   FlexItem,
   Title,
@@ -22,7 +21,7 @@ import TemplatesTable from './TemplatesTable';
 
 import PageCard from '../../PageCard';
 
-import { ApiReturnType, Template } from './types';
+import { DataType, Template } from './types';
 import { ComponentProps } from '../types';
 
 const calculateDelta = (a: string | number, b: string | number): number => {
@@ -78,8 +77,8 @@ const computeTotalSavings = (data: Template[]): number =>
   data.reduce((sum, curr) => sum + curr.delta, 0);
 
 interface Props extends Omit<ComponentProps, 'data' | 'extraData'> {
-  data: ApiReturnType;
-  extraData?: ApiReturnType;
+  data: DataType;
+  extraData?: DataType;
 }
 
 const AutomationCalculator: FunctionComponent<Props> = ({
@@ -99,7 +98,13 @@ const AutomationCalculator: FunctionComponent<Props> = ({
   const renderLeft = () => (
     <Card isPlain>
       <CardBody>
-        <Chart schema={schema} data={filterDisabled(api.items)} />
+        <Chart
+          schema={schema}
+          data={{
+            ...api,
+            items: filterDisabled(api.items),
+          }}
+        />
       </CardBody>
     </Card>
   );

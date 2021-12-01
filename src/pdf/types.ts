@@ -1,5 +1,5 @@
 import { ChartSchemaElement } from 'react-json-chart-builder';
-import { REPORT_LAYOUTS } from '../Components/ReportComponents';
+import { ReportLayout } from '../Components/ReportComponents';
 
 export type SchemaFnc = (
   label: string,
@@ -18,5 +18,5 @@ export interface ReportSchema {
   description: string;
   schemaFnc: SchemaFnc;
   ExpandRowsComponent?: ExpandRowsComponentType;
-  componentName?: REPORT_LAYOUTS;
+  componentName?: ReportLayout;
 }

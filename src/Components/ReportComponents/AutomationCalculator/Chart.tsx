@@ -1,33 +1,27 @@
 import React, { FunctionComponent } from 'react';
 import ChartBuilder, {
-  ApiReturnType,
   functions,
-  ApiType,
   ChartSchemaElement,
 } from 'react-json-chart-builder';
-import { Template } from './types';
-
-const customFunctions = (data: ApiReturnType) => ({
-  ...functions,
-  fetchFnc: () =>
-    new Promise<ApiReturnType>((resolve) => {
-      resolve(data);
-    }),
-});
+import { convertApiToData } from '../../ChartHelpers/convertApi';
+import { ApiReturnType } from '../../ChartHelpers/types';
+import { DataType } from './types';
 
 interface Props {
   schema: ChartSchemaElement[];
-  data: Template[];
+  data: DataType;
 }
 
 const Chart: FunctionComponent<Props> = ({ schema, data }) => (
   <ChartBuilder
     schema={schema}
-    functions={customFunctions({
-      items: data as unknown,
-      type: ApiType.nonGrouped,
-      response_type: '',
-    } as ApiReturnType)}
+    functions={functions}
+    dataState={[
+      convertApiToData(data as unknown as ApiReturnType),
+      () => {
+        return;
+      },
+    ]}
   />
 );
 

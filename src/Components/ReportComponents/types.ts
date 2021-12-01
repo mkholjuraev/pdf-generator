@@ -1,5 +1,6 @@
-import { ApiReturnType, ChartSchemaElement } from 'react-json-chart-builder';
+import { ChartSchemaElement } from 'react-json-chart-builder';
 import { ExpandRowsComponentType } from '../../pdf/types';
+import { ApiReturnType } from '../ChartHelpers/types';
 
 export interface ComponentProps {
   tableHeaders: { key: string; value: string }[];

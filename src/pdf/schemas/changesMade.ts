@@ -55,10 +55,6 @@ const schemaFnc: SchemaFnc = (label, y, xTickFormat) => [
         },
       },
     },
-    api: {
-      url: '',
-      params: {},
-    },
     legend: {
       interactive: false,
       orientation: ChartLegendOrientation.vertical,
@@ -71,15 +67,16 @@ const schemaFnc: SchemaFnc = (label, y, xTickFormat) => [
     id: 2,
     kind: ChartKind.group,
     parent: 1,
-    template: {
-      id: 0,
-      kind: ChartKind.simple,
-      type: ChartType.line,
-      parent: 0,
-      props: {
-        x: 'created_date',
-        y,
-      },
+    template: 3,
+  },
+  {
+    id: 3,
+    kind: ChartKind.simple,
+    type: ChartType.line,
+    parent: 0,
+    props: {
+      x: 'created_date',
+      y,
     },
   },
 ];
