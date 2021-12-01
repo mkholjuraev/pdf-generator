@@ -30,10 +30,6 @@ const schemaFnc: SchemaFnc = () => [
         right: 0,
         left: 90,
       },
-      domainPadding: {
-        y: 25,
-        x: 85,
-      },
     },
     xAxis: {
       label: 'Templates',
@@ -49,6 +45,8 @@ const schemaFnc: SchemaFnc = () => [
         dy: 0,
       },
       fixLabelOverlap: false,
+      turncateAt: 16,
+      wrapText: true,
     },
     yAxis: {
       tickFormat: 'formatNumberAsK',

@@ -33,11 +33,12 @@ const schemaFnc: SchemaFnc = (label, y) => [
       height: 400,
       padding: {
         top: 70,
+        bottom: 150,
         right: 100,
+        left: 90,
       },
       domainPadding: {
         y: 25,
-        x: 85,
       },
       themeColor: ChartThemeColor.multiOrdered,
     },
@@ -45,9 +46,18 @@ const schemaFnc: SchemaFnc = (label, y) => [
       label: 'Template',
       style: {
         axisLabel: {
-          padding: 55,
+          padding: 130,
         },
       },
+      labelProps: {
+        angle: -45,
+        textAnchor: 'end',
+        dx: 0,
+        dy: 0,
+      },
+      fixLabelOverlap: false,
+      turncateAt: 16,
+      wrapText: true,
     },
     yAxis: {
       tickFormat: 'formatNumberAsK',
