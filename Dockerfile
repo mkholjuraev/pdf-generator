@@ -32,6 +32,7 @@ RUN wget "https://gitlab.cee.redhat.com/automation-analytics/automation-analytic
 RUN wget "https://gitlab.cee.redhat.com/automation-analytics/automation-analytics-cypress-image/-/raw/9db7781bb8bef0838fa6657532c8a234309fedfd/rpms/mesa-libGL-18.2.2-1.el8.x86_64.rpm" -O /tmp/mesa-libGL-18.2.2-1.el8.x86_64.rpm
 
 RUN dnf install -y /tmp/*.rpm
+RUN rm -f /tmp/*.rpm
 
 # RUN npm install using package-lock.json
 RUN npm ci --also=dev
