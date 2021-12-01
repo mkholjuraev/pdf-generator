@@ -1,7 +1,11 @@
 default:
   image: registry.access.redhat.com/ubi8/python-38
 
+
 before_script:
+  - pip install flake8
+  - pip freeze
+  - bash --version
   - python --version
 
 stages:
@@ -12,4 +16,7 @@ build:
   tags:
     - shared
   script:
-    - git diff HEAD^
+    - find . -iname "*.sh" | xargs bash -x -n
+    - find . -iname "*.py" | xargs flake8
+    - find . -iname "*.js" | xargs node --check
+
