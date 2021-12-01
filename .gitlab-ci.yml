@@ -1,0 +1,15 @@
+default:
+  image: registry.access.redhat.com/ubi8/python-38
+
+before_script:
+  - python --version
+
+stages:
+  - test
+
+build:
+  stage: test
+  tags:
+    - shared
+  script:
+    - git diff HEAD^
