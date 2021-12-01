@@ -48,6 +48,7 @@ RUN mkdir build
 RUN npm run build
 RUN npm install cypress
 RUN chown -R default /opt/app-root/
+RUN chmod 777 -R /opt/app-root/
 
 EXPOSE 8000
 CMD ["node", "./server/index.js"]
