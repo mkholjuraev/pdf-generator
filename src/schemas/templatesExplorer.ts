@@ -3,10 +3,13 @@ import {
   ChartTopLevelType,
   ChartType,
   ChartThemeColor,
+  ChartSchemaElement,
 } from 'react-json-chart-builder';
-
-import ExpandedRow from '../../Components/ReportComponents/Standard/Components/TemplateExplorerExpandedRow';
-import { ReportSchema, SchemaFnc } from '../types';
+import {
+  ReportLayout,
+  ReportStandardExpandedRow,
+} from '../Components/ReportComponents/types';
+import { ReportSchema } from './types';
 
 const slug = 'templates_explorer';
 
@@ -23,7 +26,7 @@ const tableHeaders = [
   { key: 'failed_count', value: 'Failed jobs count' },
 ];
 
-const schemaFnc: SchemaFnc = (label, y) => [
+const schema: ChartSchemaElement[] = [
   {
     id: 1,
     kind: ChartKind.wrapper,
@@ -62,7 +65,7 @@ const schemaFnc: SchemaFnc = (label, y) => [
     yAxis: {
       tickFormat: 'formatNumberAsK',
       showGrid: true,
-      label,
+      label: 'VAR_label',
       style: {
         axisLabel: {
           padding: 60,
@@ -83,18 +86,21 @@ const schemaFnc: SchemaFnc = (label, y) => [
     parent: 0,
     props: {
       x: 'name',
-      y,
+      y: 'VAR_y',
     },
   },
 ];
 
 const reportParams: ReportSchema = {
-  slug,
-  name,
-  description,
-  tableHeaders,
-  schemaFnc,
-  ExpandRowsComponent: ExpandedRow,
+  layoutComponent: ReportLayout.Standard,
+  layoutProps: {
+    slug,
+    name,
+    description,
+    tableHeaders,
+    schema,
+    expandedRowComponent: ReportStandardExpandedRow.templateExplorer,
+  },
 };
 
 export default reportParams;

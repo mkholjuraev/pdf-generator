@@ -1,4 +1,5 @@
 import { ApiReturnType } from '../../ChartHelpers/types';
+import { BaseReportProps } from '../types';
 
 export interface Template {
   name: string;
@@ -21,6 +22,9 @@ export interface Template {
   [key: string]: string | number | boolean;
 }
 
-export interface DataType extends Omit<ApiReturnType, 'items'> {
+export interface ReportAutomationCalculatorDataType
+  extends Omit<ApiReturnType, 'items'> {
   items: Template[];
 }
+
+export type ReportAutomationCalculatorProps = BaseReportProps;

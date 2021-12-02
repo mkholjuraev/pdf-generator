@@ -13,7 +13,7 @@ import {
 import { CardTitle, CardSubtitle } from '../../StyledPatternfly';
 
 // Chart
-import Chart from './Chart';
+import Chart from '../../ChartHelpers/Chart';
 
 // Local imports
 import TotalSavings from './TotalSavings';
@@ -21,8 +21,12 @@ import TemplatesTable from './TemplatesTable';
 
 import PageCard from '../../PageCard';
 
-import { DataType, Template } from './types';
-import { ComponentProps } from '../types';
+import {
+  ReportAutomationCalculatorDataType,
+  ReportAutomationCalculatorProps,
+  Template,
+} from './types';
+import { ApiReturnType } from '../../ChartHelpers/types';
 
 const calculateDelta = (a: string | number, b: string | number): number => {
   const n1 = +a;
@@ -76,18 +80,12 @@ const updateDeltaCost = (
 const computeTotalSavings = (data: Template[]): number =>
   data.reduce((sum, curr) => sum + curr.delta, 0);
 
-interface Props extends Omit<ComponentProps, 'data' | 'extraData'> {
-  data: DataType;
-  extraData?: DataType;
-}
+const AutomationCalculator: FunctionComponent<
+  ReportAutomationCalculatorProps
+> = ({ schema, name, description, ...props }) => {
+  // Extract the data from props later to be able to retype to the specific type.
+  const data = props.data as unknown as ReportAutomationCalculatorDataType;
 
-const AutomationCalculator: FunctionComponent<Props> = ({
-  tableHeaders: _ignored,
-  data,
-  schema,
-  name,
-  description,
-}) => {
   const costManual = 50;
   const costAutomation = 20;
   const api = {
@@ -100,10 +98,12 @@ const AutomationCalculator: FunctionComponent<Props> = ({
       <CardBody>
         <Chart
           schema={schema}
-          data={{
-            ...api,
-            items: filterDisabled(api.items),
-          }}
+          data={
+            {
+              ...api,
+              items: filterDisabled(api.items),
+            } as unknown as ApiReturnType
+          }
         />
       </CardBody>
     </Card>

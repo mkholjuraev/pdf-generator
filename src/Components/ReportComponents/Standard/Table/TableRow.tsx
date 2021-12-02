@@ -1,8 +1,7 @@
 import React, { FC } from 'react';
-import { ExpandRowsComponentType, TableHeaders } from '../../../../pdf/types';
 import { Td, Tr } from '../../../StyledPatternfly';
 import { getText } from '../helpers';
-import { LegendEntry } from '../types';
+import { ExpandRowsComponentType, LegendEntry, TableHeaders } from '../types';
 
 interface Props {
   legendEntry: LegendEntry;

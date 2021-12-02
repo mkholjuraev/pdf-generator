@@ -1,31 +1,31 @@
 import {
   ChartKind,
-  ChartType,
   ChartLegendOrientation,
   ChartLegendPosition,
   ChartTopLevelType,
+  ChartType,
   ChartThemeColor,
+  ChartSchemaElement,
 } from 'react-json-chart-builder';
-import { ReportSchema, SchemaFnc } from '../types';
+import { ReportLayout } from '../Components/ReportComponents/types';
+import { ReportSchema } from './types';
 
-const slug = 'most_used_modules';
+const slug = 'job_template_run_rate';
 
-const name = 'Most used modules';
+const name = 'Job template run rate';
 
 const description =
-  'The number of job template and task runs, grouped by Ansible module usage.\n\nYou can use this report to find which modules are being used the most across your automation, helping you to check things like organization-wide adoption of purpose-built modules over potentially less performant, catch-all solutions.';
+  'The number of times a job template has ran in a specified time window.\n\nYou can use this report to be able to tell which playbooks are running most frequently, allowing you to see which groups in your organization are running Ansible the most.';
 
 const tableHeaders = [
   { key: 'id', value: 'ID' },
-  { key: 'name', value: 'Module name' },
-  { key: 'host_task_count', value: 'Tasks count' },
-  { key: 'host_task_changed_count', value: 'Changed tasks count' },
-  { key: 'host_task_ok_count', value: 'Successful tasks count' },
-  { key: 'host_task_failed_count', value: 'Failed tasks count' },
-  { key: 'host_task_unreachable_count', value: 'Unreachable tasks count' },
+  { key: 'name', value: 'Template name' },
+  { key: 'total_count', value: 'Total jobs count' },
+  { key: 'successful_count', value: 'Successful jobs count' },
+  { key: 'failed_count', value: 'Failed jobs count' },
 ];
 
-const schemaFnc: SchemaFnc = (label, y, xTickFormat) => [
+const schema: ChartSchemaElement[] = [
   {
     id: 1,
     kind: ChartKind.wrapper,
@@ -35,7 +35,7 @@ const schemaFnc: SchemaFnc = (label, y, xTickFormat) => [
       height: 500,
       padding: {
         top: 70,
-        left: 100,
+        right: 100,
       },
       domainPadding: {
         y: 25,
@@ -44,17 +44,12 @@ const schemaFnc: SchemaFnc = (label, y, xTickFormat) => [
     },
     xAxis: {
       label: 'Date',
-      tickFormat: xTickFormat,
-      style: {
-        axisLabel: {
-          padding: 50,
-        },
-      },
+      tickFormat: 'VAR_xTickFormat',
     },
     yAxis: {
       tickFormat: 'formatNumberAsK',
       showGrid: true,
-      label,
+      label: 'VAR_label',
       style: {
         axisLabel: {
           padding: 55,
@@ -82,17 +77,20 @@ const schemaFnc: SchemaFnc = (label, y, xTickFormat) => [
     parent: 0,
     props: {
       x: 'created_date',
-      y,
+      y: 'VAR_y',
     },
   },
 ];
 
 const reportParams: ReportSchema = {
-  slug,
-  name,
-  description,
-  tableHeaders,
-  schemaFnc,
+  layoutComponent: ReportLayout.Standard,
+  layoutProps: {
+    slug,
+    tableHeaders,
+    name,
+    description,
+    schema,
+  },
 };
 
 export default reportParams;

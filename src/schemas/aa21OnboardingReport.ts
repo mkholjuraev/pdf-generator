@@ -1,30 +1,30 @@
 import {
   ChartKind,
+  ChartType,
   ChartLegendOrientation,
   ChartLegendPosition,
   ChartTopLevelType,
-  ChartType,
   ChartThemeColor,
+  ChartSchemaElement,
 } from 'react-json-chart-builder';
-import { ReportSchema, SchemaFnc } from '../types';
+import { ReportLayout } from '../Components/ReportComponents/types';
+import { ReportSchema } from './types';
 
-const slug = 'changes_made_by_job_template';
+const slug = 'aa_2_1_onboarding';
 
-const name = 'Changes made by job template';
+const name = 'AA 2.1 Onboarding Report';
 
-const description =
-  'The total count of changes made by each job template in a specified time window.\n\nYou can use this report to ensure the correct number of changes are made per hostname, as well as see which job templates are doing the most changes to your infrastructure.';
+const description = `This report shows templates that utilize certain module types that have been identified to pose potential problems when migrating to AAP 2.1.
+
+  You can use this report to determine the last job run of these templates, as well as a link into the Controller instance where the template is defined.`;
 
 const tableHeaders = [
   { key: 'id', value: 'ID' },
   { key: 'name', value: 'Template name' },
-  { key: 'host_count', value: 'Host count' },
-  { key: 'changed_host_count', value: 'Changed host count' },
-  { key: 'host_task_changed_count', value: 'Changed task count' },
-  { key: 'host_task_count', value: 'Task count' },
+  { key: 'host_task_count', value: 'Tasks count' },
 ];
 
-const schemaFnc: SchemaFnc = (label, y, xTickFormat) => [
+const schema: ChartSchemaElement[] = [
   {
     id: 1,
     kind: ChartKind.wrapper,
@@ -34,7 +34,7 @@ const schemaFnc: SchemaFnc = (label, y, xTickFormat) => [
       height: 500,
       padding: {
         top: 70,
-        right: 100,
+        left: 100,
       },
       domainPadding: {
         y: 25,
@@ -43,12 +43,17 @@ const schemaFnc: SchemaFnc = (label, y, xTickFormat) => [
     },
     xAxis: {
       label: 'Date',
-      tickFormat: xTickFormat,
+      tickFormat: 'VAR_xTickFormat',
+      style: {
+        axisLabel: {
+          padding: 50,
+        },
+      },
     },
     yAxis: {
       tickFormat: 'formatNumberAsK',
       showGrid: true,
-      label,
+      label: 'VAR_label',
       style: {
         axisLabel: {
           padding: 55,
@@ -76,17 +81,19 @@ const schemaFnc: SchemaFnc = (label, y, xTickFormat) => [
     parent: 0,
     props: {
       x: 'created_date',
-      y,
+      y: 'VAR_y',
     },
   },
 ];
 
 const reportParams: ReportSchema = {
-  slug,
-  tableHeaders,
-  name,
-  description,
-  schemaFnc,
+  layoutComponent: ReportLayout.Standard,
+  layoutProps: {
+    slug,
+    name,
+    description,
+    tableHeaders,
+    schema,
+  },
 };
-
 export default reportParams;

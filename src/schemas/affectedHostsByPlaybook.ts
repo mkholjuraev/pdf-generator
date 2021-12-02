@@ -5,25 +5,29 @@ import {
   ChartTopLevelType,
   ChartType,
   ChartThemeColor,
+  ChartSchemaElement,
 } from 'react-json-chart-builder';
-import { ReportSchema, SchemaFnc } from '../types';
+import { ReportLayout } from '../Components/ReportComponents/types';
+import { ReportSchema } from './types';
 
-const slug = 'job_template_run_rate';
+const slug = 'hosts_changed_by_job_template';
 
-const name = 'Job template run rate';
+const name = 'Hosts changed by job template';
 
 const description =
-  'The number of times a job template has ran in a specified time window.\n\nYou can use this report to be able to tell which playbooks are running most frequently, allowing you to see which groups in your organization are running Ansible the most.';
+  'The number of hosts changed by a job template in a specified time window.\n\nYou can use this report to find discrepancies in the host change rate at a particular time, helping you drill down to when and why hosts were unreachable at a particular time.';
 
 const tableHeaders = [
   { key: 'id', value: 'ID' },
   { key: 'name', value: 'Template name' },
-  { key: 'total_count', value: 'Total jobs count' },
-  { key: 'successful_count', value: 'Successful jobs count' },
-  { key: 'failed_count', value: 'Failed jobs count' },
+  { key: 'total_unique_host_count', value: 'Total unique hosts' },
+  {
+    key: 'total_unique_host_changed_count',
+    value: 'Total unique hosts changed',
+  },
 ];
 
-const schemaFnc: SchemaFnc = (label, y, xTickFormat) => [
+const schema: ChartSchemaElement[] = [
   {
     id: 1,
     kind: ChartKind.wrapper,
@@ -42,12 +46,12 @@ const schemaFnc: SchemaFnc = (label, y, xTickFormat) => [
     },
     xAxis: {
       label: 'Date',
-      tickFormat: xTickFormat,
+      tickFormat: 'VAR_xTickFormat',
     },
     yAxis: {
       tickFormat: 'formatNumberAsK',
       showGrid: true,
-      label,
+      label: 'VAR_label',
       style: {
         axisLabel: {
           padding: 55,
@@ -75,17 +79,20 @@ const schemaFnc: SchemaFnc = (label, y, xTickFormat) => [
     parent: 0,
     props: {
       x: 'created_date',
-      y,
+      y: 'VAR_y',
     },
   },
 ];
 
 const reportParams: ReportSchema = {
-  slug,
-  tableHeaders,
-  name,
-  description,
-  schemaFnc,
+  layoutComponent: ReportLayout.Standard,
+  layoutProps: {
+    slug,
+    tableHeaders,
+    name,
+    description,
+    schema,
+  },
 };
 
 export default reportParams;

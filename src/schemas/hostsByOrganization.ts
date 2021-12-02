@@ -5,27 +5,29 @@ import {
   ChartLegendPosition,
   ChartTopLevelType,
   ChartThemeColor,
+  ChartSchemaElement,
 } from 'react-json-chart-builder';
-import { ReportSchema, SchemaFnc } from '../types';
+import { ReportLayout } from '../Components/ReportComponents/types';
+import { ReportSchema } from './types';
 
-const slug = 'module_usage_by_task';
+const slug = 'hosts_by_organization';
 
-const name = 'Module usage by task';
+const name = 'Hosts by organization';
 
 const description =
-  'The number of job template and task runs for a specified set of Ansible modules, grouped by task.\n\nYou can use this report to find which tasks are using particular modules, helping you to check things like adoption of purpose-built modules for particular tasks.';
+  'The number of unique hosts, grouped by organizations from Ansible Controller.\n\nYou can use this report to find which organizations are managing the most hosts with Ansible automation.';
 
 const tableHeaders = [
   { key: 'id', value: 'ID' },
-  { key: 'name', value: 'Task name' },
-  { key: 'host_task_count', value: 'Tasks count' },
-  { key: 'host_task_changed_count', value: 'Changed tasks count' },
-  { key: 'host_task_ok_count', value: 'Successful tasks count' },
-  { key: 'host_task_failed_count', value: 'Failed tasks count' },
-  { key: 'host_task_unreachable_count', value: 'Unreachable tasks count' },
+  { key: 'name', value: 'Organization name' },
+  { key: 'total_unique_host_count', value: 'Unique host count' },
+  {
+    key: 'total_unique_host_changed_count',
+    value: 'Unique changed hosts count',
+  },
 ];
 
-const schemaFnc: SchemaFnc = (label, y, xTickFormat) => [
+const schema: ChartSchemaElement[] = [
   {
     id: 1,
     kind: ChartKind.wrapper,
@@ -44,7 +46,7 @@ const schemaFnc: SchemaFnc = (label, y, xTickFormat) => [
     },
     xAxis: {
       label: 'Date',
-      tickFormat: xTickFormat,
+      tickFormat: 'VAR_xTickFormat',
       style: {
         axisLabel: {
           padding: 50,
@@ -54,7 +56,7 @@ const schemaFnc: SchemaFnc = (label, y, xTickFormat) => [
     yAxis: {
       tickFormat: 'formatNumberAsK',
       showGrid: true,
-      label,
+      label: 'VAR_label',
       style: {
         axisLabel: {
           padding: 55,
@@ -82,17 +84,20 @@ const schemaFnc: SchemaFnc = (label, y, xTickFormat) => [
     parent: 0,
     props: {
       x: 'created_date',
-      y,
+      y: 'VAR_y',
     },
   },
 ];
 
 const reportParams: ReportSchema = {
-  slug,
-  name,
-  description,
-  tableHeaders,
-  schemaFnc,
+  layoutComponent: ReportLayout.Standard,
+  layoutProps: {
+    slug,
+    name,
+    description,
+    tableHeaders,
+    schema,
+  },
 };
 
 export default reportParams;

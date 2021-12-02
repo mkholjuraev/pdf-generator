@@ -1,10 +1,11 @@
 import {
   ChartKind,
+  ChartSchemaElement,
   ChartTopLevelType,
   ChartType,
 } from 'react-json-chart-builder';
-import { ReportLayout } from '../../Components/ReportComponents';
-import { TableHeaders, ReportSchema, SchemaFnc } from '../types';
+import { ReportLayout } from '../Components/ReportComponents/types';
+import { ReportSchema } from './types';
 
 const slug = 'automation_calculator';
 
@@ -14,9 +15,7 @@ const description =
   'The calculated savings of the job templates running across the company in comparison to the cost of completing these jobs manually.\n\n' +
   'You can use this report to get an idea of the ROI from your automation, as well as identify which templates are contributing to this savings the most';
 
-const tableHeaders = [] as TableHeaders;
-
-const schemaFnc: SchemaFnc = () => [
+const schema: ChartSchemaElement[] = [
   {
     id: 1,
     kind: ChartKind.wrapper,
@@ -82,12 +81,13 @@ const schemaFnc: SchemaFnc = () => [
 ];
 
 const reportParams: ReportSchema = {
-  slug,
-  tableHeaders,
-  name,
-  description,
-  schemaFnc,
-  componentName: ReportLayout.AutomationCalculator,
+  layoutComponent: ReportLayout.AutomationCalculator,
+  layoutProps: {
+    slug,
+    name,
+    description,
+    schema,
+  },
 };
 
 export default reportParams;

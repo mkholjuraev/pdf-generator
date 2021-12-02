@@ -10,7 +10,8 @@ import moduleUsageByJobTemplate from './moduleUsageByJobTemplate';
 import moduleUsageByTask from './moduleUsageByTask';
 import automationCalculator from './automationCalculator';
 import aa21OnboardingReport from './aa21OnboardingReport';
-import { ReportSchema } from '../types';
+import { ReportSchema } from './types';
+import hydrateSchema from '../Utilities/hydrateSchema';
 
 const reports: ReportSchema[] = [
   affectedHostsByPlaybook,
@@ -27,7 +28,29 @@ const reports: ReportSchema[] = [
   aa21OnboardingReport,
 ];
 
-export const getReport = (searchSlug: string): ReportSchema | undefined =>
-  reports.find(({ slug }) => slug === searchSlug);
+export const getReport = ({
+  slug,
+  schemaParams,
+}: {
+  slug: string;
+  schemaParams: {
+    label?: string;
+    y?: string;
+    xTickFormat?: string;
+  };
+}): ReportSchema => {
+  const report = reports.find(({ layoutProps }) => layoutProps.slug === slug);
+
+  if (!report) {
+    // This should happen only in development.
+    throw new Error(`The report (${slug}) is not implemented.`);
+  }
+
+  report.layoutProps.schema = hydrateSchema(report.layoutProps.schema)(
+    schemaParams
+  );
+
+  return report;
+};
 
 export default reports;

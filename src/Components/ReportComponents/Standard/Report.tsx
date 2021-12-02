@@ -1,28 +1,23 @@
 import React, { FC } from 'react';
-import ChartBuilder, { functions } from 'react-json-chart-builder';
-
 import { CardBody, CardHeaderMain } from '@patternfly/react-core';
 import PageCard from '../../PageCard';
 import { CardTitle, CardSubtitle } from '../../StyledPatternfly';
 import Table from './Table';
-import { ComponentProps } from '../types';
-import { convertApiToData } from '../../ChartHelpers/convertApi';
-import { ApiReturnType } from '../../ChartHelpers/types';
+import { ReportStandardProps } from './types';
+import { expandedRowMapper } from './Components';
+import Chart from '../../ChartHelpers/Chart';
 
-interface Props extends Omit<ComponentProps, 'data' | 'extraData'> {
-  data: ApiReturnType;
-  extraData?: ApiReturnType;
-}
-
-const Report: FC<Props> = ({
-  tableHeaders = [],
+const Report: FC<ReportStandardProps> = ({
+  tableHeaders,
   data,
-  extraData,
+  extraData = undefined,
   schema,
   name,
   description,
-  ExpandRowsComponent = undefined,
+  expandedRowComponent,
 }) => {
+  const ExpandRowsComponent = expandedRowMapper(expandedRowComponent);
+
   /* If the table is expanded render each row in its own page */
   const getTable = () => {
     if (ExpandRowsComponent)
@@ -39,7 +34,7 @@ const Report: FC<Props> = ({
               </CardBody>
             </PageCard>
           ))}
-          {extraData && (
+          {extraData?.meta && (
             <PageCard>
               <CardHeaderMain>
                 <CardTitle>{`${
@@ -67,7 +62,7 @@ const Report: FC<Props> = ({
             />
           </CardBody>
         </PageCard>
-        {extraData && (
+        {extraData?.meta && (
           <PageCard>
             <CardHeaderMain>
               <CardTitle>{`${
@@ -93,16 +88,7 @@ const Report: FC<Props> = ({
           <CardSubtitle>{description}</CardSubtitle>
         </CardHeaderMain>
         <CardBody>
-          <ChartBuilder
-            schema={schema}
-            functions={functions}
-            dataState={[
-              convertApiToData(data),
-              () => {
-                return;
-              },
-            ]}
-          />
+          <Chart schema={schema} data={data} />
         </CardBody>
       </PageCard>
       {getTable()}

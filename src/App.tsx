@@ -1,7 +1,7 @@
-import React, { FC, useEffect } from 'react';
+import React, { FC } from 'react';
 import '@patternfly/react-core/dist/styles/base.css';
-import reportMapper, { ReportLayout } from './Components/ReportComponents';
-import { getReport } from './pdf/schemas/index';
+import reportMapper from './Components/ReportComponents';
+import { getReport } from './schemas/index';
 import PageOptionsContext from './PageOptionsContext';
 import { ApiReturnType } from './Components/ChartHelpers/types';
 
@@ -26,30 +26,31 @@ const App: FC<Props> = ({
   pageWidth,
   pageHeight,
 }) => {
-  const report = getReport(slug);
+  const report = getReport({
+    slug,
+    schemaParams: {
+      label,
+      y,
+      xTickFormat,
+    },
+  });
 
-  if (!report) {
-    // This should happen only in development.
-    throw new Error(`The report (${slug}) is not implemented.`);
-  }
+  document.title = report.layoutProps.name;
+  const Report = reportMapper(report.layoutComponent);
 
-  useEffect(() => {
-    document.title = report.name;
-  }, [report]);
-
-  const Report = reportMapper(report?.componentName ?? ReportLayout.Standard);
+  const returnReport = () => (
+    /*
+     * Ignoring this line because TS cannot derive the correct params
+     * even though has all the information for it and it is correct.
+     */
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    <Report {...report.layoutProps} data={data} extraData={extraData} />
+  );
 
   return (
     <PageOptionsContext.Provider value={{ pageWidth, pageHeight }}>
-      <Report
-        tableHeaders={report.tableHeaders}
-        data={data}
-        extraData={extraData}
-        schema={report.schemaFnc(label, y, xTickFormat)}
-        name={report.name}
-        description={report.description}
-        ExpandRowsComponent={report.ExpandRowsComponent}
-      />
+      {returnReport()}
     </PageOptionsContext.Provider>
   );
 };

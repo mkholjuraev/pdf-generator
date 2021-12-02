@@ -1,5 +1,4 @@
 import React, { FC } from 'react';
-import { ExpandRowsComponentType, TableHeaders } from '../../../../pdf/types';
 import {
   TableComposable,
   TableVariant,
@@ -8,7 +7,7 @@ import {
   Thead,
   Tr,
 } from '../../../StyledPatternfly';
-import { LegendEntry } from '../types';
+import { ExpandRowsComponentType, LegendEntry, TableHeaders } from '../types';
 
 import TableRow from './TableRow';
 
