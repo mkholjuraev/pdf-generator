@@ -131,7 +131,7 @@ app.post(`${APIPrefix}/generate_pdf/`, async (req, res) => {
       slug: req.body.slug,
       label: req.body.label,
       y: req.body.y,
-      x_tick_format: req.body.x_tick_format,
+      xTickFormat: req.body.x_tick_format,
     });
     const pdfFileName = pathToPdf.split('/').pop();
 
