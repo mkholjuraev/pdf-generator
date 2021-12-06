@@ -1,21 +1,13 @@
-import { FunctionComponent } from 'react';
-import { default as DefaultReport } from './DefaultReport/';
-import { default as AutomationCalculatorReport } from './AutomationCalculatorReport/';
-import { ComponentProps } from './types';
+import { default as Standard } from './Standard';
+import { default as AutomationCalculator } from './AutomationCalculator';
+import { ReportComponentType, ReportLayout } from './types';
 
-export enum REPORT_LAYOUTS {
-  DEFAULT = 'default',
-  AUTOMATION_CALCULATOR = 'automationCalculator',
-}
-
-const reportMap = {
-  [REPORT_LAYOUTS.DEFAULT]: DefaultReport,
-  [REPORT_LAYOUTS.AUTOMATION_CALCULATOR]: AutomationCalculatorReport,
+const reportMap: Record<ReportLayout, ReportComponentType> = {
+  [ReportLayout.Standard]: Standard,
+  [ReportLayout.AutomationCalculator]: AutomationCalculator,
 };
 
-// TODO Replace any with a type
-const reportMapper = (
-  name: REPORT_LAYOUTS
-): FunctionComponent<ComponentProps> => reportMap[name];
+const reportMapper = (name: ReportLayout): ReportComponentType =>
+  reportMap[name];
 
 export default reportMapper;
