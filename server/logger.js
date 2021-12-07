@@ -40,7 +40,7 @@ if (clowderConfigJson) {
           return item.level + ': ' + item.message + ' ' + JSON.stringify(item.meta)
         }
       }
-      logger.add(CloudWatchTransport, config);
+      logger.configure(CloudWatchTransport, config);
   }
 }
 
