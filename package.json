@@ -14,6 +14,7 @@
     "axios": "^0.24.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
+    "fs": "^0.0.1-security",
     "ignore-styles": "^5.0.1",
     "os": "^0.1.2",
     "puppeteer": "^10.2.0",
@@ -24,7 +25,8 @@
     "styled-components": "^5.3.1",
     "uuid": "^8.3.2",
     "web-vitals": "^1.1.2",
-    "winston": "^3.3.3"
+    "winston": "^3.3.3",
+    "winston-aws-cloudwatch": "^3.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.15.5",
