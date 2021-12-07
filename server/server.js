@@ -139,8 +139,8 @@ app.post(`${APIPrefix}/generate_pdf/`, async (req, res) => {
       throw new PDFNotFoundError(pdfFileName);
     }
 
-    logger.info(`${pdfFileName} has been created.`, { tenant });
-    logger.info(`Sending ${pdfFileName} to the client.`, { tenant });
+    logger.log('info', `${pdfFileName} has been created.`, { tenant });
+    logger.log('info', `Sending ${pdfFileName} to the client.`, { tenant });
 
     res.status(200).sendFile(pathToPdf, (err) => {
       if (err) {
@@ -149,13 +149,13 @@ app.post(`${APIPrefix}/generate_pdf/`, async (req, res) => {
 
       fs.unlink(pathToPdf, (err) => {
         if (err) {
-          logger.warn(`Failed to unlink ${pdfFileName}: ${err}`, { tenant });
+          logger.log('warn', `Failed to unlink ${pdfFileName}: ${err}`, { tenant });
         }
-        logger.info(`${pdfFileName} finished downloading.`, { tenant });
+        logger.log('info', `${pdfFileName} finished downloading.`, { tenant });
       });
     });
   } catch (error) {
-    logger.error(error.code + ': ' + error.message);
+    logger.log('error', error.code + ': ' + error.message, { tenant });
     res.status(error.code).send(error.message);
   }
 });
@@ -172,13 +172,13 @@ if (process.env.NODE_ENV === 'development') {
     const indexHtml = path.resolve('./build/index.html');
     if (fs.existsSync(indexHtml)) {
       clearInterval(checkForBuildAssets);
-      logger.info(`Listening on port ${PORT}`);
+      logger.log('info', `Listening on port ${PORT}`);
     } else {
-      logger.info('Waiting to start PDF API server');
+      logger.log('info', 'Waiting to start PDF API server');
     }
   }, 3000);
 
   app.listen(PORT, () => checkForBuildAssets);
 } else {
-  app.listen(PORT, () => logger.info(`Listening on port ${PORT}`));
+  app.listen(PORT, () => logger.log('info', `Listening on port ${PORT}`));
 }
