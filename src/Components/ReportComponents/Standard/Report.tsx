@@ -10,7 +10,7 @@ import Chart from '../../ChartHelpers/Chart';
 const Report: FC<ReportStandardProps> = ({
   tableHeaders,
   data,
-  extraData = undefined,
+  extraData,
   schema,
   name,
   description,
@@ -34,7 +34,7 @@ const Report: FC<ReportStandardProps> = ({
               </CardBody>
             </PageCard>
           ))}
-          {extraData?.meta && (
+          {extraData.meta.legend.length > 0 && (
             <PageCard>
               <CardHeaderMain>
                 <CardTitle>{`${
@@ -62,7 +62,7 @@ const Report: FC<ReportStandardProps> = ({
             />
           </CardBody>
         </PageCard>
-        {extraData?.meta && (
+        {extraData.meta.legend.length > 0 && (
           <PageCard>
             <CardHeaderMain>
               <CardTitle>{`${
