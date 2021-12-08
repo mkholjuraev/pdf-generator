@@ -10,7 +10,7 @@ const myFormat = printf(({ message, label, timestamp }) => {
   return `${timestamp} [${label}]: ${message}`;
 });
 
-const logger = createLogger({
+let logger = createLogger({
   format: combine(
     label({ label: 'PDF API Server' }),
     timestamp(),
