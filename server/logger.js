@@ -1,5 +1,5 @@
 import { createLogger, format, transports } from 'winston';
-import { CloudWatchTransport } from 'winston-aws-cloudwatch';
+import CloudWatchTransport from 'winston-aws-cloudwatch';
 import fs from 'fs';
 
 const clowderConfigJson = process.env.ACG_CONFIG;
@@ -26,30 +26,32 @@ if (clowderConfigJson) {
       clowderConfig.logging.cloudwatch.secretAccessKey &&
       clowderConfig.logging.cloudwatch.region) {
       const namespace = fs.readFileSync("/var/run/secrets/kubernetes.io/serviceaccount/namespace").toString().trim();
-      const config = {
-        logGroupName: clowderConfig.logging.cloudwatch.logGroup,
-        logStreamName: namespace,
-        createLogGroup: false,
-        createLogStream: true,
-        awsConfig: {
-          accessKeyId: clowderConfig.logging.cloudwatch.accessKeyId,
-          secretAccessKey: clowderConfig.logging.cloudwatch.secretAccessKey,
-          region: clowderConfig.logging.cloudwatch.region
-        },
-        formatLog: function (item) {
-          return item.level + ': ' + item.message + ' ' + JSON.stringify(item.meta)
-        }
-      }
-      logger.configure(CloudWatchTransport, config);
+      logger = createLogger({
+        format: combine(
+          label({ label: 'PDF API Server' }),
+          timestamp(),
+          myFormat
+        ),
+        transports: [
+            new CloudWatchTransport({
+              logGroupName: clowderConfig.logging.cloudwatch.logGroup,
+              logStreamName: namespace,
+              createLogGroup: true,
+              createLogStream: true,
+              submissionInterval: 2000,
+              submissionRetryCount: 1,
+              batchSize: 20,
+              awsConfig: {
+                accessKeyId: clowderConfig.logging.cloudwatch.accessKeyId,
+                secretAccessKey: clowderConfig.logging.cloudwatch.secretAccessKey,
+                region: clowderConfig.logging.cloudwatch.region
+              },
+              formatLog: item =>
+                `${item.level}: ${item.message} ${JSON.stringify(item.meta)}`
+            })
+          ]
+      })
   }
 }
-
-logger.level = process.env.LOG_LEVEL || "info";
-
-logger.stream = {
-  write: function(message, encoding) {
-    logger.info(message);
-  }
-};
 
 export default logger;
