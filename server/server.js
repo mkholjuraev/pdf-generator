@@ -3,6 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import cors from 'cors';
 import atob from 'atob';
+import { performance } from 'perf_hooks';
 
 import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
@@ -50,10 +51,14 @@ app.post(`${APIPrefix}/generate_pdf/`, async (req, res) => {
 
   try {
     // Custom script to get the params for our app
+    const startGeneration = performance.now()
     const params = await getParamsForGenerator({ ...req.body, rhIdentity });
+    logger.log('info', `Total Data collection time: ${performance.now() - startGeneration} ms`, { tenant });
 
     // Generate the pdf
+    const startRender = performance.now()
     const pathToPdf = await generatePdf(url, params);
+    logger.log('info', `Total Rendering time: ${performance.now() - startRender} ms`, { tenant });
 
     const pdfFileName = pathToPdf.split('/').pop();
 
@@ -76,6 +81,7 @@ app.post(`${APIPrefix}/generate_pdf/`, async (req, res) => {
         logger.log('info', `${pdfFileName} finished downloading.`, { tenant });
       });
     });
+    logger.log('info', `Total Data collection + PDF Rendering + Download time: ${performance.now() - startGeneration} ms`, { tenant });
   } catch (error) {
     logger.log('error', error.code + ': ' + error.message, { tenant });
     res.status(error.code).send(error.message);
