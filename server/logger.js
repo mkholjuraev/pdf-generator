@@ -33,6 +33,7 @@ if (clowderConfigJson) {
           myFormat
         ),
         transports: [
+            new transports.Console(),
             new CloudWatchTransport({
               logGroupName: clowderConfig.logging.cloudwatch.logGroup,
               logStreamName: namespace,
