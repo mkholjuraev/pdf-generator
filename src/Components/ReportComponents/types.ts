@@ -18,7 +18,7 @@ export interface BaseReportProps {
   name: string;
   description: string;
   data: ApiReturnType;
-  extraData?: ApiReturnType;
+  extraData: ApiReturnType;
 }
 
 export type ReportComponentType =
