@@ -18,7 +18,7 @@ const tableHeaders = [
   { key: 'id', value: 'ID' },
   { key: 'name', value: 'Organization name' },
   { key: 'total_count', value: 'Total jobs count' },
-  { key: 'total_task_count', value: 'Tasks count' },
+  { key: 'host_task_count', value: 'Tasks count' },
 ];
 
 const schemaFnc = (label, y, xTickFormat) => [
