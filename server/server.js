@@ -73,8 +73,11 @@ app.post(`${APIPrefix}/generate_pdf/`, async (req, res) => {
 
     res.status(200).sendFile(pathToPdf, (err) => {
       if (err) {
-        throw new SendingFailedError(pdfFileName, err);
+        const errorMessage = new SendingFailedError(pdfFileName, err);
+        logger.log('error', errorMessage, { tenant });
+        throw errorMessage;
       }
+      
 
       fs.unlink(pathToPdf, (err) => {
         if (err) {
