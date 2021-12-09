@@ -120,9 +120,10 @@ app.post(`${APIPrefix}/generate_pdf/`, async (req, res) => {
 
     logger.info(`${pdfFileName} has been created.`, { tenant });
     logger.info(`Sending ${pdfFileName} to the client.`, { tenant });
-
+    
     res.status(200).sendFile(pathToPdf, err => {
       if (err) {
+        logger.log('error', err, { tenant });
         throw new SendingFailedError(pdfFileName, err);
       }
 
