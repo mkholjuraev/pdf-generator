@@ -40,9 +40,6 @@ const schema: ChartSchemaElement[] = [
         right: 100,
         left: 90,
       },
-      domainPadding: {
-        y: 25,
-      },
       themeColor: ChartThemeColor.multiOrdered,
     },
     xAxis: {
