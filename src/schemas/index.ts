@@ -37,6 +37,7 @@ export const getReport = ({
     label?: string;
     y?: string;
     xTickFormat?: string;
+    chartType?: string;
   };
 }): ReportSchema => {
   const report = reports.find(({ layoutProps }) => layoutProps.slug === slug);

@@ -26,7 +26,7 @@ const tableHeaders = [
   { key: 'failed_count', value: 'Failed jobs count' },
 ];
 
-const schema: ChartSchemaElement[] = [
+const schema = [
   {
     id: 1,
     kind: ChartKind.wrapper,
@@ -39,9 +39,6 @@ const schema: ChartSchemaElement[] = [
         bottom: 150,
         right: 100,
         left: 90,
-      },
-      domainPadding: {
-        y: 25,
       },
       themeColor: ChartThemeColor.multiOrdered,
     },
@@ -98,7 +95,7 @@ const reportParams: ReportSchema = {
     name,
     description,
     tableHeaders,
-    schema,
+    schema: schema as unknown as ChartSchemaElement[],
     expandedRowComponent: ReportStandardExpandedRow.templateExplorer,
   },
 };

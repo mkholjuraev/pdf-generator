@@ -3,7 +3,6 @@ import {
   ChartLegendOrientation,
   ChartLegendPosition,
   ChartTopLevelType,
-  ChartType,
   ChartThemeColor,
   ChartSchemaElement,
 } from 'react-json-chart-builder';
@@ -26,7 +25,7 @@ const tableHeaders = [
   { key: 'host_task_count', value: 'Task count' },
 ];
 
-const schema: ChartSchemaElement[] = [
+const schema = [
   {
     id: 1,
     kind: ChartKind.wrapper,
@@ -37,9 +36,6 @@ const schema: ChartSchemaElement[] = [
       padding: {
         top: 70,
         right: 100,
-      },
-      domainPadding: {
-        y: 25,
       },
       themeColor: ChartThemeColor.multiOrdered,
     },
@@ -74,7 +70,7 @@ const schema: ChartSchemaElement[] = [
   {
     id: 3,
     kind: ChartKind.simple,
-    type: ChartType.line,
+    type: 'VAR_chartType',
     parent: 0,
     props: {
       x: 'created_date',
@@ -90,7 +86,7 @@ const reportParams: ReportSchema = {
     tableHeaders,
     name,
     description,
-    schema,
+    schema: schema as unknown as ChartSchemaElement[],
   },
 };
 

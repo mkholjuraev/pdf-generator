@@ -15,7 +15,7 @@ const description =
   'The calculated savings of the job templates running across the company in comparison to the cost of completing these jobs manually.\n\n' +
   'You can use this report to get an idea of the ROI from your automation, as well as identify which templates are contributing to this savings the most';
 
-const schema: ChartSchemaElement[] = [
+const schema = [
   {
     id: 1,
     kind: ChartKind.wrapper,
@@ -86,7 +86,7 @@ const reportParams: ReportSchema = {
     slug,
     name,
     description,
-    schema,
+    schema: schema as unknown as ChartSchemaElement[],
   },
 };
 

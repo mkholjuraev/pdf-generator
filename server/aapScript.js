@@ -52,6 +52,7 @@ const getParamsForGenerator = async ({
   // For data fetching
   queryParams,
   showExtraRows,
+  chartType,
   apiHost,
   apiPort,
   endpointUrl,
@@ -85,6 +86,7 @@ const getParamsForGenerator = async ({
     label,
     y,
     xTickFormat,
+    chartType,
   };
 };
 

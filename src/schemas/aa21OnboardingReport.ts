@@ -1,6 +1,5 @@
 import {
   ChartKind,
-  ChartType,
   ChartLegendOrientation,
   ChartLegendPosition,
   ChartTopLevelType,
@@ -24,7 +23,7 @@ const tableHeaders = [
   { key: 'host_task_count', value: 'Tasks count' },
 ];
 
-const schema: ChartSchemaElement[] = [
+const schema = [
   {
     id: 1,
     kind: ChartKind.wrapper,
@@ -35,9 +34,6 @@ const schema: ChartSchemaElement[] = [
       padding: {
         top: 70,
         left: 100,
-      },
-      domainPadding: {
-        y: 25,
       },
       themeColor: ChartThemeColor.multiOrdered,
     },
@@ -77,7 +73,7 @@ const schema: ChartSchemaElement[] = [
   {
     id: 3,
     kind: ChartKind.simple,
-    type: ChartType.line,
+    type: 'VAR_chartType',
     parent: 0,
     props: {
       x: 'created_date',
@@ -93,7 +89,7 @@ const reportParams: ReportSchema = {
     name,
     description,
     tableHeaders,
-    schema,
+    schema: schema as unknown as ChartSchemaElement[],
   },
 };
 export default reportParams;
