@@ -12,6 +12,7 @@ interface Props {
   slug: string;
   data: ApiReturnType;
   extraData: ApiReturnType;
+  chartType: string;
   pageWidth: number;
   pageHeight: number;
 }
@@ -23,6 +24,7 @@ const App: FC<Props> = ({
   slug,
   data,
   extraData,
+  chartType,
   pageWidth,
   pageHeight,
 }) => {
@@ -32,6 +34,7 @@ const App: FC<Props> = ({
       label,
       y,
       xTickFormat,
+      chartType,
     },
   });
 
