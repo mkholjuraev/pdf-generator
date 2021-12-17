@@ -54,13 +54,19 @@ app.post(`${APIPrefix}/generate_pdf/`, async (req, res) => {
     const startGeneration = performance.now();
     const params = await getParamsForGenerator({ ...req.body, rhIdentity });
     let elapsed = performance.now() - startGeneration;
-    logger.log('info', `Total Data collection time: ${elapsed} ms`, { tenant, elapsed });
+    logger.log('info', `Total Data collection time: ${elapsed} ms`, {
+      tenant,
+      elapsed,
+    });
 
     // Generate the pdf
     const startRender = performance.now();
     const pathToPdf = await generatePdf(url, params);
     elapsed = performance.now() - startRender;
-    logger.log('info', `Total Rendering time: ${elapsed} ms`, { tenant, elapsed });
+    logger.log('info', `Total Rendering time: ${elapsed} ms`, {
+      tenant,
+      elapsed,
+    });
 
     const pdfFileName = pathToPdf.split('/').pop();
 
@@ -77,17 +83,23 @@ app.post(`${APIPrefix}/generate_pdf/`, async (req, res) => {
         logger.log('error', errorMessage, { tenant });
         throw errorMessage;
       }
-      
 
       fs.unlink(pathToPdf, (err) => {
         if (err) {
-          logger.log('warn', `Failed to unlink ${pdfFileName}: ${err}`, { tenant });
+          logger.log('warn', `Failed to unlink ${pdfFileName}: ${err}`, {
+            tenant,
+          });
         }
         logger.log('info', `${pdfFileName} finished downloading.`, { tenant });
       });
     });
+
     elapsed = performance.now() - startGeneration;
-    logger.log('info', `Total Data collection + PDF Rendering + Download time: ${elapsed} ms`, { tenant, elapsed });
+    logger.log(
+      'info',
+      `Total Data collection + PDF Rendering + Download time: ${elapsed} ms`,
+      { tenant, elapsed }
+    );
   } catch (error) {
     logger.log('error', error.code + ': ' + error.message, { tenant });
     res.status(error.code).send(error.message);
