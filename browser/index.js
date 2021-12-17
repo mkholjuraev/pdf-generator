@@ -46,7 +46,13 @@ const generatePdf = async (url, data) => {
   await setWindowProperty(
     page,
     'customPupeteerParams',
-    JSON.stringify({ ...data, pageWidth, pageHeight })
+    JSON.stringify({
+      ...data,
+      pupeteerParams: {
+        pageWidth,
+        pageHeight,
+      },
+    })
   );
 
   const pageStatus = await page.goto(url, { waitUntil: 'networkidle2' });

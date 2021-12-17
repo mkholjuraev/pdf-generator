@@ -49,10 +49,10 @@ const getParamsForGenerator = async ({
   label,
   y,
   x_tick_format: xTickFormat,
+  chartType,
   // For data fetching
   queryParams,
   showExtraRows,
-  chartType,
   apiHost,
   apiPort,
   endpointUrl,
@@ -80,13 +80,15 @@ const getParamsForGenerator = async ({
       : [];
 
   return {
+    slug,
     data,
     extraData: { meta: { legend: extraDataLegend } },
-    slug,
-    label,
-    y,
-    xTickFormat,
-    chartType,
+    schemaParams: {
+      label,
+      y,
+      xTickFormat,
+      chartType,
+    },
   };
 };
 

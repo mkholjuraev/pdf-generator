@@ -4,38 +4,29 @@ import reportMapper from './Components/ReportComponents';
 import { getReport } from './schemas/index';
 import PageOptionsContext from './PageOptionsContext';
 import { ApiReturnType } from './Components/ChartHelpers/types';
+import { SchemaParams } from './schemas/types';
 
 interface Props {
-  label: string;
-  y: string;
-  xTickFormat: string;
   slug: string;
   data: ApiReturnType;
   extraData: ApiReturnType;
-  chartType: string;
-  pageWidth: number;
-  pageHeight: number;
+  schemaParams: SchemaParams;
+  pupeteerParams: {
+    pageWidth: number;
+    pageHeight: number;
+  };
 }
 
 const App: FC<Props> = ({
-  label,
-  y,
-  xTickFormat,
   slug,
   data,
   extraData,
-  chartType,
-  pageWidth,
-  pageHeight,
+  schemaParams,
+  pupeteerParams,
 }) => {
   const report = getReport({
     slug,
-    schemaParams: {
-      label,
-      y,
-      xTickFormat,
-      chartType,
-    },
+    schemaParams,
   });
 
   document.title = report.layoutProps.name;
@@ -52,7 +43,7 @@ const App: FC<Props> = ({
   );
 
   return (
-    <PageOptionsContext.Provider value={{ pageWidth, pageHeight }}>
+    <PageOptionsContext.Provider value={pupeteerParams}>
       {returnReport()}
     </PageOptionsContext.Provider>
   );
