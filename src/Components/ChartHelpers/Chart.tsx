@@ -1,8 +1,10 @@
-import React, { FC } from 'react';
+import React, { FC, useContext } from 'react';
 import ChartBuilder, {
+  ChartData,
   ChartSchemaElement,
   functions,
 } from 'react-json-chart-builder';
+import PageOptionsContext from '../../PageOptionsContext';
 import { convertApiToData } from './convertApi';
 import { ApiReturnType } from './types';
 
@@ -22,17 +24,36 @@ const customFunctions = {
   },
 };
 
-const Chart: FC<Props> = ({ schema, data }) => (
-  <ChartBuilder
-    schema={schema}
-    functions={customFunctions}
-    dataState={[
-      convertApiToData(data),
-      () => {
-        return;
-      },
-    ]}
-  />
-);
+const applyHiddenFilter = (
+  chartData: ChartData,
+  chartSeriesHidden: boolean[] = []
+): ChartData => ({
+  ...chartData,
+  series: chartData.series.map((series, index) => ({
+    ...series,
+    hidden: !!chartSeriesHidden[index],
+  })),
+});
+
+const Chart: FC<Props> = ({ schema, data }) => {
+  const { chartSeriesHiddenProps } = useContext(PageOptionsContext);
+  const processedData = applyHiddenFilter(
+    convertApiToData(data),
+    chartSeriesHiddenProps
+  );
+
+  return (
+    <ChartBuilder
+      schema={schema}
+      functions={customFunctions}
+      dataState={[
+        processedData,
+        () => {
+          return;
+        },
+      ]}
+    />
+  );
+};
 
 export default Chart;
