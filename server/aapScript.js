@@ -3,13 +3,15 @@ import reports from '../src/schemas';
 import axios from 'axios';
 
 const getData = (baseURL, headers, queryParams) => {
-  const { offset, limit, ...rest } = queryParams;
+  const { offset, limit, sort_options, sort_order, ...rest } = queryParams;
   const url = baseURL;
 
-  const urlQuery = new URLSearchParams(url.search);
-  urlQuery.set('offset', offset);
-  urlQuery.set('limit', limit);
-  url.search = urlQuery.toString();
+  url.search = new URLSearchParams({
+    sort_by:
+      sort_options && sort_order ? `${sort_options}:${sort_order}` : undefined,
+    offset,
+    limit,
+  }).toString();
 
   return axios
     .post(url.toString(), rest, { headers })
@@ -68,15 +70,13 @@ const getParamsForGenerator = async ({
     'x-rh-identity': rhIdentity,
   };
 
-  const { sort_options, sort_order, ...restQuery } = queryParams;
   const fastApiUrl = new URL(endpointUrl, `http://${apiHost}:${apiPort}`);
-  fastApiUrl.search = new URLSearchParams({ sort_options, sort_order });
 
-  const data = await getData(fastApiUrl, headers, restQuery);
+  const data = await getData(fastApiUrl, headers, queryParams);
 
   const extraDataLegend =
     showExtraRows === 'True'
-      ? await getExtraData(fastApiUrl, headers, restQuery, data.meta.count)
+      ? await getExtraData(fastApiUrl, headers, queryParams, data.meta.count)
       : [];
 
   return {
