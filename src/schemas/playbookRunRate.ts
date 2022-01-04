@@ -34,7 +34,7 @@ const schema = [
       height: 500,
       padding: {
         top: 70,
-        right: 100,
+        right: 180,
       },
       themeColor: ChartThemeColor.multiOrdered,
     },
