@@ -46,17 +46,15 @@ const getExtraData = (baseUrl, headers, queryParams, dataSize) => {
 
 const getParamsForGenerator = async ({
   slug,
-  label,
-  y,
-  x_tick_format: xTickFormat,
-  // For data fetching
-  queryParams,
-  showExtraRows,
-  chartType,
-  apiHost,
-  apiPort,
-  endpointUrl,
-  // Added by the pdf server
+  schemaParams,
+  dataFetchingParams: {
+    queryParams,
+    showExtraRows,
+    apiHost,
+    apiPort,
+    endpointUrl,
+  },
+  // Added by the electron server
   rhIdentity,
 }) => {
   if (!reports.find(({ layoutProps }) => layoutProps.slug === slug)) {
@@ -80,13 +78,10 @@ const getParamsForGenerator = async ({
       : [];
 
   return {
+    slug,
     data,
     extraData: { meta: { legend: extraDataLegend } },
-    slug,
-    label,
-    y,
-    xTickFormat,
-    chartType,
+    schemaParams,
   };
 };
 

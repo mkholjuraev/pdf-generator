@@ -11,47 +11,48 @@ const myFormat = printf(({ message, label, timestamp }) => {
 });
 
 let logger = createLogger({
-  format: combine(
-    label({ label: 'PDF API Server' }),
-    timestamp(),
-    myFormat
-  ),
-  transports: [new transports.Console()]
+  format: combine(label({ label: 'PDF API Server' }), timestamp(), myFormat),
+  transports: [new transports.Console()],
 });
 
 if (clowderConfigJson) {
   const clowderConfig = JSON.parse(fs.readFileSync(clowderConfigJson));
 
-  if (clowderConfig.logging.cloudwatch.accessKeyId &&
-      clowderConfig.logging.cloudwatch.secretAccessKey &&
-      clowderConfig.logging.cloudwatch.region) {
-      const namespace = fs.readFileSync("/var/run/secrets/kubernetes.io/serviceaccount/namespace").toString().trim();
-      logger = createLogger({
-        format: combine(
-          label({ label: 'PDF API Server' }),
-          timestamp(),
-          myFormat
-        ),
-        transports: [
-            new transports.Console(),
-            new CloudWatchTransport({
-              logGroupName: clowderConfig.logging.cloudwatch.logGroup,
-              logStreamName: namespace,
-              createLogGroup: true,
-              createLogStream: true,
-              submissionInterval: 2000,
-              submissionRetryCount: 1,
-              batchSize: 20,
-              awsConfig: {
-                accessKeyId: clowderConfig.logging.cloudwatch.accessKeyId,
-                secretAccessKey: clowderConfig.logging.cloudwatch.secretAccessKey,
-                region: clowderConfig.logging.cloudwatch.region
-              },
-              formatLog: item =>
-                `${item.level}: ${item.message} ${JSON.stringify(item.meta)}`
-            })
-          ]
-      })
+  if (
+    clowderConfig.logging.cloudwatch.accessKeyId &&
+    clowderConfig.logging.cloudwatch.secretAccessKey &&
+    clowderConfig.logging.cloudwatch.region
+  ) {
+    const namespace = fs
+      .readFileSync('/var/run/secrets/kubernetes.io/serviceaccount/namespace')
+      .toString()
+      .trim();
+    logger = createLogger({
+      format: combine(
+        label({ label: 'PDF API Server' }),
+        timestamp(),
+        myFormat
+      ),
+      transports: [
+        new transports.Console(),
+        new CloudWatchTransport({
+          logGroupName: clowderConfig.logging.cloudwatch.logGroup,
+          logStreamName: namespace,
+          createLogGroup: true,
+          createLogStream: true,
+          submissionInterval: 2000,
+          submissionRetryCount: 1,
+          batchSize: 20,
+          awsConfig: {
+            accessKeyId: clowderConfig.logging.cloudwatch.accessKeyId,
+            secretAccessKey: clowderConfig.logging.cloudwatch.secretAccessKey,
+            region: clowderConfig.logging.cloudwatch.region,
+          },
+          formatLog: (item) =>
+            `${item.level}: ${item.message} ${JSON.stringify(item.meta)}`,
+        }),
+      ],
+    });
   }
 }
 

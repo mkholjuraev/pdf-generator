@@ -1,10 +1,5 @@
 import { ChartSchemaElement } from 'react-json-chart-builder';
-
-export type SchemaFnc = (props: {
-  label?: string;
-  y?: string;
-  xTickFormat?: string;
-}) => ChartSchemaElement[];
+import { SchemaFnc } from '../schemas/types';
 
 /**
  * I have strong hunch that you can use one function to hydrate

@@ -33,12 +33,7 @@ export const getReport = ({
   schemaParams,
 }: {
   slug: string;
-  schemaParams: {
-    label?: string;
-    y?: string;
-    xTickFormat?: string;
-    chartType?: string;
-  };
+  schemaParams: Record<string, string>;
 }): ReportSchema => {
   const report = reports.find(({ layoutProps }) => layoutProps.slug === slug);
 

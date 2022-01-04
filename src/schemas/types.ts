@@ -5,11 +5,8 @@ import {
   ReportStandardProps,
 } from '../Components/ReportComponents/types';
 
-export type SchemaFnc = (
-  label: string,
-  y: string,
-  xTickFormat: string
-) => ChartSchemaElement[];
+export type SchemaParams = Record<string, string>;
+export type SchemaFnc = (props: SchemaParams) => ChartSchemaElement[];
 
 export type ReportSchema =
   | {
