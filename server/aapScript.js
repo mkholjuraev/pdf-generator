@@ -55,6 +55,7 @@ const getParamsForGenerator = async ({
     apiHost,
     apiPort,
     endpointUrl,
+    chartSeriesHiddenProps,
   },
   // Added by the electron server
   rhIdentity,
@@ -82,6 +83,7 @@ const getParamsForGenerator = async ({
     data,
     extraData: { meta: { legend: extraDataLegend } },
     schemaParams,
+    chartSeriesHiddenProps,
   };
 };
 

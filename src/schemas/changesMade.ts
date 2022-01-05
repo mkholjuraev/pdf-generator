@@ -54,7 +54,7 @@ const schema = [
       },
     },
     legend: {
-      interactive: false,
+      interactive: true,
       orientation: ChartLegendOrientation.vertical,
       position: ChartLegendPosition.right,
       turncateAt: 18,
