@@ -1,12 +1,19 @@
 import React, { FunctionComponent } from 'react';
 import { Tr, Td } from '../../../StyledPatternfly/Table';
 import { global_success_color_200 as globalSuccessColor200 } from '@patternfly/react-tokens';
+import styled from 'styled-components';
+import * as Table from '@patternfly/react-table';
 
 import { Template } from '../types';
 import currencyFormatter from '../../../../Utilities/currencyFormatter';
+import ExpandedRowContents from './ExpandedRowContents';
+import { AutomationCalculatorExpandRowsComponentType } from '../../../ReportComponents/Standard/Components/types';
+
+export const ExpandedRow = styled(Table.Tr)``;
 
 interface Props {
   template: Template;
+  ExpandRowsComponent?: AutomationCalculatorExpandRowsComponentType;
 }
 
 const Row: FunctionComponent<Props> = ({ template }) => {
@@ -23,6 +30,9 @@ const Row: FunctionComponent<Props> = ({ template }) => {
         </Td>
         <Td>{template.enabled ? 'Shown' : 'Hidden'}</Td>
       </Tr>
+      <ExpandedRow>
+        <ExpandedRowContents item={template} />
+      </ExpandedRow>
     </>
   );
 };
