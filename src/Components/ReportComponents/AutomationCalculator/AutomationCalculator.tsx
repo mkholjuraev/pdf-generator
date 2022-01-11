@@ -29,6 +29,7 @@ import {
 } from './types';
 import { ApiReturnType } from '../../ChartHelpers/types';
 import { expandedRowMapper } from '../Standard/Components';
+import Table from '../Standard/Table';
 
 const calculateDelta = (a: string | number, b: string | number): number => {
   const n1 = +a;
@@ -138,6 +139,21 @@ const AutomationCalculator: FunctionComponent<
     </Flex>
   );
 
+  const rowPerPage = () => {
+    for (let count = 0; count <= 2; count++) {
+      return api.items.map((item, idx) => (
+        <PageCard key={idx}>
+          <CardBody>
+            <TemplatesTable
+              data={[item]}
+              ExpandRowsComponent={ExpandRowsComponent}
+            />
+          </CardBody>
+        </PageCard>
+      ));
+    }
+  };
+
   return (
     <>
       <PageCard>
@@ -150,12 +166,8 @@ const AutomationCalculator: FunctionComponent<
           </Grid>
         </CardBody>
       </PageCard>
-      <PageCard>
-        <CardBody>
-          <TemplatesTable data={api.items} />
-        </CardBody>
-      </PageCard>
-      {ExpandRowsComponent ? (
+      {rowPerPage()}
+      {props.extraData.meta.legend.length > 0 && (
         <PageCard>
           <CardHeaderMain>
             <CardTitle>{`${
@@ -165,11 +177,12 @@ const AutomationCalculator: FunctionComponent<
             }`}</CardTitle>
           </CardHeaderMain>
           <CardBody>
-            <TemplatesTable data={api.items} />
+            <Table
+              legend={props.extraData.meta.legend}
+              headers={props.tableHeaders}
+            />
           </CardBody>
         </PageCard>
-      ) : (
-        []
       )}
     </>
   );

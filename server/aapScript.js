@@ -39,7 +39,7 @@ const getExtraData = (baseUrl, headers, queryParams, dataSize) => {
 
   return Promise.all(promises)
     .then((responses) =>
-      responses.map(({ meta }) => meta.data).reduce((a, b) => a.concat(b), [])
+      responses.map(({ items }) => items).reduce((a, b) => a.concat(b), [])
     )
     .catch((err) => {
       throw new PDFRequestError(err);

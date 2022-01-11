@@ -8,14 +8,19 @@ import {
   Thead,
   Tr,
 } from '../../../StyledPatternfly/Table';
+import { AutomationCalculatorExpandRowsComponentType } from '../../types';
 import { Template } from '../types';
 import Row from './Row';
 
 interface Props {
   data: Template[];
+  ExpandRowsComponent?: AutomationCalculatorExpandRowsComponentType;
 }
 
-const TopTemplates: FunctionComponent<Props> = ({ data = [] }) => (
+const TopTemplates: FunctionComponent<Props> = ({
+  data = [],
+  ExpandRowsComponent,
+}) => (
   <TableComposable aria-label="ROI Table" variant={TableVariant.compact}>
     <Thead>
       <Tr>
@@ -27,7 +32,11 @@ const TopTemplates: FunctionComponent<Props> = ({ data = [] }) => (
     </Thead>
     <Tbody>
       {data.map((template) => (
-        <Row key={template.id} template={template} />
+        <Row
+          key={template.id}
+          template={template}
+          ExpandRowsComponent={ExpandRowsComponent}
+        />
       ))}
     </Tbody>
   </TableComposable>

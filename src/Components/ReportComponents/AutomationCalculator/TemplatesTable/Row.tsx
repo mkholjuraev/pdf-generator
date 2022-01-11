@@ -6,7 +6,7 @@ import * as Table from '@patternfly/react-table';
 
 import { Template } from '../types';
 import currencyFormatter from '../../../../Utilities/currencyFormatter';
-import ExpandedRowContents from './ExpandedRowContents';
+// import ExpandedRowContents from './ExpandedRowContents';
 import { AutomationCalculatorExpandRowsComponentType } from '../../../ReportComponents/Standard/Components/types';
 
 export const ExpandedRow = styled(Table.Tr)``;
@@ -16,7 +16,7 @@ interface Props {
   ExpandRowsComponent?: AutomationCalculatorExpandRowsComponentType;
 }
 
-const Row: FunctionComponent<Props> = ({ template }) => {
+const Row: FunctionComponent<Props> = ({ template, ExpandRowsComponent }) => {
   return (
     <>
       <Tr>
@@ -31,7 +31,7 @@ const Row: FunctionComponent<Props> = ({ template }) => {
         <Td>{template.enabled ? 'Shown' : 'Hidden'}</Td>
       </Tr>
       <ExpandedRow>
-        <ExpandedRowContents item={template} />
+        {ExpandRowsComponent && <ExpandRowsComponent item={template} />}
       </ExpandedRow>
     </>
   );
