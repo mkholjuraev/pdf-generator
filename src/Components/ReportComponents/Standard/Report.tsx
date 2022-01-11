@@ -29,7 +29,7 @@ const Report: FC<ReportStandardProps> = ({
                 <Table
                   legend={[item]}
                   headers={tableHeaders}
-                  // ExpandRowsComponent={ExpandRowsComponent}
+                  ExpandRowsComponent={ExpandRowsComponent}
                 />
               </CardBody>
             </PageCard>

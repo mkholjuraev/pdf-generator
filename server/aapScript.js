@@ -39,7 +39,7 @@ const getExtraData = (baseUrl, headers, queryParams, dataSize) => {
 
   return Promise.all(promises)
     .then((responses) =>
-      responses.map(({ items }) => items).reduce((a, b) => a.concat(b), [])
+      responses.map(({ meta }) => meta.legend).reduce((a, b) => a.concat(b), [])
     )
     .catch((err) => {
       throw new PDFRequestError(err);
@@ -75,7 +75,7 @@ const getParamsForGenerator = async ({
   const extraDataLegend = showExtraRows
     ? await getExtraData(fastApiUrl, headers, queryParams, data.meta.count)
     : [];
-  console.log('extraDataLegendextraDataLegendextraDataLegend', extraDataLegend);
+
   return {
     slug,
     data,

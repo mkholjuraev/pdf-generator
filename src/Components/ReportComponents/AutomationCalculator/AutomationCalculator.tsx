@@ -28,7 +28,7 @@ import {
   Template,
 } from './types';
 import { ApiReturnType } from '../../ChartHelpers/types';
-import { expandedRowMapper } from '../Standard/Components';
+import { AutomationCalculatorExpandedRowMapper } from '../Standard/Components';
 import Table from '../Standard/Table';
 
 const calculateDelta = (a: string | number, b: string | number): number => {
@@ -88,7 +88,9 @@ const AutomationCalculator: FunctionComponent<
 > = ({ schema, name, description, ...props }) => {
   // Extract the data from props later to be able to retype to the specific type.
   const data = props.data as unknown as ReportAutomationCalculatorDataType;
-  const ExpandRowsComponent = expandedRowMapper(props.expandedRowComponent);
+  const ExpandRowsComponent = AutomationCalculatorExpandedRowMapper(
+    props.expandedRowComponent
+  );
 
   const costManual = 50;
   const costAutomation = 20;
