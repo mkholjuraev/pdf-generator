@@ -50,8 +50,8 @@ const calculateDelta = (a: string | number, b: string | number): number => {
 const convertSecondsToHours = (seconds: string | number): number =>
   isNaN(+seconds) ? 0 : +seconds / 3600;
 
-const mapApi = (items: Template[]) =>
-  items.map((el) => ({
+const mapApi = (legend: Template[]) =>
+  legend.map((el) => ({
     ...el,
     delta: 0,
     avgRunTime: 3600,
