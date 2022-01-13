@@ -24,8 +24,10 @@ export interface Template {
 }
 
 export interface ReportAutomationCalculatorDataType
-  extends Omit<ApiReturnType, 'items'> {
-  items: Template[];
+  extends Omit<ApiReturnType, 'meta'> {
+  meta: {
+    legend: Template[];
+  };
 }
 
 export interface ReportAutomationCalculatorProps extends BaseReportProps {
