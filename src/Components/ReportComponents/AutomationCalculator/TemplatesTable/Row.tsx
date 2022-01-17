@@ -31,11 +31,9 @@ const Row: FunctionComponent<Props> = ({ template, ExpandRowsComponent }) => {
         <Td>{template.enabled ? 'Shown' : 'Hidden'}</Td>
       </Tr>
       {ExpandRowsComponent && (
-        <>
-          <ExpandedRow>
-            <ExpandedRowContents item={template} />
-          </ExpandedRow>
-        </>
+        <ExpandedRow>
+          <ExpandedRowContents item={template} />
+        </ExpandedRow>
       )}
     </>
   );

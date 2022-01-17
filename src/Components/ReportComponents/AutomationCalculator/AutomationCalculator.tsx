@@ -155,14 +155,8 @@ const AutomationCalculator: FunctionComponent<
           <PageCard key={idx}>
             <CardBody>
               <TemplatesTable
-                data={[item]}
+                data={[item, api.items[idx + 1]]}
                 ExpandRowsComponent={ExpandRowsComponent}
-                showHeader={true}
-              />
-              <TemplatesTable
-                data={[api.items[idx + 1]]}
-                ExpandRowsComponent={ExpandRowsComponent}
-                showHeader={false}
               />
             </CardBody>
           </PageCard>
@@ -199,7 +193,6 @@ const AutomationCalculator: FunctionComponent<
                 costAutomation,
                 costManual
               )}
-              showHeader={true}
             />
           </CardBody>
         </PageCard>
