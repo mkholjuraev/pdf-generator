@@ -9,7 +9,9 @@ import { AutomationCalculatorExpandRowsComponentType } from '../../../ReportComp
 import styled from 'styled-components';
 import * as Table from '@patternfly/react-table';
 
-export const ExpandedRow = styled(Table.Tr)``;
+export const ExpandedRow = styled(Table.Tr)`
+  background-color: #f0f0f0;
+`;
 
 interface Props {
   template: Template;
@@ -31,7 +33,7 @@ const Row: FunctionComponent<Props> = ({ template, ExpandRowsComponent }) => {
         <Td>{template.enabled ? 'Shown' : 'Hidden'}</Td>
       </Tr>
       {ExpandRowsComponent && (
-        <ExpandedRow>
+        <ExpandedRow style={{ borderBottomWidth: '0px' }}>
           <ExpandedRowContents item={template} />
         </ExpandedRow>
       )}

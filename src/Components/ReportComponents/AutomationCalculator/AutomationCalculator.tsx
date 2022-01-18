@@ -151,11 +151,13 @@ const AutomationCalculator: FunctionComponent<
   const rowPerPage = () => {
     return api.items.map(
       (item, idx) =>
-        idx % 2 === 0 && (
+        idx % 4 === 0 && (
           <PageCard key={idx}>
             <CardBody>
               <TemplatesTable
-                data={[item, api.items[idx + 1]]}
+                data={api.items.filter(
+                  (item, itemId) => itemId >= idx && itemId <= idx + 3
+                )}
                 ExpandRowsComponent={ExpandRowsComponent}
               />
             </CardBody>

@@ -22,25 +22,23 @@ const TopTemplates: FunctionComponent<Props> = ({
   ExpandRowsComponent,
 }) => (
   <TableComposable aria-label="ROI Table" variant={TableVariant.compact}>
-    <>
-      <Thead>
-        <Tr>
-          <Th>Name</Th>
-          <Th>Time</Th>
-          <Th>Savings</Th>
-          <Th>Presence in the chart</Th>
-        </Tr>
-      </Thead>
-      <Tbody style={{ borderBottomWidth: '0px' }}>
-        {data.map((template) => (
-          <Row
-            key={template.id}
-            template={template}
-            ExpandRowsComponent={ExpandRowsComponent}
-          />
-        ))}
-      </Tbody>
-    </>
+    <Thead>
+      <Tr>
+        <Th>Name</Th>
+        <Th>Time</Th>
+        <Th>Savings</Th>
+        <Th>Presence in the chart</Th>
+      </Tr>
+    </Thead>
+    <Tbody style={{ borderBottomWidth: '0px' }}>
+      {data.map((template) => (
+        <Row
+          key={template.id}
+          template={template}
+          ExpandRowsComponent={ExpandRowsComponent}
+        />
+      ))}
+    </Tbody>
   </TableComposable>
 );
 
