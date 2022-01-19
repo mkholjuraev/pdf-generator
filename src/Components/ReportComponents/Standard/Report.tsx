@@ -1,5 +1,11 @@
 import React, { FC } from 'react';
-import { CardBody, CardHeaderMain } from '@patternfly/react-core';
+import {
+  CardBody,
+  CardHeaderMain,
+  Chip,
+  ChipGroup,
+} from '@patternfly/react-core';
+import styled from 'styled-components';
 import PageCard from '../../PageCard';
 import { CardTitle, CardSubtitle } from '../../StyledPatternfly';
 import Table from './Table';
@@ -16,9 +22,44 @@ const Report: FC<ReportStandardProps> = ({
   description,
   expandedRowComponent,
 }) => {
-  const ExpandRowsComponent = expandedRowMapper(expandedRowComponent);
+  const ChipContainer = styled.div`
+    display: flex;
+    > * {
+      &:nth-child(odd) {
+        margin-right: 10px;
+      }
+    }
+  `;
 
+  const getFilterChips = (arr: [string, []]) => {
+    const chipLabels: Record<string, string> = {
+      org_id: 'Organization',
+      cluster_id: 'Cluster',
+      iventory_id: 'Inventory',
+      template_id: 'Template',
+      task_action_id: 'Module',
+      job_type: 'Job',
+      status: 'Status',
+    };
+
+    if (arr[0] != 'attributes') {
+      arr[0] = arr[0].replace(`${arr[0]}`, `${chipLabels[arr[0]]}`);
+      return (
+        <div>
+          <ChipGroup categoryName={arr[0]}>
+            {arr[1].map((item: Record<string, string>) => (
+              <Chip key={item.key}>{item.value}</Chip>
+            ))}
+          </ChipGroup>
+        </div>
+      );
+    }
+    return;
+  };
+
+  const ExpandRowsComponent = expandedRowMapper(expandedRowComponent);
   /* If the table is expanded render each row in its own page */
+
   const getTable = () => {
     if (ExpandRowsComponent)
       return (
@@ -86,6 +127,9 @@ const Report: FC<ReportStandardProps> = ({
         <CardHeaderMain>
           <CardTitle>{name}</CardTitle>
           <CardSubtitle>{description}</CardSubtitle>
+          <ChipContainer>
+            {Object.entries(data.filters).map((arr) => getFilterChips(arr))}
+          </ChipContainer>
         </CardHeaderMain>
         <CardBody>
           <Chart schema={schema} data={data} />

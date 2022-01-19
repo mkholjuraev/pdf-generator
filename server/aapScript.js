@@ -2,7 +2,29 @@ import { PDFNotImplementedError, PDFRequestError } from './errors';
 import reports from '../src/schemas';
 import axios from 'axios';
 
-const getData = (baseURL, headers, queryParams) => {
+const getFilterData = (queryParams, selectOptions) => {
+  let params = {};
+  let filters = {};
+  for (const [key, val] of Object.entries(queryParams)) {
+    if (typeof val === 'object' && val.length > 0) {
+      params[key] = val.filter((v) => v.length > 0);
+    }
+  }
+
+  for (const [key, val] of Object.entries(params)) {
+    let item = val.map((x) => {
+      if (!isNaN(x)) {
+        return selectOptions[key].find((obj) => obj.key === parseInt(x));
+      }
+      return selectOptions[key].find((obj) => obj.key === x);
+    });
+
+    filters[key] = item;
+  }
+  return filters;
+};
+
+const getData = (baseURL, headers, queryParams, selectOptions) => {
   const { offset, limit, sort_options, sort_order, ...rest } = queryParams;
   const url = baseURL;
 
@@ -15,13 +37,16 @@ const getData = (baseURL, headers, queryParams) => {
 
   return axios
     .post(url.toString(), rest, { headers })
-    .then((response) => response.data)
+    .then((response) => {
+      const filters = getFilterData(queryParams, selectOptions);
+      return { ...response.data, filters };
+    })
     .catch((err) => {
       throw new PDFRequestError(err);
     });
 };
 
-const getExtraData = (baseUrl, headers, queryParams, dataSize) => {
+const getExtraData = (baseUrl, headers, queryParams, dataSize, selectOptions) => {
   const maxOffset = dataSize - queryParams.limit > 100 ? 100 : dataSize;
 
   let promises = [];
@@ -51,6 +76,7 @@ const getParamsForGenerator = async ({
   schemaParams,
   dataFetchingParams: {
     queryParams,
+    selectOptions,
     showExtraRows,
     apiHost,
     apiPort,
@@ -71,11 +97,12 @@ const getParamsForGenerator = async ({
 
   const fastApiUrl = new URL(endpointUrl, `http://${apiHost}:${apiPort}`);
 
-  const data = await getData(fastApiUrl, headers, queryParams);
+  const data = await getData(fastApiUrl, headers, queryParams, selectOptions);
 
-  const extraDataLegend = showExtraRows
-    ? await getExtraData(fastApiUrl, headers, queryParams, data.meta.count)
-    : [];
+  const extraDataLegend =
+    showExtraRows
+      ? await getExtraData(fastApiUrl, headers, queryParams, data.meta.count, selectOptions)
+      : [];
 
   return {
     slug,

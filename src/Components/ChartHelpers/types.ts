@@ -12,6 +12,7 @@ export interface NonGroupedApi {
     legend: ChartLegendEntry[];
     count: number;
   };
+  filters: Record<string, boolean | string[] | number>;
 }
 
 export interface GroupedApi {
@@ -24,6 +25,7 @@ export interface GroupedApi {
     legend: ChartLegendEntry[];
     count: number;
   };
+  filters: Record<string, boolean | string | string[] | number[]>;
 }
 
 export type ApiReturnType = NonGroupedApi | GroupedApi;
