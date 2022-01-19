@@ -1,3 +1,10 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
 import React, { FunctionComponent } from 'react';
 
 import {
@@ -8,6 +15,7 @@ import {
   Flex,
   FlexItem,
   Title,
+  CardHeaderMain,
 } from '@patternfly/react-core';
 
 import { CardTitle, CardSubtitle } from '../../StyledPatternfly';
@@ -21,12 +29,8 @@ import TemplatesTable from './TemplatesTable';
 
 import PageCard from '../../PageCard';
 
-import {
-  ReportAutomationCalculatorDataType,
-  ReportAutomationCalculatorProps,
-  Template,
-} from './types';
-import { ApiReturnType } from '../../ChartHelpers/types';
+import { ReportAutomationCalculatorProps, Template } from './types';
+import { AutomationCalculatorExpandedRowMapper } from '../Standard/Components';
 
 const calculateDelta = (a: string | number, b: string | number): number => {
   const n1 = +a;
@@ -47,8 +51,8 @@ const calculateDelta = (a: string | number, b: string | number): number => {
 const convertSecondsToHours = (seconds: string | number): number =>
   isNaN(+seconds) ? 0 : +seconds / 3600;
 
-const mapApi = (items: Template[]) =>
-  items.map((el) => ({
+const mapApi = (templates: any[]) =>
+  templates.map((el: any) => ({
     ...el,
     delta: 0,
     avgRunTime: 3600,
@@ -61,7 +65,14 @@ const filterDisabled = (data: Template[]): Template[] =>
   data.filter(({ enabled }) => enabled);
 
 const updateDeltaCost = (
-  data: Template[],
+  data: {
+    avgRunTime: number;
+    manualCost: number;
+    el: Template;
+    delta: number;
+    automatedCost: number;
+    enabled: boolean;
+  }[],
   costAutomation: number,
   costManual: number
 ) =>
@@ -84,13 +95,17 @@ const AutomationCalculator: FunctionComponent<
   ReportAutomationCalculatorProps
 > = ({ schema, name, description, ...props }) => {
   // Extract the data from props later to be able to retype to the specific type.
-  const data = props.data as unknown as ReportAutomationCalculatorDataType;
+  const data = { legend: [] };
+  data.legend = props.data.meta.legend;
+  const ExpandRowsComponent = AutomationCalculatorExpandedRowMapper(
+    props.expandedRowComponent
+  );
 
   const costManual = 50;
   const costAutomation = 20;
   const api = {
     ...data,
-    items: updateDeltaCost(mapApi(data.items), costAutomation, costManual),
+    items: updateDeltaCost(mapApi(data.legend), costAutomation, costManual),
   };
 
   const renderLeft = () => (
@@ -98,12 +113,10 @@ const AutomationCalculator: FunctionComponent<
       <CardBody>
         <Chart
           schema={schema}
-          data={
-            {
-              ...api,
-              items: filterDisabled(api.items),
-            } as unknown as ApiReturnType
-          }
+          data={{
+            ...api,
+            items: filterDisabled(api.items),
+          }}
         />
       </CardBody>
     </Card>
@@ -135,6 +148,24 @@ const AutomationCalculator: FunctionComponent<
     </Flex>
   );
 
+  const rowPerPage = () => {
+    return api.items.map(
+      (item, idx) =>
+        idx % 4 === 0 && (
+          <PageCard key={idx}>
+            <CardBody>
+              <TemplatesTable
+                data={api.items.filter(
+                  (item, itemId) => itemId >= idx && itemId <= idx + 3
+                )}
+                ExpandRowsComponent={ExpandRowsComponent}
+              />
+            </CardBody>
+          </PageCard>
+        )
+    );
+  };
+
   return (
     <>
       <PageCard>
@@ -147,9 +178,27 @@ const AutomationCalculator: FunctionComponent<
           </Grid>
         </CardBody>
       </PageCard>
-      <PageCard>
-        <TemplatesTable data={api.items} />
-      </PageCard>
+      {rowPerPage()}
+      {props.extraData.meta.legend.length > 0 && (
+        <PageCard>
+          <CardHeaderMain>
+            <CardTitle>{`${
+              props.extraData.meta.legend.length < 100
+                ? `All ${props.extraData.meta.legend.length} items`
+                : `Top 100 of ${data?.meta?.count}`
+            }`}</CardTitle>
+          </CardHeaderMain>
+          <CardBody>
+            <TemplatesTable
+              data={updateDeltaCost(
+                mapApi(props.extraData.meta.legend),
+                costAutomation,
+                costManual
+              )}
+            />
+          </CardBody>
+        </PageCard>
+      )}
     </>
   );
 };

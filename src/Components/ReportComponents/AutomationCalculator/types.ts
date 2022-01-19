@@ -1,5 +1,6 @@
 import { ApiReturnType } from '../../ChartHelpers/types';
-import { BaseReportProps } from '../types';
+import { BaseReportProps, TableHeaders } from '../types';
+import { ReportStandardExpandedRow } from '../types';
 
 export interface Template {
   name: string;
@@ -23,8 +24,13 @@ export interface Template {
 }
 
 export interface ReportAutomationCalculatorDataType
-  extends Omit<ApiReturnType, 'items'> {
-  items: Template[];
+  extends Omit<ApiReturnType, 'meta'> {
+  meta: {
+    legend: Template[];
+  };
 }
 
-export type ReportAutomationCalculatorProps = BaseReportProps;
+export interface ReportAutomationCalculatorProps extends BaseReportProps {
+  tableHeaders: TableHeaders;
+  expandedRowComponent?: ReportStandardExpandedRow;
+}

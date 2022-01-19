@@ -73,10 +73,9 @@ const getParamsForGenerator = async ({
 
   const data = await getData(fastApiUrl, headers, queryParams);
 
-  const extraDataLegend =
-    showExtraRows
-      ? await getExtraData(fastApiUrl, headers, queryParams, data.meta.count)
-      : [];
+  const extraDataLegend = showExtraRows
+    ? await getExtraData(fastApiUrl, headers, queryParams, data.meta.count)
+    : [];
 
   return {
     slug,

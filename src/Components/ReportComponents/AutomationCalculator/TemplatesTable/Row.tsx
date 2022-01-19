@@ -4,12 +4,21 @@ import { global_success_color_200 as globalSuccessColor200 } from '@patternfly/r
 
 import { Template } from '../types';
 import currencyFormatter from '../../../../Utilities/currencyFormatter';
+import ExpandedRowContents from './ExpandedRowContents';
+import { AutomationCalculatorExpandRowsComponentType } from '../../../ReportComponents/Standard/Components/types';
+import styled from 'styled-components';
+import * as Table from '@patternfly/react-table';
+
+export const ExpandedRow = styled(Table.Tr)`
+  background-color: #f0f0f0;
+`;
 
 interface Props {
   template: Template;
+  ExpandRowsComponent?: AutomationCalculatorExpandRowsComponentType;
 }
 
-const Row: FunctionComponent<Props> = ({ template }) => {
+const Row: FunctionComponent<Props> = ({ template, ExpandRowsComponent }) => {
   return (
     <>
       <Tr>
@@ -23,6 +32,11 @@ const Row: FunctionComponent<Props> = ({ template }) => {
         </Td>
         <Td>{template.enabled ? 'Shown' : 'Hidden'}</Td>
       </Tr>
+      {ExpandRowsComponent && (
+        <ExpandedRow style={{ borderBottomWidth: '0px' }}>
+          <ExpandedRowContents item={template} />
+        </ExpandedRow>
+      )}
     </>
   );
 };
