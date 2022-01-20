@@ -3,7 +3,7 @@ import {
   CardBody,
   CardHeaderMain,
   Chip,
-  ChipGroup,
+  ChipGroup as PatternflyChipGroup,
 } from '@patternfly/react-core';
 import styled from 'styled-components';
 import PageCard from '../../PageCard';
@@ -24,18 +24,19 @@ const Report: FC<ReportStandardProps> = ({
 }) => {
   const ChipContainer = styled.div`
     display: flex;
-    > * {
-      &:nth-child(odd) {
-        margin-right: 10px;
-      }
-    }
+    flex-wrap: wrap;
+  `;
+
+  const ChipGroup = styled(PatternflyChipGroup)`
+    margin-right: 10px;
+    margin-bottom: 10px;
   `;
 
   const getFilterChips = (arr: [string, []]) => {
     const chipLabels: Record<string, string> = {
       org_id: 'Organization',
       cluster_id: 'Cluster',
-      iventory_id: 'Inventory',
+      inventory_id: 'Inventory',
       template_id: 'Template',
       task_action_id: 'Module',
       job_type: 'Job',
@@ -46,9 +47,11 @@ const Report: FC<ReportStandardProps> = ({
       arr[0] = arr[0].replace(`${arr[0]}`, `${chipLabels[arr[0]]}`);
       return (
         <div>
-          <ChipGroup categoryName={arr[0]}>
+          <ChipGroup categoryName={arr[0]} numChips={1000}>
             {arr[1].map((item: Record<string, string>) => (
-              <Chip key={item.key}>{item.value}</Chip>
+              <Chip key={item.key} isReadOnly>
+                {item.value}
+              </Chip>
             ))}
           </ChipGroup>
         </div>
