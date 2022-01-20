@@ -6,8 +6,8 @@ const getFilterData = (queryParams, selectOptions) => {
   let params = {};
   let filters = {};
   for (const [key, val] of Object.entries(queryParams)) {
-    if (typeof val === 'object' && val.length > 0) {
-      params[key] = val.filter((v) => v.length > 0);
+    if (typeof val === 'object' && val?.length > 0) {
+      params[key] = val?.filter((v) => v?.length > 0);
     }
   }
 
