@@ -31,7 +31,7 @@ const schema = [
     type: ChartTopLevelType.chart,
     parent: null,
     props: {
-      height: 475,
+      height: 400,
       padding: {
         top: 70,
         right: 180,
