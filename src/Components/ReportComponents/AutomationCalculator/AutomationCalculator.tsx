@@ -1,8 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/restrict-template-expressions */
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 import React, { FunctionComponent } from 'react';
@@ -52,7 +47,7 @@ const convertSecondsToHours = (seconds: string | number): number =>
   isNaN(+seconds) ? 0 : +seconds / 3600;
 
 const mapApi = (templates: any[]) =>
-  templates.map((el: any) => ({
+  templates.map((el: []) => ({
     ...el,
     delta: 0,
     avgRunTime: 3600,
@@ -95,7 +90,7 @@ const AutomationCalculator: FunctionComponent<
   ReportAutomationCalculatorProps
 > = ({ schema, name, description, ...props }) => {
   // Extract the data from props later to be able to retype to the specific type.
-  const data = { legend: [] };
+  const data = { legend: [], meta: { count: 0 } };
   data.legend = props.data.meta.legend;
   const ExpandRowsComponent = AutomationCalculatorExpandedRowMapper(
     props.expandedRowComponent
