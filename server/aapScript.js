@@ -46,19 +46,30 @@ const getData = (baseURL, headers, queryParams, selectOptions) => {
     });
 };
 
-const getExtraData = (baseUrl, headers, queryParams, dataSize, selectOptions) => {
+const getExtraData = (
+  baseUrl,
+  headers,
+  queryParams,
+  dataSize,
+  selectOptions
+) => {
   const maxOffset = dataSize - queryParams.limit > 100 ? 100 : dataSize;
 
   let promises = [];
   for (let offset = 0; offset < maxOffset; offset += 25) {
     promises = [
       ...promises,
-      getData(baseUrl, headers, {
-        ...queryParams,
-        offset,
-        limit: 25,
-        include_others: false,
-      }),
+      getData(
+        baseUrl,
+        headers,
+        {
+          ...queryParams,
+          offset,
+          limit: 25,
+          include_others: false,
+        },
+        selectOptions
+      ),
     ];
   }
 
@@ -99,11 +110,15 @@ const getParamsForGenerator = async ({
 
   const data = await getData(fastApiUrl, headers, queryParams, selectOptions);
 
-  const extraDataLegend =
-    showExtraRows
-      ? await getExtraData(fastApiUrl, headers, queryParams, data.meta.count, selectOptions)
-      : [];
-
+  const extraDataLegend = showExtraRows
+    ? await getExtraData(
+        fastApiUrl,
+        headers,
+        queryParams,
+        data.meta.count,
+        selectOptions
+      )
+    : [];
   return {
     slug,
     data,
