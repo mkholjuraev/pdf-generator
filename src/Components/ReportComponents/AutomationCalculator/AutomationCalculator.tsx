@@ -228,7 +228,7 @@ const AutomationCalculator: FunctionComponent<
             <CardTitle>{`${
               props.extraData.meta.legend.length < 100
                 ? `All ${props.extraData.meta.legend.length} items`
-                : `Top 100 of ${data?.meta?.count}`
+                : `Top 100 of ${props.data?.meta?.count}`
             }`}</CardTitle>
           </CardHeaderMain>
           <CardBody>
