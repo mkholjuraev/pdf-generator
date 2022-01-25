@@ -1,6 +1,8 @@
 import { PDFNotImplementedError, PDFRequestError } from './errors';
 import reports from '../src/schemas';
 import axios from 'axios';
+import logger from './logger';
+import atob from 'atob';
 
 const getFilterData = (queryParams, selectOptions) => {
   let params = {};
@@ -108,7 +110,21 @@ const getParamsForGenerator = async ({
 
   const fastApiUrl = new URL(endpointUrl, `http://${apiHost}:${apiPort}`);
 
+  const calculateSize = (input) => {
+    const str = JSON.stringify(input);
+    const newStr = new TextEncoder().encode(str).length;
+    return (newStr / 1000).toFixed(2);
+  };
+
   const data = await getData(fastApiUrl, headers, queryParams, selectOptions);
+  const tenant = JSON.parse(atob(rhIdentity))['identity']['internal']['org_id'];
+  const size = calculateSize(data);
+  logger.log(
+    'info',
+    `Payload size of current page response is ${size} kb for report: ${slug}, queryParams: ${JSON.stringify(
+      queryParams
+    )}, tenant: ${tenant}.`
+  );
 
   const extraDataLegend = showExtraRows
     ? await getExtraData(
@@ -119,6 +135,16 @@ const getParamsForGenerator = async ({
         selectOptions
       )
     : [];
+  if (showExtraRows) {
+    const size = calculateSize(data) + calculateSize(extraDataLegend);
+    logger.log(
+      'info',
+      `Payload size of extra rows response is ${size} kb for report: ${slug}, queryParams: ${JSON.stringify(
+        queryParams
+      )}, tenant: ${tenant}.`
+    );
+  }
+
   return {
     slug,
     data,
