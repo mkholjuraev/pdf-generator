@@ -130,9 +130,11 @@ const Report: FC<ReportStandardProps> = ({
         <CardHeaderMain>
           <CardTitle>{name}</CardTitle>
           <CardSubtitle>{description}</CardSubtitle>
-          <ChipContainer>
-            {Object.entries(data.filters).map((arr) => getFilterChips(arr))}
-          </ChipContainer>
+          {data?.filters && (
+            <ChipContainer>
+              {Object.entries(data.filters).map((arr) => getFilterChips(arr))}
+            </ChipContainer>
+          )}
         </CardHeaderMain>
         <CardBody>
           <Chart schema={schema} data={data} />

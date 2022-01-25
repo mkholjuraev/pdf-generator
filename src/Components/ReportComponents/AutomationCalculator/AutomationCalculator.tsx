@@ -11,6 +11,8 @@ import {
   FlexItem,
   Title,
   CardHeaderMain,
+  Chip,
+  ChipGroup as PatternflyChipGroup,
 } from '@patternfly/react-core';
 
 import { CardTitle, CardSubtitle } from '../../StyledPatternfly';
@@ -26,6 +28,7 @@ import PageCard from '../../PageCard';
 
 import { ReportAutomationCalculatorProps, Template } from './types';
 import { AutomationCalculatorExpandedRowMapper } from '../Standard/Components';
+import styled from 'styled-components';
 
 const calculateDelta = (a: string | number, b: string | number): number => {
   const n1 = +a;
@@ -89,9 +92,49 @@ const computeTotalSavings = (data: Template[]): number =>
 const AutomationCalculator: FunctionComponent<
   ReportAutomationCalculatorProps
 > = ({ schema, name, description, ...props }) => {
+  const ChipContainer = styled.div`
+    display: flex;
+    flex-wrap: wrap;
+  `;
+
+  const ChipGroup = styled(PatternflyChipGroup)`
+    margin-right: 10px;
+    margin-bottom: 10px;
+  `;
+
+  const getFilterChips = (arr: [string, []]) => {
+    const chipLabels: Record<string, string> = {
+      org_id: 'Organization',
+      cluster_id: 'Cluster',
+      inventory_id: 'Inventory',
+      template_id: 'Template',
+      task_action_id: 'Module',
+      job_type: 'Job',
+      status: 'Status',
+    };
+
+    if (arr[0] !== 'attributes') {
+      arr[0] = arr[0].replace(`${arr[0]}`, `${chipLabels[arr[0]]}`);
+      arr[1] = arr[1].filter((x) => x !== undefined && x !== null);
+      return (
+        <div>
+          <ChipGroup categoryName={arr[0]} numChips={1000}>
+            {arr[1].map((item: Record<string, string>) => (
+              <Chip key={item.key} isReadOnly>
+                {item.value}
+              </Chip>
+            ))}
+          </ChipGroup>
+        </div>
+      );
+    }
+    return <></>;
+  };
+
   // Extract the data from props later to be able to retype to the specific type.
-  const data = { legend: [], meta: { count: 0 } };
+  const data = { legend: [], meta: { count: 0 }, filters: [] };
   data.legend = props.data.meta.legend;
+  data.filters = props.data.filters;
   const ExpandRowsComponent = AutomationCalculatorExpandedRowMapper(
     props.expandedRowComponent
   );
@@ -166,6 +209,11 @@ const AutomationCalculator: FunctionComponent<
       <PageCard>
         <CardTitle>{name}</CardTitle>
         <CardSubtitle>{description}</CardSubtitle>
+        {data?.filters && (
+          <ChipContainer>
+            {Object.entries(data.filters).map((arr) => getFilterChips(arr))}
+          </ChipContainer>
+        )}
         <CardBody>
           <Grid hasGutter>
             <GridItem span={12}>{renderRight()}</GridItem>
