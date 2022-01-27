@@ -115,7 +115,7 @@ const getParamsForGenerator = async ({
   const calculateSize = (input) => {
     const str = JSON.stringify(input);
     const newStr = new TextEncoder().encode(str).length;
-    return (newStr / 1000).toFixed(2);
+    return parseFloat((newStr / 1000).toFixed(2));
   };
 
   const data = await getData(fastApiUrl, headers, queryParams, selectOptions);
@@ -123,10 +123,11 @@ const getParamsForGenerator = async ({
   const size = calculateSize(data);
   logger.log(
     'info',
-    `Payload size of current page response is ${size} kb for report: ${slug}, queryParams: ${JSON.stringify(
-      queryParams
-    )}, tenant: ${tenant}.`
-  );
+    `Payload size of current page response is ${size} kb`, {
+        tenant,
+        slug,
+        queryParams
+    });
 
   const extraDataLegend = showExtraRows
     ? await getExtraData(
@@ -141,10 +142,11 @@ const getParamsForGenerator = async ({
     const size = calculateSize(data) + calculateSize(extraDataLegend);
     logger.log(
       'info',
-      `Payload size of extra rows response is ${size} kb for report: ${slug}, queryParams: ${JSON.stringify(
-        queryParams
-      )}, tenant: ${tenant}.`
-    );
+      `Payload size of extra rows response is ${size} kb`, {
+         tenant,
+         slug,
+         queryParams
+    });
   }
 
   return {
