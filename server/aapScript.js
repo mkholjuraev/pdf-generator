@@ -15,10 +15,12 @@ const getFilterData = (queryParams, selectOptions) => {
 
   for (const [key, val] of Object.entries(params)) {
     let item = val.map((x) => {
-      if (!isNaN(x)) {
-        return selectOptions[key]?.find((obj) => obj?.key === parseInt(x));
+      if (selectOptions) {
+        if (!isNaN(x)) {
+          return selectOptions[key]?.find((obj) => obj?.key === parseInt(x));
+        }
+        return selectOptions[key]?.find((obj) => obj?.key === x);
       }
-      return selectOptions[key]?.find((obj) => obj?.key === x);
     });
 
     filters[key] = item;
