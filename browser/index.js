@@ -43,6 +43,9 @@ const generatePdf = async (url, data) => {
 
   await page.setViewport({ width: pageWidth, height: pageHeight });
 
+  // Enables console logging in Headless mode - handy for debugging components
+  page.on('console', msg => console.log(`[Headless log] ${msg.text()}`));
+
   await setWindowProperty(
     page,
     'customPupeteerParams',
