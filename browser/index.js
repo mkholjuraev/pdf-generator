@@ -1,4 +1,4 @@
-import { charEscape, getImg } from './helpers';
+import { replaceString, getImg } from './helpers';
 
 const puppeteer = require('puppeteer');
 const { v4: uuidv4 } = require('uuid');
@@ -23,7 +23,7 @@ const setWindowProperty = (page, name, value) =>
   page.evaluateOnNewDocument(`
     Object.defineProperty(window, '${name}', {
       get() {
-        return '${charEscape(value)}'
+        return '${replaceString(value)}'
       }
     })
   `);

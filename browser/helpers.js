@@ -13,6 +13,6 @@ export const getImg = (imgPath) =>
     )}"
   />`;
 
-export const charEscape = (string) => {
+export const replaceString = (string) => {
   return string.replace(/[-[\]{}()'`*+?.,\\^$|#]/g, '\\$&');
 };
