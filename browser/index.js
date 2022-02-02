@@ -1,4 +1,4 @@
-import { getImg } from './helpers';
+import { replaceString, getImg } from './helpers';
 
 const puppeteer = require('puppeteer');
 const { v4: uuidv4 } = require('uuid');
@@ -23,7 +23,7 @@ const setWindowProperty = (page, name, value) =>
   page.evaluateOnNewDocument(`
     Object.defineProperty(window, '${name}', {
       get() {
-        return '${value}'
+        return '${replaceString(value)}'
       }
     })
   `);
@@ -44,7 +44,7 @@ const generatePdf = async (url, data) => {
   await page.setViewport({ width: pageWidth, height: pageHeight });
 
   // Enables console logging in Headless mode - handy for debugging components
-  page.on('console', msg => console.log(`[Headless log] ${msg.text()}`));
+  page.on('console', (msg) => console.log(`[Headless log] ${msg.text()}`));
 
   await setWindowProperty(
     page,

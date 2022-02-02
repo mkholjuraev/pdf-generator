@@ -12,3 +12,7 @@ export const getImg = (imgPath) =>
       path.resolve(__dirname, imgPath)
     )}"
   />`;
+
+export const replaceString = (string) => {
+  return string.replace(/[-[\]{}()'`*+?.,\\^$|#]/g, '\\$&');
+};
