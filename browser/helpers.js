@@ -12,3 +12,7 @@ export const getImg = (imgPath) =>
       path.resolve(__dirname, imgPath)
     )}"
   />`;
+
+export const charEscape = (string) => {
+  return string.replace(/[-[\]{}()'`*+?.,\\^$|#]/g, '\\$&');
+};
