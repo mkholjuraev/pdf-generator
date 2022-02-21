@@ -12,6 +12,8 @@ import templateMapper from '../templates';
 import generatePdf from '../browser';
 import { PDFNotFoundError, SendingFailedError } from './errors';
 import getTemplateData from './data-access';
+import { SupportedTemplates } from './types';
+import renderTemplate from './render-template';
 
 const PORT = process.env.PORT || 8000;
 const APIPrefix = '/api/tower-analytics/v1';
@@ -20,12 +22,17 @@ const app = express();
 app.use(cors());
 app.use(express.json({ limit: '5mb' }));
 app.use(express.static(path.resolve(__dirname, '..', 'build')));
+app.use(express.static(path.resolve(__dirname, '../public')));
 
-app.use('^/$', (_req, res, _next) => {
-  const App = templateMapper['automation-analytics']
-  return res.send(
-    `<div id="root">${renderToStaticMarkup(<App />)}</div>`
-  )
+app.use('^/$', async (req, res, _next) => {
+  let template: SupportedTemplates = req.query.template as SupportedTemplates
+  if(!template) {
+    console.log('Missing template, using "automation-analytics".')
+    template = 'automation-analytics'
+  }
+  const templateData = await getTemplateData(template)
+  const HTMLTemplate: string = renderTemplate(template, templateData)
+  return res.send(HTMLTemplate)
 });
 
 app.post(`${APIPrefix}/generate_pdf`, async (req, res) => {
@@ -34,14 +41,13 @@ app.post(`${APIPrefix}/generate_pdf`, async (req, res) => {
   if (!rhIdentity) {
     return res.status(401).send('Unauthorized access not allowed');
   }
+  const template = req.body.template;
 
   const tenant = JSON.parse(atob(rhIdentity as string))['identity']['internal']['org_id'];
-  const url = `http://localhost:${PORT}`;
+  const url = `http://localhost:${PORT}?template=${template}`;
 
   try {
-    // Custom script to get the params for our app
     const startGeneration = performance.now();
-    const params = await getTemplateData('automation-analytics', { slug: 'aa_2_1_onboarding', ...req.body, rhIdentity, dataFetchingParams: {slug: 'changesMade'} });
     let elapsed = performance.now() - startGeneration;
     logger.log('info', `Total Data collection time: ${elapsed} ms`, {
       tenant,
@@ -50,7 +56,7 @@ app.post(`${APIPrefix}/generate_pdf`, async (req, res) => {
 
     // Generate the pdf
     const startRender = performance.now();
-    const pathToPdf = await generatePdf(url, params);
+    const pathToPdf = await generatePdf(url);
     elapsed = performance.now() - startRender;
     logger.log('info', `Total Rendering time: ${elapsed} ms`, {
       tenant,

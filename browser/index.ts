@@ -19,7 +19,7 @@ const margins = {
 const pageWidth = (A4Height - 20) * 4;
 const pageHeight = (A4Width - 40) * 4;
 
-const setWindowProperty = (page, name, value) =>
+const setWindowProperty = (page: any, name: any, value: any) =>
   page.evaluateOnNewDocument(`
     Object.defineProperty(window, '${name}', {
       get() {
@@ -33,7 +33,7 @@ const getNewPdfName = () => {
   return `${os.tmpdir()}/${pdfFilename}`;
 };
 
-const generatePdf = async (url, data) => {
+const generatePdf = async (url: string) => {
   const pdfPath = getNewPdfName();
 
   const browser = await puppeteer.launch({
@@ -42,15 +42,15 @@ const generatePdf = async (url, data) => {
   const page = await browser.newPage();
 
   await page.setViewport({ width: pageWidth, height: pageHeight });
+  
 
   // Enables console logging in Headless mode - handy for debugging components
-  page.on('console', (msg) => console.log(`[Headless log] ${msg.text()}`));
+  page.on('console', (msg: any) => console.log(`[Headless log] ${msg.text()}`));
 
   await setWindowProperty(
     page,
     'customPupeteerParams',
     JSON.stringify({
-      ...data,
       pupeteerParams: {
         pageWidth,
         pageHeight,
@@ -73,7 +73,7 @@ const generatePdf = async (url, data) => {
     margin: margins,
     displayHeaderFooter: true,
     headerTemplate: fs
-      .readFileSync(path.resolve('./src/headerTemplate.html'))
+      .readFileSync(path.resolve(__dirname, '../templates/headerTemplate.html'))
       .toString()
       .replace(/<img class="logo" \/>/g, getImg('../public/logo.svg')),
     footerTemplate: '<div/>',
