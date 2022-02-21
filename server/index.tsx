@@ -8,7 +8,7 @@ import { performance } from 'perf_hooks';
 import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import logger from './logger';
-import App from '../templates/App';
+import templateMapper from '../templates';
 import generatePdf from '../browser';
 import { PDFNotFoundError, SendingFailedError } from './errors';
 import getTemplateData from './data-access';
@@ -22,6 +22,7 @@ app.use(express.json({ limit: '5mb' }));
 app.use(express.static(path.resolve(__dirname, '..', 'build')));
 
 app.use('^/$', (_req, res, _next) => {
+  const App = templateMapper['automation-analytics']
   return res.send(
     `<div id="root">${renderToStaticMarkup(<App />)}</div>`
   )
