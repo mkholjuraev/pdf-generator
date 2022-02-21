@@ -121,13 +121,11 @@ const getParamsForGenerator = async ({
   const data = await getData(fastApiUrl, headers, queryParams, selectOptions);
   const tenant = JSON.parse(atob(rhIdentity))['identity']['internal']['org_id'];
   const size = calculateSize(data);
-  logger.log(
-    'info',
-    `Payload size of current page response is ${size} kb`, {
-        tenant,
-        slug,
-        queryParams
-    });
+  logger.log('info', `Payload size of current page response is ${size} kb`, {
+    tenant,
+    slug,
+    queryParams,
+  });
 
   const extraDataLegend = showExtraRows
     ? await getExtraData(
@@ -140,12 +138,10 @@ const getParamsForGenerator = async ({
     : [];
   if (showExtraRows) {
     const size = calculateSize(data) + calculateSize(extraDataLegend);
-    logger.log(
-      'info',
-      `Payload size of extra rows response is ${size} kb`, {
-         tenant,
-         slug,
-         queryParams
+    logger.log('info', `Payload size of extra rows response is ${size} kb`, {
+      tenant,
+      slug,
+      queryParams,
     });
   }
 

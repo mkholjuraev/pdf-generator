@@ -1,10 +1,10 @@
 import { replaceString, getImg } from './helpers';
 
-const puppeteer = require('puppeteer');
-const { v4: uuidv4 } = require('uuid');
-const os = require('os');
-const fs = require('fs');
-const path = require('path');
+import puppeteer from 'puppeteer';
+import { v4 as uuidv4 } from 'uuid';
+import os from 'os';
+import fs from 'fs';
+import path from 'path';
 
 const A4Width = 210;
 const A4Height = 297;
@@ -19,7 +19,11 @@ const margins = {
 const pageWidth = (A4Height - 20) * 4;
 const pageHeight = (A4Width - 40) * 4;
 
-const setWindowProperty = (page: any, name: any, value: any) =>
+const setWindowProperty = (
+  page: puppeteer.Page,
+  name: string,
+  value: undefined
+) =>
   page.evaluateOnNewDocument(`
     Object.defineProperty(window, '${name}', {
       get() {
@@ -42,10 +46,9 @@ const generatePdf = async (url: string) => {
   const page = await browser.newPage();
 
   await page.setViewport({ width: pageWidth, height: pageHeight });
-  
 
   // Enables console logging in Headless mode - handy for debugging components
-  page.on('console', (msg: any) => console.log(`[Headless log] ${msg.text()}`));
+  page.on('console', (msg) => console.log(`[Headless log] ${msg.text()}`));
 
   await setWindowProperty(
     page,
@@ -55,7 +58,7 @@ const generatePdf = async (url: string) => {
         pageWidth,
         pageHeight,
       },
-    })
+    }) as undefined // probably a typings issue in pupetter
   );
 
   const pageStatus = await page.goto(url, { waitUntil: 'networkidle2' });
@@ -67,7 +70,7 @@ const generatePdf = async (url: string) => {
 
   await page.pdf({
     path: pdfPath,
-    format: 'A4',
+    format: 'a4',
     printBackground: true,
     landscape: true,
     margin: margins,

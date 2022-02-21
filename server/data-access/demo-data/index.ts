@@ -1,6 +1,6 @@
 const demoData = {
-    title: 'Foo',
-    description: 'bar'
-}
+  title: 'Foo',
+  description: 'bar',
+};
 
 export const getDemoData = () => Promise.resolve(demoData);

@@ -24,7 +24,6 @@ const tableHeaders = [
   { key: 'host_task_count', value: 'Tasks count' },
 ];
 
-
 const schema: ChartSchemaElement[] = [
   {
     id: 1,

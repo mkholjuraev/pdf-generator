@@ -1,1 +1,1 @@
-export type SupportedTemplates = 'automation-analytics' | 'demo'
+export type SupportedTemplates = 'automation-analytics' | 'demo';

@@ -5,10 +5,7 @@ import cors from 'cors';
 import atob from 'atob';
 import { performance } from 'perf_hooks';
 
-import React from 'react';
-import { renderToStaticMarkup } from 'react-dom/server';
 import logger from './logger';
-import templateMapper from '../templates';
 import generatePdf from '../browser';
 import { PDFNotFoundError, SendingFailedError } from './errors';
 import getTemplateData from './data-access';
@@ -25,14 +22,14 @@ app.use(express.static(path.resolve(__dirname, '..', 'build')));
 app.use(express.static(path.resolve(__dirname, '../public')));
 
 app.use('^/$', async (req, res, _next) => {
-  let template: SupportedTemplates = req.query.template as SupportedTemplates
-  if(!template) {
-    console.log('Missing template, using "automation-analytics".')
-    template = 'automation-analytics'
+  let template: SupportedTemplates = req.query.template as SupportedTemplates;
+  if (!template) {
+    console.log('Missing template, using "automation-analytics"');
+    template = 'automation-analytics';
   }
-  const templateData = await getTemplateData(template)
-  const HTMLTemplate: string = renderTemplate(template, templateData)
-  return res.send(HTMLTemplate)
+  const templateData = await getTemplateData(template);
+  const HTMLTemplate: string = renderTemplate(template, templateData);
+  res.send(HTMLTemplate);
 });
 
 app.post(`${APIPrefix}/generate_pdf`, async (req, res) => {
@@ -41,9 +38,11 @@ app.post(`${APIPrefix}/generate_pdf`, async (req, res) => {
   if (!rhIdentity) {
     return res.status(401).send('Unauthorized access not allowed');
   }
-  const template = req.body.template;
+  const template: string = req.body.template;
 
-  const tenant = JSON.parse(atob(rhIdentity as string))['identity']['internal']['org_id'];
+  const tenant = JSON.parse(atob(rhIdentity as string))['identity']['internal'][
+    'org_id'
+  ];
   const url = `http://localhost:${PORT}?template=${template}`;
 
   try {
@@ -96,8 +95,8 @@ app.post(`${APIPrefix}/generate_pdf`, async (req, res) => {
       { tenant, elapsed }
     );
   } catch (error) {
-    logger.log('error', error.code + ': ' + error.message, { tenant });
-    res.status(error.code).send(error.message);
+    logger.log('error', `${error.code}: ${error.message}`, { tenant });
+    res.status(error.code as number).send(error.message);
   }
 });
 
