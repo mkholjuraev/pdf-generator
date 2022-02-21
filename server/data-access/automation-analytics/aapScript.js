@@ -1,7 +1,7 @@
-import { PDFNotImplementedError, PDFRequestError } from './errors';
-import reports from '../templates/schemas';
+import { PDFNotImplementedError, PDFRequestError } from '../../errors';
+import reports from '../../../templates/schemas';
 import axios from 'axios';
-import logger from './logger';
+import logger from '../../logger';
 import atob from 'atob';
 
 const getFilterData = (queryParams, selectOptions) => {

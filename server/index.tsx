@@ -11,7 +11,7 @@ import logger from './logger';
 import App from '../templates/App';
 import generatePdf from '../browser';
 import { PDFNotFoundError, SendingFailedError } from './errors';
-import getParamsForGenerator from './aapScript';
+import getTemplateData from './data-access';
 
 const PORT = process.env.PORT || 8000;
 const APIPrefix = '/api/tower-analytics/v1';
@@ -40,7 +40,7 @@ app.post(`${APIPrefix}/generate_pdf`, async (req, res) => {
   try {
     // Custom script to get the params for our app
     const startGeneration = performance.now();
-    const params = await getParamsForGenerator({ slug: 'aa_2_1_onboarding', ...req.body, rhIdentity, dataFetchingParams: {slug: 'changesMade'} });
+    const params = await getTemplateData('automation-analytics', { slug: 'aa_2_1_onboarding', ...req.body, rhIdentity, dataFetchingParams: {slug: 'changesMade'} });
     let elapsed = performance.now() - startGeneration;
     logger.log('info', `Total Data collection time: ${elapsed} ms`, {
       tenant,
