@@ -1,4 +1,6 @@
 import { DefinePlugin, Configuration } from "webpack";
+import { createJoinFunction, createJoinImplementation, asGenerator, defaultJoinGenerator } from 'resolve-url-loader';
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 import "webpack-dev-server";
 import path from "path";
 import { CleanWebpackPlugin } from "clean-webpack-plugin";
@@ -7,6 +9,19 @@ import { merge } from "webpack-merge";
 import { TsconfigPathsPlugin } from "tsconfig-paths-webpack-plugin";
 import CopyWebpackPlugin from "copy-webpack-plugin";
 import searchIgnoredStyles from './search-ignored-styles';
+
+// call default generator then pair different variations of uri with each base
+const myGenerator = asGenerator((item, ...rest) => {
+  const defaultTuples = [...defaultJoinGenerator(item, ...rest)];
+  if (item.uri.includes('./assets')) {
+    return defaultTuples.map(([base]) => {
+      if (base.includes('@patternfly/patternfly')) {
+        return [base, path.relative(base, path.resolve(__dirname, '../node_modules/@patternfly/patternfly', item.uri))];
+      }
+    });
+  }
+  return defaultTuples;
+});
 
 const baseConfig: Configuration = {
   mode: "development",
@@ -20,8 +35,46 @@ const baseConfig: Configuration = {
   },
 }
 
+const stylesConfig: Configuration = {
+  mode: 'production',
+  name: 'styles',
+  entry: path.resolve(__dirname, '../styles/styles.scss'),
+  output: {
+    path: path.resolve(__dirname, '../public'),
+    filename: 'styles.css'
+  },
+  module: {
+    rules: [
+      {
+        test: /\.s?[ac]ss$/,
+        use: [
+          MiniCssExtractPlugin.loader,
+          'css-loader',
+          {
+            loader: 'resolve-url-loader',
+            options: {
+              join: createJoinFunction('myJoinFn', createJoinImplementation(myGenerator)),
+            },
+          },
+          {
+            loader: 'sass-loader',
+            options: {
+              sourceMap: true
+            }
+          }
+        ],
+      },
+    ]
+  },
+  plugins: [
+    new MiniCssExtractPlugin({
+      filename: '[name].css',
+    }),
+  ]
+}
+
 const serverConfig: Configuration = {
-  devtool: 'eval',
+  devtool: 'eval-source-map',
   name: "server",
   target: "node",
   externalsPresets: {
@@ -145,4 +198,4 @@ const clientConfig: Configuration = {
 // const clConfig = merge(baseConfig, clientConfig);
 const srConfig = merge(baseConfig, serverConfig);
 
-module.exports = srConfig
+module.exports = [srConfig, stylesConfig]

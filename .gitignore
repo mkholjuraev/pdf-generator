@@ -3,3 +3,9 @@ build
 .vscode
 *.d.ts
 dist
+public/*
+!public/favicon.ico
+!public/logo.svg
+!public/manifest.json
+!public/robots.txt
+!public/index.html
