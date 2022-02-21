@@ -58,7 +58,8 @@
     "@types/puppeteer": "^5.4.4",
     "@types/styled-components": "^5.1.22",
     "@types/uuid": "^8.3.4",
-    "@typescript-eslint/eslint-plugin": "^4.31.2",
+    "@typescript-eslint/eslint-plugin": "^5.12.0",
+    "@typescript-eslint/parser": "^5.12.0",
     "babel-core": "^7.0.0-bridge.0",
     "babel-jest": "^27.5.1",
     "babel-plugin-lodash": "^3.3.4",
@@ -86,8 +87,9 @@
   },
   "scripts": {
     "build": "tsc",
+    "lint": "eslint server config templates browser",
     "prestart": "npm run build",
-    "start:server": "npx concurrently \"npx webpack -c ./config/webpack.config.ts -w\" \"npx nodemon ./dist/index.js\"",
+    "start:server": "npx concurrently \"npx webpack -c ./config/webpack.config.js -w\" \"npx nodemon ./dist/index.js\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "watch": {
@@ -159,8 +161,5 @@
       "jest-watch-typeahead/testname"
     ],
     "resetMocks": true
-  },
-  "eslintConfig": {
-    "extends": "react-app"
   }
 }

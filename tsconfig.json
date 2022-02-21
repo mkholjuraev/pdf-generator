@@ -10,6 +10,7 @@
       "sourceMap": true,
       "outDir": "dist",
       "baseUrl": ".",
+      "lib": ["es2015", "dom"],
       "paths": {
           "*": [
               "node_modules/*"
@@ -17,6 +18,8 @@
       }
   },
   "include": [
-      "server/**/*"
+      "server/**/*",
+      "templates/**/*",
+      "node_modules/@types/puppeteer/index.d.ts"
   ]
 }
