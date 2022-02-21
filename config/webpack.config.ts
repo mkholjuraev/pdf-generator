@@ -38,7 +38,7 @@ const serverConfig: Configuration = {
       message: /Critical\sdependency:\sthe\srequest\sof\sa\sdependency\sis\san\sexpression/,
     }
   ],
-  entry: path.resolve(__dirname, "../src/index.tsx"),
+  entry: path.resolve(__dirname, "../server/index.tsx"),
   output: {
     path: path.resolve(__dirname, "../dist"),
     filename: "index.js",
