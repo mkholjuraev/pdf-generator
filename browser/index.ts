@@ -1,10 +1,10 @@
-import { replaceString, getImg } from './helpers';
+import { replaceString } from './helpers';
 
 import puppeteer from 'puppeteer';
 import { v4 as uuidv4 } from 'uuid';
 import os from 'os';
-import fs from 'fs';
-import path from 'path';
+import { getHeaderandFooterTemplates } from '../server/render-template';
+import { SupportedTemplates } from '../server/types';
 
 const A4Width = 210;
 const A4Height = 297;
@@ -37,7 +37,7 @@ const getNewPdfName = () => {
   return `${os.tmpdir()}/${pdfFilename}`;
 };
 
-const generatePdf = async (url: string, template: string) => {
+const generatePdf = async (url: string, template: SupportedTemplates) => {
   const pdfPath = getNewPdfName();
 
   const browser = await puppeteer.launch({
@@ -68,28 +68,8 @@ const generatePdf = async (url: string, template: string) => {
     );
   }
 
-  let headerTemplate: string;
-  let footerTemplate: string;
-  const headerTemplatePath = path.resolve(
-    __dirname,
-    '../templates',
-    template,
-    'header-template.html'
-  );
-  const footerTemplatePath = path.resolve(
-    __dirname,
-    '../templates',
-    template,
-    'header-template.html'
-  );
-
-  if (template && fs.statSync(headerTemplatePath).isFile()) {
-    headerTemplate = fs.readFileSync(headerTemplatePath, { encoding: 'utf-8' });
-  }
-
-  if (template && fs.statSync(footerTemplatePath).isFile()) {
-    footerTemplate = fs.readFileSync(footerTemplatePath, { encoding: 'utf-8' });
-  }
+  const { headerTemplate, footerTemplate } =
+    getHeaderandFooterTemplates(template);
 
   await page.pdf({
     path: pdfPath,
@@ -98,8 +78,8 @@ const generatePdf = async (url: string, template: string) => {
     landscape: true,
     margin: margins,
     displayHeaderFooter: true,
-    headerTemplate: headerTemplate,
-    footerTemplate: footerTemplate,
+    headerTemplate,
+    footerTemplate,
   });
 
   await browser.close();

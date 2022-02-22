@@ -38,7 +38,7 @@ app.post(`${APIPrefix}/generate_pdf`, async (req, res) => {
   if (!rhIdentity) {
     return res.status(401).send('Unauthorized access not allowed');
   }
-  const template: string = req.body.template;
+  const template: SupportedTemplates = req.body.template;
 
   const tenant = JSON.parse(atob(rhIdentity as string))['identity']['internal'][
     'org_id'
