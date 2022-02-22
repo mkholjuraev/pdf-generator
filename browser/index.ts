@@ -37,7 +37,7 @@ const getNewPdfName = () => {
   return `${os.tmpdir()}/${pdfFilename}`;
 };
 
-const generatePdf = async (url: string) => {
+const generatePdf = async (url: string, template: string) => {
   const pdfPath = getNewPdfName();
 
   const browser = await puppeteer.launch({
@@ -68,6 +68,29 @@ const generatePdf = async (url: string) => {
     );
   }
 
+  let headerTemplate: string;
+  let footerTemplate: string;
+  const headerTemplatePath = path.resolve(
+    __dirname,
+    '../templates',
+    template,
+    'header-template.html'
+  );
+  const footerTemplatePath = path.resolve(
+    __dirname,
+    '../templates',
+    template,
+    'header-template.html'
+  );
+
+  if (template && fs.statSync(headerTemplatePath).isFile()) {
+    headerTemplate = fs.readFileSync(headerTemplatePath, { encoding: 'utf-8' });
+  }
+
+  if (template && fs.statSync(footerTemplatePath).isFile()) {
+    footerTemplate = fs.readFileSync(footerTemplatePath, { encoding: 'utf-8' });
+  }
+
   await page.pdf({
     path: pdfPath,
     format: 'a4',
@@ -75,11 +98,8 @@ const generatePdf = async (url: string) => {
     landscape: true,
     margin: margins,
     displayHeaderFooter: true,
-    headerTemplate: fs
-      .readFileSync(path.resolve(__dirname, '../templates/headerTemplate.html'))
-      .toString()
-      .replace(/<img class="logo" \/>/g, getImg('../public/logo.svg')),
-    footerTemplate: '<div/>',
+    headerTemplate: headerTemplate,
+    footerTemplate: footerTemplate,
   });
 
   await browser.close();

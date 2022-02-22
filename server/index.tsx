@@ -55,7 +55,7 @@ app.post(`${APIPrefix}/generate_pdf`, async (req, res) => {
 
     // Generate the pdf
     const startRender = performance.now();
-    const pathToPdf = await generatePdf(url);
+    const pathToPdf = await generatePdf(url, template);
     elapsed = performance.now() - startRender;
     logger.log('info', `Total Rendering time: ${elapsed} ms`, {
       tenant,
