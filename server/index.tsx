@@ -38,7 +38,7 @@ app.post(`${APIPrefix}/generate_pdf`, async (req, res) => {
   if (!rhIdentity) {
     return res.status(401).send('Unauthorized access not allowed');
   }
-  const template: string = req.body.template;
+  const template: SupportedTemplates = req.body.template;
 
   const tenant = JSON.parse(atob(rhIdentity as string))['identity']['internal'][
     'org_id'
@@ -55,7 +55,7 @@ app.post(`${APIPrefix}/generate_pdf`, async (req, res) => {
 
     // Generate the pdf
     const startRender = performance.now();
-    const pathToPdf = await generatePdf(url);
+    const pathToPdf = await generatePdf(url, template);
     elapsed = performance.now() - startRender;
     logger.log('info', `Total Rendering time: ${elapsed} ms`, {
       tenant,

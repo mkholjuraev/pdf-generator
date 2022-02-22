@@ -3,8 +3,24 @@ import fs from 'fs';
 import path from 'path';
 
 import { SupportedTemplates } from '../types';
-import templateMapper from '../../templates';
+import templateMapper, {
+  footerTemplateMapper,
+  headerTeamplteMapper,
+} from '../../templates';
 import { renderToStaticMarkup } from 'react-dom/server';
+
+export function getHeaderandFooterTemplates(templateType: SupportedTemplates): {
+  headerTemplate: string;
+  footerTemplate: string;
+} {
+  const HeaderTemplateNode = headerTeamplteMapper[templateType];
+  const FooterTemplateNode = footerTemplateMapper[templateType];
+
+  return {
+    headerTemplate: renderToStaticMarkup(<HeaderTemplateNode />),
+    footerTemplate: renderToStaticMarkup(<FooterTemplateNode />),
+  };
+}
 
 function renderTemplate(
   templateType: SupportedTemplates,

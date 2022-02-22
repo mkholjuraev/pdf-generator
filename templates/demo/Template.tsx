@@ -1,4 +1,4 @@
-import { Text, TextContent, Title } from '@patternfly/react-core';
+import { Button, Text, TextContent, Title } from '@patternfly/react-core';
 import React from 'react';
 
 const DemoTemplate = ({
@@ -12,6 +12,7 @@ const DemoTemplate = ({
     <Title headingLevel="h1">{title}</Title>
     <TextContent>
       <Text>{description}</Text>
+      <Button className="pf-u-m-md">Hola</Button>
     </TextContent>
   </div>
 );
