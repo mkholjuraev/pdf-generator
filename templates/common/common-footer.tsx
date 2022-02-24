@@ -1,23 +1,11 @@
 import React from 'react';
+import FooterContainer from './footer-container';
+import PagesMarker from './pages-marker';
 
 const CommonFooter = () => (
-  <div
-    style={{
-      fontFamily: 'Red Hat Text',
-      fontStyle: 'italic',
-      fontSize: 9,
-      color: '#ccc',
-      width: '100%',
-      paddingLeft: 24,
-      paddingRight: 24,
-      paddingBottom: 16,
-      display: 'flex',
-      justifyContent: 'center',
-    }}
-  >
-    Page&nbsp;<span className="pageNumber"></span>/
-    <span className="totalPages"></span>
-  </div>
+  <FooterContainer>
+    <PagesMarker />
+  </FooterContainer>
 );
 
 export default CommonFooter;
