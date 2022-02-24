@@ -1,9 +1,9 @@
-import React from 'react';
 import AutomationAnalyticsTemplate from './automation-analytics/App';
 import AutomationAnalyticsHeaderTemplate from './automation-analytics/header-template';
 import AutomationAnalyticsFooterTemplate from './automation-analytics/footer-template';
 import DemoTemplate from './demo/Template';
 import CommonHeader from './common/common-header';
+import CommonFooter from './common/common-footer';
 
 export const headerTeamplteMapper = {
   'automation-analytics': AutomationAnalyticsHeaderTemplate,
@@ -12,7 +12,7 @@ export const headerTeamplteMapper = {
 
 export const footerTemplateMapper = {
   'automation-analytics': AutomationAnalyticsFooterTemplate,
-  demo: () => <div />,
+  demo: CommonFooter,
 };
 
 const templates = {
