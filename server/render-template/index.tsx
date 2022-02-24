@@ -16,9 +16,25 @@ export function getHeaderandFooterTemplates(templateType: SupportedTemplates): {
   const HeaderTemplateNode = headerTeamplteMapper[templateType];
   const FooterTemplateNode = footerTemplateMapper[templateType];
 
+  const headerBase = fs.readFileSync(
+    path.resolve(__dirname, '../public/templates/header-template.html'),
+    { encoding: 'utf-8' }
+  );
+
+  const footerBase = fs.readFileSync(
+    path.resolve(__dirname, '../public/templates/footer-template.html'),
+    { encoding: 'utf-8' }
+  );
+
   return {
-    headerTemplate: renderToStaticMarkup(<HeaderTemplateNode />),
-    footerTemplate: renderToStaticMarkup(<FooterTemplateNode />),
+    headerTemplate: headerBase.replace(
+      '<div id="content"></div>',
+      renderToStaticMarkup(<HeaderTemplateNode />)
+    ),
+    footerTemplate: footerBase.replace(
+      '<div id="content"></div>',
+      renderToStaticMarkup(<FooterTemplateNode />)
+    ),
   };
 }
 
@@ -33,7 +49,7 @@ function renderTemplate(
   }
 
   const baseTemplate = fs.readFileSync(
-    path.resolve(__dirname, '../public/base-template.html'),
+    path.resolve(__dirname, '../public/templates/base-template.html'),
     { encoding: 'utf-8' }
   );
 
