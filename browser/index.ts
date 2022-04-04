@@ -108,7 +108,7 @@ const generatePdf = async (
     path: pdfPath,
     format: 'a4',
     printBackground: true,
-    landscape: true,
+    // landscape: false,
     margin: margins,
     displayHeaderFooter: true,
     headerTemplate,

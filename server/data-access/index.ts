@@ -4,6 +4,7 @@ import { IncomingHttpHeaders } from 'http';
 import prepareServiceCall, { ServiceCallFunction } from './call-service';
 import demoDescriptor from './demoDescriptor';
 import complianceDescriptor from './complianceDescriptor';
+import vulnerabilityDescriptor from './vulnerabilityDescriptor';
 import ServiceNames from './service-names';
 
 const templateMapper: {
@@ -12,6 +13,7 @@ const templateMapper: {
   // 'automation-analytics': prepareServiceCall(getAutomationAnalyticsDescriptor),
   [ServiceNames.demo]: prepareServiceCall(demoDescriptor),
   [ServiceNames.compliance]: prepareServiceCall(complianceDescriptor),
+  [ServiceNames.vulnerability]: prepareServiceCall(vulnerabilityDescriptor),
 };
 
 async function getTemplateData(

@@ -5,23 +5,27 @@ import DemoTemplate from './demo/Template';
 import CommonHeader from './common/common-header';
 import CommonFooter from './common/common-footer';
 import ServiceNames from '../server/data-access/service-names';
+import VulnerabilityExecutiveReportTemplate from './vulnerability-executive-report/Template';
 
 export const headerTeamplteMapper = {
   // 'automation-analytics': AutomationAnalyticsHeaderTemplate,
   [ServiceNames.demo]: CommonHeader,
   [ServiceNames.compliance]: CommonHeader,
+  'vulnerability-executive-report': CommonHeader,
 };
 
 export const footerTemplateMapper = {
   // 'automation-analytics': AutomationAnalyticsFooterTemplate,
   [ServiceNames.demo]: CommonFooter,
   [ServiceNames.compliance]: CommonFooter,
+  'vulnerability-executive-report': CommonFooter,
 };
 
 const templates = {
   // 'automation-analytics': AutomationAnalyticsTemplate,
   [ServiceNames.demo]: DemoTemplate,
   [ServiceNames.compliance]: DemoTemplate,
+  'vulnerability-executive-report': VulnerabilityExecutiveReportTemplate,
 };
 
 export default templates;
