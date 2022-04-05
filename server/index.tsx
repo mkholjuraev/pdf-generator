@@ -27,22 +27,20 @@ app.use('^/$', async (req, res, _next) => {
     console.log('Missing template, using "automation-analytics"');
     template = 'automation-analytics';
   }
-  const templateData = await getTemplateData(template);
+  const templateData = await getTemplateData(req.headers, template);
   const HTMLTemplate: string = renderTemplate(template, templateData);
   res.send(HTMLTemplate);
 });
 
 app.post(`${APIPrefix}/generate_pdf`, async (req, res) => {
-  const rhIdentity = req.headers['x-rh-identity'];
+  const rhIdentity = req.headers['x-rh-identity'] as string;
 
   if (!rhIdentity) {
     return res.status(401).send('Unauthorized access not allowed');
   }
   const template: SupportedTemplates = req.body.template;
 
-  const tenant = JSON.parse(atob(rhIdentity as string))['identity']['internal'][
-    'org_id'
-  ];
+  const tenant = JSON.parse(atob(rhIdentity))['identity']['internal']['org_id'];
   const url = `http://localhost:${PORT}?template=${template}`;
 
   try {
@@ -55,7 +53,7 @@ app.post(`${APIPrefix}/generate_pdf`, async (req, res) => {
 
     // Generate the pdf
     const startRender = performance.now();
-    const pathToPdf = await generatePdf(url, template);
+    const pathToPdf = await generatePdf(url, rhIdentity, template);
     elapsed = performance.now() - startRender;
     logger.log('info', `Total Rendering time: ${elapsed} ms`, {
       tenant,
