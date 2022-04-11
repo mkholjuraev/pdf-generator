@@ -10,64 +10,65 @@ objects:
     name: pdf-generator
   spec:
     envName: ${ENV_NAME}
-    featureFlags: true
     deployments:
     - name: api
       minReplicas: ${{REPLICAS}}
-      web: true
+      webServices:
+        public:
+          enabled: true
       podSpec:
         image: ${IMAGE}:${IMAGE_TAG}
         resources:
-          limits:
-            cpu: 500m
-            memory: ${MEMORY_LIMIT}
-          requests:
-            cpu: 100m
-            memory: ${MEMORY_REQUEST}
-        readinessProbe:
+        livenessProbe:
+          failureThreshold: 3
           httpGet:
             path: /healthz
             port: 8000
             scheme: HTTP
-          initialDelaySeconds: 10
+          initialDelaySeconds: 35
+          periodSeconds: 5
+          successThreshold: 1
+          timeoutSeconds: 120
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /healthz
+            port: 8000
+            scheme: HTTP
+          initialDelaySeconds: 35
+          periodSeconds: 5
+          successThreshold: 1
+          timeoutSeconds: 120
         env:
           - name: CLOWDER_ENABLED
             value: ${CLOWDER_ENABLED}
-          - name: PDF_GENERATOR_URL
-            value: ${PDF_GENERATOR_URL}
-          - name: API_PREFIX
-            value: ${API_PREFIX}
-          - name: LOG_LEVEL
-            value: ${LOG_LEVEL}
+        resources:
+          limits:
+            cpu: ${CPU_LIMIT}
+            memory: ${MEMORY_LIMIT}
+          requests:
+            cpu: 200m
+            memory: 256Mi
 
 parameters:
-- description: Number of API replicas
-  name: REPLICAS
+- description: Cpu limit of service
+  name: CPU_LIMIT
+  value: 500m
+- description: memory limit of service
+  name: MEMORY_LIMIT
+  value: 512Mi
+- name: MIN_REPLICAS
   value: '1'
-- descripton: pdf generator image name
-  name: IMAGE
-  value: "quay.io/cloudservices/pdf-generator"
-- description: pdf generator Image tag
+- description: Image tag
   name: IMAGE_TAG
   required: true
-  value: latest
-- description: Clowder ENV
-  name: ENV_NAME
-  required: true
-- description: Clowder enabled flag
+- description: Image name
+  name: IMAGE
+  value: quay.io/cloudservices/pdf-generator
+- description: Determines Clowder deployment
   name: CLOWDER_ENABLED
-  value: 'True'
-- description: Memory request
-  name: MEMORY_REQUEST
-  value: 2Gi
-- description: Memory limit
-  name: MEMORY_LIMIT
-  value: 4Gi
-- descript: PDF Generator API url
-  name: PDF_GENERATOR_URL
-  value: ''
-- description: PDF Generator secret name
-  name: PDF_GENERATOR_SECRET_NAME
-  value: pdf-generator-ephemeral
-- description: log level
-  name: LOG_LEVEL
+  value: "false"
+- description: ClowdEnv Name
+  name: ENV_NAME
+  value: "pdf-generator"
+  required: true
