@@ -90,8 +90,7 @@
   "scripts": {
     "build": "tsc",
     "lint": "eslint server config templates browser",
-    "prestart": "npm run build",
-    "start:server": "npx concurrently \"npx webpack -c ./config/webpack.config.js -w\" \"npx nodemon ./dist/index.js\"",
+    "start:server": "NODE_ENV=development npx concurrently \"npx webpack -c ./config/webpack.config.js -w\" \"npx nodemon ./dist/index.js\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "watch": {

@@ -86,30 +86,27 @@ const getExtraData = (
     });
 };
 
-const getParamsForGenerator = async ({
-  slug,
-  schemaParams,
-  dataFetchingParams: {
-    queryParams,
-    selectOptions,
-    showExtraRows,
-    apiHost,
-    apiPort,
-    endpointUrl,
-    chartSeriesHiddenProps,
-  },
-  // Added by the electron server
-  rhIdentity,
-}) => {
+const getParamsForGenerator = async (
+  headers,
+  {
+    slug,
+    schemaParams,
+    dataFetchingParams: {
+      queryParams,
+      selectOptions,
+      showExtraRows,
+      apiHost,
+      apiPort,
+      endpointUrl,
+      chartSeriesHiddenProps,
+    },
+    // Added by the electron server
+    rhIdentity,
+  }
+) => {
   if (!reports.find(({ layoutProps }) => layoutProps.slug === slug)) {
     throw new PDFNotImplementedError();
   }
-
-  const headers = {
-    'Content-Type': 'application/json',
-    'x-rh-identity': rhIdentity,
-  };
-
   const fastApiUrl = new URL(endpointUrl, `http://${apiHost}:${apiPort}`);
 
   const calculateSize = (input) => {

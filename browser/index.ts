@@ -4,7 +4,7 @@ import puppeteer from 'puppeteer';
 import { v4 as uuidv4 } from 'uuid';
 import os from 'os';
 import { getHeaderandFooterTemplates } from '../server/render-template';
-import { SupportedTemplates } from '../server/types';
+import ServiceNames from '../server/data-access/service-names';
 
 const A4Width = 210;
 const A4Height = 297;
@@ -37,7 +37,11 @@ const getNewPdfName = () => {
   return `${os.tmpdir()}/${pdfFilename}`;
 };
 
-const generatePdf = async (url: string, template: SupportedTemplates) => {
+const generatePdf = async (
+  url: string,
+  rhIdentity: string,
+  template: ServiceNames
+) => {
   const pdfPath = getNewPdfName();
 
   const browser = await puppeteer.launch({
@@ -61,6 +65,9 @@ const generatePdf = async (url: string, template: SupportedTemplates) => {
     }) as undefined // probably a typings issue in pupetter
   );
 
+  await page.setExtraHTTPHeaders({
+    'x-rh-identity': rhIdentity,
+  });
   const pageStatus = await page.goto(url, { waitUntil: 'networkidle2' });
   if (!pageStatus.ok()) {
     throw new Error(

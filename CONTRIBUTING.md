@@ -8,7 +8,7 @@
 
 We advise using some tool like Postman to create the API calls
 
-Create a **POST** request to this URL: `http://localhost:8000/api/tower-analytics/v1/generate_pdf`
+Create a **POST** request to this URL: `http://localhost:8000/api/pdf-generator/v1/generate`
 
 The post request must have
 1. `x-rh-identity` header. You can use this value `eyJpZGVudGl0eSI6eyJpbnRlcm5hbCI6eyJvcmdfaWQiOjF9fX0=`. Its just a mocked identity object with no real data, but enables the download
@@ -20,24 +20,24 @@ The post request must have
 }
 ```
 
-## Creating new template
+## Creating a new template
 
-1. Create a new directory in `/server/data-access/<template-id>`
-2. Inside the new directory, create a script that will load your data. (For now we just mock the API call. Follow the `/server/data-access/demo-data`)
-3. Register the promise to `templateMapper` under the `<template-id>` in the `/server/data-access/index.ts` file. Example
+1. Add a new entry into the `ServiceNames` enum in `/server/service-names.ts`. Make sure you give it `<template-id>` string value!
+2. Create a new directory in `/server/data-access/<template-id>`
+3. Inside the new directory, create an API descriptor. It will be used to load your data. (For now, we just mock the API call. Follow the `/server/data-access/demoDescriptor`)
+4. Register the promise to `templateMapper` under the `<template-id>` in the `/server/data-access/index.ts` file. Example
 
 ```diff
-+import { getTemplateIdData } from './new-template-id';
++import newDescriptor from './new-template-id';
 
 const templateMapper: {
-  [key: string]: (...args: any[]) => Promise<Record<string, unknown>>;
+  [key: string]: ServiceCallFunction;
 } = {
-  'automation-analytics': getAutomationAnalyticsData,
-  demo: getDemoData,
-+ 'new-template-id': getTemplateIdData
+  [ServiceNames.demo]: getDemoData,
++ [ServiceName.newService]: prepareServiceCall(newDescriptor)
 };
 ```
-4. Create a new directory in `/templates/<template-id>`.
-5. Inside the new directory, create a file and export React component. Make sure you are not referencing any browser API (like window or document). It will not work in SSR environment. The component will receive props based on the script response you have defined earlier
-6. Register the component to `templates` under the `<template-id>` inside `/templates/index.tsx`
-7. Add template headers and footer in respective mappers. If you can't use the common header and footer templates, create new React components.
+5. Create a new directory in `/templates/<template-id>`.
+6. Inside the new directory, create a file and export React component. Make sure you are not referencing any browser API (like window or document). It will not work in SSR environment. The component will receive props based on the script response you have defined earlier
+7. Register the component to `templates` under the `<template-id>` inside `/templates/index.tsx`
+8. Add template headers and footer in respective mappers. If you can't use the common header and footer templates, create new React components.

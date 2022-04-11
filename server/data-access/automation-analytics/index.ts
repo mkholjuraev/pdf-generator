@@ -1,1 +1,1 @@
-export { default as aapScript } from './aapScript';
+export { default } from './aapScript';

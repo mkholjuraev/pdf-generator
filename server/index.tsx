@@ -9,11 +9,11 @@ import logger from './logger';
 import generatePdf from '../browser';
 import { PDFNotFoundError, SendingFailedError } from './errors';
 import getTemplateData from './data-access';
-import { SupportedTemplates } from './types';
 import renderTemplate from './render-template';
+import ServiceNames from './data-access/service-names';
 
 const PORT = process.env.PORT || 8000;
-const APIPrefix = '/api/tower-analytics/v1';
+const APIPrefix = '/api/pdf-generator/v1';
 
 const app = express();
 app.use(cors());
@@ -22,27 +22,25 @@ app.use(express.static(path.resolve(__dirname, '..', 'build')));
 app.use(express.static(path.resolve(__dirname, '../public')));
 
 app.use('^/$', async (req, res, _next) => {
-  let template: SupportedTemplates = req.query.template as SupportedTemplates;
+  let template: ServiceNames = req.query.template as ServiceNames;
   if (!template) {
-    console.log('Missing template, using "automation-analytics"');
-    template = 'automation-analytics';
+    console.log('Missing template, using "demo"');
+    template = ServiceNames.demo;
   }
-  const templateData = await getTemplateData(template);
+  const templateData = await getTemplateData(req.headers, template);
   const HTMLTemplate: string = renderTemplate(template, templateData);
   res.send(HTMLTemplate);
 });
 
-app.post(`${APIPrefix}/generate_pdf`, async (req, res) => {
-  const rhIdentity = req.headers['x-rh-identity'];
+app.post(`${APIPrefix}/generate`, async (req, res) => {
+  const rhIdentity = req.headers['x-rh-identity'] as string;
 
   if (!rhIdentity) {
     return res.status(401).send('Unauthorized access not allowed');
   }
-  const template: SupportedTemplates = req.body.template;
+  const template: ServiceNames = req.body.template;
 
-  const tenant = JSON.parse(atob(rhIdentity as string))['identity']['internal'][
-    'org_id'
-  ];
+  const tenant = JSON.parse(atob(rhIdentity))['identity']['internal']['org_id'];
   const url = `http://localhost:${PORT}?template=${template}`;
 
   try {
@@ -55,7 +53,7 @@ app.post(`${APIPrefix}/generate_pdf`, async (req, res) => {
 
     // Generate the pdf
     const startRender = performance.now();
-    const pathToPdf = await generatePdf(url, template);
+    const pathToPdf = await generatePdf(url, rhIdentity, template);
     elapsed = performance.now() - startRender;
     logger.log('info', `Total Rendering time: ${elapsed} ms`, {
       tenant,

@@ -1,5 +1,4 @@
 import React, { FC } from 'react';
-import '@patternfly/react-core/dist/styles/base.css';
 import reportMapper from './Components/ReportComponents';
 import { getReport } from './schemas/index';
 import PageOptionsContext from './PageOptionsContext';
