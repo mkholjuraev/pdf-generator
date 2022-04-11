@@ -1,5 +1,5 @@
 {
-  "name": "pdf-generator",
+  "name": "crc-pdf-generator",
   "version": "1.0.0",
   "description": "",
   "main": "dist/src/index.js",
@@ -130,7 +130,7 @@
       "<rootDir>/src/**/*.{spec,test}.{js,jsx,ts,tsx}"
     ],
     "testEnvironment": "jsdom",
-    "testRunner": "/home/martin/insights/pdf-generator/node_modules/jest-circus/runner.js",
+    "testRunner": "/home/martin/insights/crc-pdf-generator/node_modules/jest-circus/runner.js",
     "transform": {
       "^.+\\.(js|jsx|mjs|cjs|ts|tsx)$": "<rootDir>/config/jest/babelTransform.js",
       "^.+\\.css$": "<rootDir>/config/jest/cssTransform.js",

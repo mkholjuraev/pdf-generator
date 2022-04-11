@@ -2,7 +2,7 @@
 
 set -exv
 
-IMAGE="quay.io/cloudservices/pdf-generator"
+IMAGE="quay.io/cloudservices/crc-pdf-generator"
 IMAGE_TAG=$(git rev-parse --short=7 HEAD)
 
 if [[ -z "$QUAY_USER" || -z "$QUAY_TOKEN" ]]; then

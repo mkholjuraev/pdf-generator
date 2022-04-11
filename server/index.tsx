@@ -13,7 +13,7 @@ import renderTemplate from './render-template';
 import ServiceNames from './data-access/service-names';
 
 const PORT = process.env.PORT || 8000;
-const APIPrefix = '/api/pdf-generator/v1';
+const APIPrefix = '/api/crc-pdf-generator/v1';
 
 const app = express();
 app.use(cors());

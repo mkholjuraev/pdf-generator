@@ -3,9 +3,9 @@
 # --------------------------------------------
 # Options that must be configured by app owner
 # --------------------------------------------
-APP_NAME="pdf-generator"  # name of app-sre "application" folder this component lives in
-COMPONENT_NAME="pdf-generator"  # name of app-sre "resourceTemplate" in deploy.yaml for this component
-IMAGE="quay.io/cloudservices/pdf-generator"
+APP_NAME="crc-pdf-generator"  # name of app-sre "application" folder this component lives in
+COMPONENT_NAME="crc-pdf-generator"  # name of app-sre "resourceTemplate" in deploy.yaml for this component
+IMAGE="quay.io/cloudservices/crc-pdf-generator"
 
 IQE_PLUGINS=
 IQE_MARKER_EXPRESSION="ephemeral"
