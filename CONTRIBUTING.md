@@ -8,7 +8,7 @@
 
 We advise using some tool like Postman to create the API calls
 
-Create a **POST** request to this URL: `http://localhost:8000/api/tower-analytics/v1/generate_pdf`
+Create a **POST** request to this URL: `http://localhost:8000/api/pdf-generator/v1/generate`
 
 The post request must have
 1. `x-rh-identity` header. You can use this value `eyJpZGVudGl0eSI6eyJpbnRlcm5hbCI6eyJvcmdfaWQiOjF9fX0=`. Its just a mocked identity object with no real data, but enables the download

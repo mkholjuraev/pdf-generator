@@ -13,7 +13,7 @@ import renderTemplate from './render-template';
 import { ServiceNames } from './data-access/call-service';
 
 const PORT = process.env.PORT || 8000;
-const APIPrefix = '/api/tower-analytics/v1';
+const APIPrefix = '/api/pdf-generator/v1';
 
 const app = express();
 app.use(cors());
@@ -24,7 +24,7 @@ app.use(express.static(path.resolve(__dirname, '../public')));
 app.use('^/$', async (req, res, _next) => {
   let template: ServiceNames = req.query.template as ServiceNames;
   if (!template) {
-    console.log('Missing template, using "automation-analytics"');
+    console.log('Missing template, using "demo"');
     template = ServiceNames.demo;
   }
   const templateData = await getTemplateData(req.headers, template);
@@ -32,7 +32,7 @@ app.use('^/$', async (req, res, _next) => {
   res.send(HTMLTemplate);
 });
 
-app.post(`${APIPrefix}/generate_pdf`, async (req, res) => {
+app.post(`${APIPrefix}/generate`, async (req, res) => {
   const rhIdentity = req.headers['x-rh-identity'] as string;
 
   if (!rhIdentity) {
