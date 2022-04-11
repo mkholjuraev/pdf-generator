@@ -1,24 +1,32 @@
+import { AxiosRequestConfig, AxiosRequestHeaders } from 'axios';
 import { IncomingHttpHeaders } from 'http';
-import { SupportedTemplates } from '../types';
-import { aapScript as getAutomationAnalyticsData } from './automation-analytics';
-import { getDemoData } from './demo-data';
+// import * as getAutomationAnalyticsDescriptor from './automation-analytics';
+import prepareServiceCall, {
+  ServiceCallFunction,
+  ServiceNames,
+} from './call-service';
+import demoDescriptor from './demoDescriptor';
+import complianceDescriptor from './complianceDescriptor';
 
 const templateMapper: {
-  [key: string]: (...args: any[]) => Promise<Record<string, unknown>>;
+  [key in ServiceNames]: ServiceCallFunction;
 } = {
-  'automation-analytics': getAutomationAnalyticsData,
-  demo: getDemoData,
+  // 'automation-analytics': prepareServiceCall(getAutomationAnalyticsDescriptor),
+  [ServiceNames.demo]: prepareServiceCall(demoDescriptor),
+  [ServiceNames.compliance]: prepareServiceCall(complianceDescriptor),
 };
 
 async function getTemplateData(
   headers: IncomingHttpHeaders,
-  template: SupportedTemplates,
-  ...args: any[]
-): Promise<Record<string, unknown>> {
+  template: ServiceNames,
+  options?: Omit<AxiosRequestConfig, 'headers'>
+): Promise<unknown> {
+  console.log('process.env.NODE_ENV', process.env.NODE_ENV);
   const dataAccessor = templateMapper[template];
 
   if (typeof dataAccessor === 'function') {
-    return dataAccessor(headers, ...args);
+    const data = await dataAccessor(headers as AxiosRequestHeaders, options);
+    return data;
   }
 }
 
