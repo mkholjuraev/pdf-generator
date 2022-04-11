@@ -6,7 +6,7 @@ import templateMapper, {
   footerTemplateMapper,
   headerTeamplteMapper,
 } from '../../templates';
-import { ServiceNames } from '../data-access/call-service';
+import ServiceNames from '../data-access/service-names';
 import { renderToStaticMarkup } from 'react-dom/server';
 
 export function getHeaderandFooterTemplates(templateType: ServiceNames): {

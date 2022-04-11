@@ -1,11 +1,7 @@
 import axios, { AxiosRequestHeaders, AxiosRequestConfig } from 'axios';
+import ServiceNames from './service-names';
 
 const IS_DEVELOPMENT = process.env.NODE_ENV === 'development';
-export enum ServiceNames {
-  'compliance' = 'compliance',
-  'demo' = 'demo',
-}
-
 // TODO: Base it on https://gitlab.cee.redhat.com/service/app-interface/-/blob/master/data/products/insights/environments/production.yml and load trough clowder
 const AVAIABLE_SERVICES = {
   [ServiceNames.compliance]: {

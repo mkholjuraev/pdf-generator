@@ -4,7 +4,7 @@
 import DemoTemplate from './demo/Template';
 import CommonHeader from './common/common-header';
 import CommonFooter from './common/common-footer';
-import { ServiceNames } from '../server/data-access/call-service';
+import ServiceNames from '../server/data-access/service-names';
 
 export const headerTeamplteMapper = {
   // 'automation-analytics': AutomationAnalyticsHeaderTemplate,

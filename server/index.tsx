@@ -10,7 +10,7 @@ import generatePdf from '../browser';
 import { PDFNotFoundError, SendingFailedError } from './errors';
 import getTemplateData from './data-access';
 import renderTemplate from './render-template';
-import { ServiceNames } from './data-access/call-service';
+import ServiceNames from './data-access/service-names';
 
 const PORT = process.env.PORT || 8000;
 const APIPrefix = '/api/pdf-generator/v1';

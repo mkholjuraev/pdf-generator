@@ -4,7 +4,7 @@ import puppeteer from 'puppeteer';
 import { v4 as uuidv4 } from 'uuid';
 import os from 'os';
 import { getHeaderandFooterTemplates } from '../server/render-template';
-import { ServiceNames } from '../server/data-access/call-service';
+import ServiceNames from '../server/data-access/service-names';
 
 const A4Width = 210;
 const A4Height = 297;

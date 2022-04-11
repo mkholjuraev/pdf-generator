@@ -1,4 +1,5 @@
-import { ServiceCallFunction, ServiceNames } from '../call-service';
+import { ServiceCallFunction } from '../call-service';
+import ServiceNames from '../service-names';
 
 const demoData = {
   title: 'Foo',

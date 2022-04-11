@@ -1,4 +1,5 @@
-import { ServiceCallFunction, ServiceNames } from '../call-service';
+import { ServiceCallFunction } from '../call-service';
+import ServiceNames from '../service-names';
 
 // TODO: Implement actuall compliance data accessor
 
