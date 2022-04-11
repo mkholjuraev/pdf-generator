@@ -4,7 +4,7 @@ import puppeteer from 'puppeteer';
 import { v4 as uuidv4 } from 'uuid';
 import os from 'os';
 import { getHeaderandFooterTemplates } from '../server/render-template';
-import { SupportedTemplates } from '../server/types';
+import { ServiceNames } from '../server/data-access/call-service';
 
 const A4Width = 210;
 const A4Height = 297;
@@ -40,7 +40,7 @@ const getNewPdfName = () => {
 const generatePdf = async (
   url: string,
   rhIdentity: string,
-  template: SupportedTemplates
+  template: ServiceNames
 ) => {
   const pdfPath = getNewPdfName();
 

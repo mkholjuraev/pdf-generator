@@ -9,8 +9,8 @@ import logger from './logger';
 import generatePdf from '../browser';
 import { PDFNotFoundError, SendingFailedError } from './errors';
 import getTemplateData from './data-access';
-import { SupportedTemplates } from './types';
 import renderTemplate from './render-template';
+import { ServiceNames } from './data-access/call-service';
 
 const PORT = process.env.PORT || 8000;
 const APIPrefix = '/api/tower-analytics/v1';
@@ -22,10 +22,10 @@ app.use(express.static(path.resolve(__dirname, '..', 'build')));
 app.use(express.static(path.resolve(__dirname, '../public')));
 
 app.use('^/$', async (req, res, _next) => {
-  let template: SupportedTemplates = req.query.template as SupportedTemplates;
+  let template: ServiceNames = req.query.template as ServiceNames;
   if (!template) {
     console.log('Missing template, using "automation-analytics"');
-    template = 'automation-analytics';
+    template = ServiceNames.demo;
   }
   const templateData = await getTemplateData(req.headers, template);
   const HTMLTemplate: string = renderTemplate(template, templateData);
@@ -38,7 +38,7 @@ app.post(`${APIPrefix}/generate_pdf`, async (req, res) => {
   if (!rhIdentity) {
     return res.status(401).send('Unauthorized access not allowed');
   }
-  const template: SupportedTemplates = req.body.template;
+  const template: ServiceNames = req.body.template;
 
   const tenant = JSON.parse(atob(rhIdentity))['identity']['internal']['org_id'];
   const url = `http://localhost:${PORT}?template=${template}`;

@@ -2,14 +2,14 @@ import React from 'react';
 import fs from 'fs';
 import path from 'path';
 
-import { SupportedTemplates } from '../types';
 import templateMapper, {
   footerTemplateMapper,
   headerTeamplteMapper,
 } from '../../templates';
+import { ServiceNames } from '../data-access/call-service';
 import { renderToStaticMarkup } from 'react-dom/server';
 
-export function getHeaderandFooterTemplates(templateType: SupportedTemplates): {
+export function getHeaderandFooterTemplates(templateType: ServiceNames): {
   headerTemplate: string;
   footerTemplate: string;
 } {
@@ -38,12 +38,8 @@ export function getHeaderandFooterTemplates(templateType: SupportedTemplates): {
   };
 }
 
-function renderTemplate(
-  templateType: SupportedTemplates,
-  templateData: Record<string, unknown>
-) {
-  const Node: React.ComponentType<Record<string, unknown>> =
-    templateMapper[templateType];
+function renderTemplate(templateType: ServiceNames, templateData: unknown) {
+  const Node: React.ComponentType<any> = templateMapper[templateType];
   if (typeof Node === 'undefined') {
     throw `Template not found, invalid query: ${templateType}!`;
   }
