@@ -14,7 +14,7 @@ const responseProcessor = (data: typeof demoData) => data;
 const demoDescriptor = {
   responseProcessor,
   path: '/',
-  service: ServiceNames.demo,
+  service: ServiceNames.compliance,
   mock: getMock,
 };
 
