@@ -20,6 +20,7 @@ app.use(cors());
 app.use(express.json({ limit: '5mb' }));
 app.use(express.static(path.resolve(__dirname, '..', 'build')));
 app.use(express.static(path.resolve(__dirname, '../public')));
+app.use(logger);
 
 app.use('^/$', async (req, res, _next) => {
   let template: ServiceNames = req.query.template as ServiceNames;
@@ -46,7 +47,7 @@ app.post(`${APIPrefix}/generate`, async (req, res) => {
   try {
     const startGeneration = performance.now();
     let elapsed = performance.now() - startGeneration;
-    logger.log('info', `Total Data collection time: ${elapsed} ms`, {
+    console.info('info', `Total Data collection time: ${elapsed} ms`, {
       tenant,
       elapsed,
     });
@@ -55,7 +56,7 @@ app.post(`${APIPrefix}/generate`, async (req, res) => {
     const startRender = performance.now();
     const pathToPdf = await generatePdf(url, rhIdentity, template);
     elapsed = performance.now() - startRender;
-    logger.log('info', `Total Rendering time: ${elapsed} ms`, {
+    console.info('info', `Total Rendering time: ${elapsed} ms`, {
       tenant,
       elapsed,
     });
@@ -66,35 +67,37 @@ app.post(`${APIPrefix}/generate`, async (req, res) => {
       throw new PDFNotFoundError(pdfFileName);
     }
 
-    logger.log('info', `${pdfFileName} has been created.`, { tenant });
-    logger.log('info', `Sending ${pdfFileName} to the client.`, { tenant });
+    console.info('info', `${pdfFileName} has been created.`, { tenant });
+    console.info('info', `Sending ${pdfFileName} to the client.`, { tenant });
 
     res.status(200).sendFile(pathToPdf, (err) => {
       if (err) {
         const errorMessage = new SendingFailedError(pdfFileName, err);
-        logger.log('error', errorMessage.message, { tenant });
+        console.info('error', errorMessage.message, { tenant });
         throw errorMessage;
       }
 
       fs.unlink(pathToPdf, (err) => {
         if (err) {
-          logger.log('warn', `Failed to unlink ${pdfFileName}: ${err}`, {
+          console.info('warn', `Failed to unlink ${pdfFileName}: ${err}`, {
             tenant,
           });
         }
-        logger.log('info', `${pdfFileName} finished downloading.`, { tenant });
+        console.info('info', `${pdfFileName} finished downloading.`, {
+          tenant,
+        });
       });
     });
 
     elapsed = performance.now() - startGeneration;
-    logger.log(
+    console.info(
       'info',
       `Total Data collection + PDF Rendering + Download time: ${elapsed} ms`,
       { tenant, elapsed }
     );
   } catch (error) {
-    logger.log('error', `${error.code}: ${error.message}`, { tenant });
-    res.status(error.code as number).send(error.message);
+    console.info('error', `${error.code}: ${error.message}`, { tenant });
+    res.status((error.code as number) || 500).send(error.message);
   }
 });
 
@@ -103,7 +106,7 @@ app.get('/healthz', (_req, res, _next) => {
 });
 
 if (process.env.NODE_ENV === 'development') {
-  app.listen(PORT, () => logger.log('info', `Listening on port ${PORT}`));
+  app.listen(PORT, () => console.info('info', `Listening on port ${PORT}`));
 } else {
-  app.listen(PORT, () => logger.log('info', `Listening on port ${PORT}`));
+  app.listen(PORT, () => console.info('info', `Listening on port ${PORT}`));
 }
