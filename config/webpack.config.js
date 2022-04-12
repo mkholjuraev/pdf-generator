@@ -38,7 +38,7 @@ const myGenerator = asGenerator((item, ...rest) => {
 });
 
 const baseConfig = {
-  mode: 'development',
+  mode: process.env.NODE_ENV || 'development',
   devtool: 'source-map',
   resolve: {
     extensions: ['.ts', '.tsx', '.js'],
