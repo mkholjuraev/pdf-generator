@@ -4,6 +4,7 @@ import path from 'path';
 import cors from 'cors';
 import atob from 'atob';
 import { performance } from 'perf_hooks';
+import promBundle from 'express-prom-bundle';
 
 import logger from './logger';
 import generatePdf from '../browser';
@@ -115,3 +116,20 @@ if (process.env.NODE_ENV === 'development') {
 } else {
   app.listen(PORT, () => console.info('info', `Listening on port ${PORT}`));
 }
+
+const metricsApp = express();
+
+const metricsMiddleware = promBundle({
+  includeMethod: true,
+  includePath: true,
+  includeStatusCode: true,
+  includeUp: true,
+  promClient: {
+    collectDefaultMetrics: {},
+  },
+});
+
+metricsApp.use(metricsMiddleware);
+metricsApp.listen(8080, () => {
+  console.info('Metrics server listening on port 8080');
+});
