@@ -12,8 +12,9 @@ import { PDFNotFoundError, SendingFailedError } from './errors';
 import getTemplateData from './data-access';
 import renderTemplate from './render-template';
 import ServiceNames from './data-access/service-names';
+import config from './config';
 
-const PORT = process.env.PORT || 8000;
+const PORT = config.webPort;
 const APIPrefix = '/api/crc-pdf-generator/v1';
 
 const app = express();
@@ -124,12 +125,13 @@ const metricsMiddleware = promBundle({
   includePath: true,
   includeStatusCode: true,
   includeUp: true,
+  metricsPath: config.metricsPath,
   promClient: {
     collectDefaultMetrics: {},
   },
 });
 
 metricsApp.use(metricsMiddleware);
-metricsApp.listen(8080, () => {
-  console.info('Metrics server listening on port 8080');
+metricsApp.listen(config.metricsPort, () => {
+  console.info(`Metrics server listening on port ${config.metricsPort}`);
 });

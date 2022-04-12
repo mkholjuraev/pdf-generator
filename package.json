@@ -9,6 +9,7 @@
     "@patternfly/patternfly": "^4.171.1",
     "@patternfly/react-core": "4.192.0",
     "@patternfly/react-table": "^4.61.15",
+    "app-common-js": "^1.4.0",
     "atob": "^2.1.2",
     "axios": "^0.26.0",
     "bluebird": "^3.7.2",
