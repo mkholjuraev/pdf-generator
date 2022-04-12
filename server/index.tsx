@@ -25,12 +25,17 @@ app.use(logger);
 app.use('^/$', async (req, res, _next) => {
   let template: ServiceNames = req.query.template as ServiceNames;
   if (!template) {
-    console.log('Missing template, using "demo"');
+    console.info('Missing template, using "demo"');
     template = ServiceNames.demo;
   }
-  const templateData = await getTemplateData(req.headers, template);
-  const HTMLTemplate: string = renderTemplate(template, templateData);
-  res.send(HTMLTemplate);
+  try {
+    const templateData = await getTemplateData(req.headers, template);
+    const HTMLTemplate: string = renderTemplate(template, templateData);
+    res.send(HTMLTemplate);
+  } catch (error) {
+    res.send(`<div>Unable to render ${template}!</div>`);
+    console.error(error);
+  }
 });
 
 app.post(`${APIPrefix}/generate`, async (req, res) => {
