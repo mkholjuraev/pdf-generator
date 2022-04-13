@@ -4,9 +4,9 @@ const HeaderContainer: React.FunctionComponent = ({ children }) => (
   <div
     style={{
       width: '100%',
-      paddingLeft: 24,
-      paddingRight: 24,
       paddingTop: 16,
+      paddingRight: 24,
+      paddingLeft: 24,
       display: 'flex',
       justifyContent: 'space-between',
       alignItems: 'end',
