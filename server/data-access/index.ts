@@ -19,12 +19,13 @@ async function getTemplateData(
   template: ServiceNames,
   options?: Omit<AxiosRequestConfig, 'headers'>
 ): Promise<unknown> {
-  console.log('process.env.NODE_ENV', process.env.NODE_ENV);
   const dataAccessor = templateMapper[template];
 
   if (typeof dataAccessor === 'function') {
     const data = await dataAccessor(headers as AxiosRequestHeaders, options);
     return data;
+  } else {
+    throw new Error(`Not API descriptor avaiable for ${template}!`);
   }
 }
 

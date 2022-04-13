@@ -1,13 +1,32 @@
 import { replaceString } from './helpers';
+import { resolve } from 'path';
 
 import puppeteer from 'puppeteer';
 import { v4 as uuidv4 } from 'uuid';
 import os from 'os';
 import { getHeaderandFooterTemplates } from '../server/render-template';
 import ServiceNames from '../server/data-access/service-names';
+import { glob } from 'glob';
 
 const A4Width = 210;
 const A4Height = 297;
+const IS_PRODUCTION = process.env.NODE_ENV === 'production';
+
+function getChromiumExectuablePath() {
+  const paths = glob.sync(
+    resolve(
+      __dirname,
+      '../node_modules/puppeteer/.local-chromium/*/chrome-linux/chrome/'
+    )
+  );
+  if (paths.length > 0) {
+    return paths[0];
+  } else {
+    throw new Error('unable to locate chromium executable');
+  }
+}
+
+const CHROMIUM_PATH = getChromiumExectuablePath();
 
 const margins = {
   top: '2cm',
@@ -45,6 +64,13 @@ const generatePdf = async (
   const pdfPath = getNewPdfName();
 
   const browser = await puppeteer.launch({
+    headless: true,
+    ...(IS_PRODUCTION
+      ? {
+          // we have a different dir structure than pupetter expects. We have to point it to the correct chromium executable
+          executablePath: CHROMIUM_PATH,
+        }
+      : {}),
     args: ['--no-sandbox', '--disable-gpu'],
   });
   const page = await browser.newPage();
