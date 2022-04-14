@@ -26,7 +26,7 @@ function getChromiumExectuablePath() {
   }
 }
 
-const CHROMIUM_PATH = getChromiumExectuablePath();
+const CHROMIUM_PATH = IS_PRODUCTION && getChromiumExectuablePath();
 
 const margins = {
   top: '2cm',
