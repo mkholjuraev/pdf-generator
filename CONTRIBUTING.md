@@ -41,3 +41,9 @@ const templateMapper: {
 6. Inside the new directory, create a file and export React component. Make sure you are not referencing any browser API (like window or document). It will not work in SSR environment. The component will receive props based on the script response you have defined earlier
 7. Register the component to `templates` under the `<template-id>` inside `/templates/index.tsx`
 8. Add template headers and footer in respective mappers. If you can't use the common header and footer templates, create new React components.
+
+### Common components
+
+**Note: try to re-use as many existing components as possible**
+
+There are many common parts of the PDF reports. Before implementing an entirely new component, please check existing templates for components you might need. If required, move the component to the `/templates/common` directory and use them instead.
