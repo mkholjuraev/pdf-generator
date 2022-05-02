@@ -4,6 +4,7 @@
 import DemoTemplate from './demo/Template';
 import CommonHeader from './common/common-header';
 import CommonFooter from './common/common-footer';
+import VulnerabilitiesSystemTemplate from './vulnerabilities-system/Template';
 import ServiceNames from '../server/data-access/service-names';
 import VulnerabilityTemplate from './vulnerability/Template';
 import AdvisorTemplate from './advisor/Template';
@@ -14,6 +15,7 @@ export const headerTeamplteMapper = {
   [ServiceNames.compliance]: CommonHeader,
   [ServiceNames.vulnerability]: CommonHeader,
   [ServiceNames.advisor]: CommonHeader,
+  [ServiceNames.vulnerabilitiesSystem]: CommonHeader,
 };
 
 export const footerTemplateMapper = {
@@ -22,6 +24,7 @@ export const footerTemplateMapper = {
   [ServiceNames.compliance]: CommonFooter,
   [ServiceNames.vulnerability]: CommonFooter,
   [ServiceNames.advisor]: CommonFooter,
+  [ServiceNames.vulnerabilitiesSystem]: CommonFooter,
 };
 
 const templates = {
@@ -30,6 +33,7 @@ const templates = {
   [ServiceNames.compliance]: DemoTemplate,
   [ServiceNames.vulnerability]: VulnerabilityTemplate,
   [ServiceNames.advisor]: AdvisorTemplate,
+  [ServiceNames.vulnerabilitiesSystem]: VulnerabilitiesSystemTemplate,
 };
 
 export default templates;

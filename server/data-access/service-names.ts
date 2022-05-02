@@ -3,6 +3,7 @@ enum ServiceNames {
   'demo' = 'demo',
   'vulnerability' = 'vulnerability',
   'advisor' = 'advisor',
+  'vulnerabilitiesSystem' = 'vulnerabilitiesSystem',
 }
 
 export default ServiceNames;

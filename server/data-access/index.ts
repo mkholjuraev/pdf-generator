@@ -6,6 +6,7 @@ import demoDescriptor from './demoDescriptor';
 import complianceDescriptor from './complianceDescriptor';
 import vulnerabilityDescriptor from './vulnerabilityDescriptor';
 import advisorDescriptor from './advisorDescriptor';
+import vulnerabilitiesSystemDescriptor from './vulnerabilitiesSystemDescriptor';
 import ServiceNames from './service-names';
 
 const templateMapper: {
@@ -16,6 +17,9 @@ const templateMapper: {
   [ServiceNames.compliance]: prepareServiceCall(complianceDescriptor),
   [ServiceNames.vulnerability]: prepareServiceCall(vulnerabilityDescriptor),
   [ServiceNames.advisor]: prepareServiceCall(advisorDescriptor),
+  [ServiceNames.vulnerabilitiesSystem]: prepareServiceCall(
+    vulnerabilitiesSystemDescriptor
+  ),
 };
 
 async function getTemplateData(
