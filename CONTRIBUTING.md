@@ -22,7 +22,7 @@ The post request must have
 
 ## Creating a new template
 
-1. Add a new entry into the `ServiceNames` enum in `/server/service-names.ts`. Make sure you give it `<template-id>` string value!
+1. Add a new entry into the `ServiceNames` enum in `/server/data-access/service-names.ts`. Make sure you give it `<template-id>` string value!
 2. Create a new directory in `/server/data-access/<template-id>`
 3. Inside the new directory, create an API descriptor. It will be used to load your data. (For now, we just mock the API call. Follow the `/server/data-access/demoDescriptor`)
 4. Register the promise to `templateMapper` under the `<template-id>` in the `/server/data-access/index.ts` file. Example

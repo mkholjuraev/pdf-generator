@@ -6,12 +6,14 @@ import CommonHeader from './common/common-header';
 import CommonFooter from './common/common-footer';
 import ServiceNames from '../server/data-access/service-names';
 import VulnerabilityTemplate from './vulnerability/Template';
+import AdvisorTemplate from './advisor/Template';
 
 export const headerTeamplteMapper = {
   // 'automation-analytics': AutomationAnalyticsHeaderTemplate,
   [ServiceNames.demo]: CommonHeader,
   [ServiceNames.compliance]: CommonHeader,
   [ServiceNames.vulnerability]: CommonHeader,
+  [ServiceNames.advisor]: CommonHeader,
 };
 
 export const footerTemplateMapper = {
@@ -19,6 +21,7 @@ export const footerTemplateMapper = {
   [ServiceNames.demo]: CommonFooter,
   [ServiceNames.compliance]: CommonFooter,
   [ServiceNames.vulnerability]: CommonFooter,
+  [ServiceNames.advisor]: CommonFooter,
 };
 
 const templates = {
@@ -26,6 +29,7 @@ const templates = {
   [ServiceNames.demo]: DemoTemplate,
   [ServiceNames.compliance]: DemoTemplate,
   [ServiceNames.vulnerability]: VulnerabilityTemplate,
+  [ServiceNames.advisor]: AdvisorTemplate,
 };
 
 export default templates;
