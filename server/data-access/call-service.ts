@@ -12,6 +12,10 @@ const AVAIABLE_SERVICES = {
     host: 'foo.bar',
     port: 8000,
   },
+  [ServiceNames.advisor]: {
+    host: 'foo.bar',
+    port: 8000,
+  },
   [ServiceNames.demo]: {
     host: 'foo.bar',
     port: 8000,
