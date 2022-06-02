@@ -16,13 +16,14 @@ export function getHeaderandFooterTemplates(templateType: ServiceNames): {
   const HeaderTemplateNode = headerTeamplteMapper[templateType];
   const FooterTemplateNode = footerTemplateMapper[templateType];
 
+  const root = process.cwd();
   const headerBase = fs.readFileSync(
-    path.resolve(__dirname, '../public/templates/header-template.html'),
+    path.resolve(root, 'public/templates/header-template.html'),
     { encoding: 'utf-8' }
   );
 
   const footerBase = fs.readFileSync(
-    path.resolve(__dirname, '../public/templates/footer-template.html'),
+    path.resolve(root, 'public/templates/footer-template.html'),
     { encoding: 'utf-8' }
   );
 
@@ -38,14 +39,18 @@ export function getHeaderandFooterTemplates(templateType: ServiceNames): {
   };
 }
 
-function renderTemplate(templateType: ServiceNames, templateData: unknown) {
+function renderTemplate(
+  templateType: ServiceNames,
+  templateData: Record<string, unknown>
+) {
   const Node: React.ComponentType<any> = templateMapper[templateType];
   if (typeof Node === 'undefined') {
     throw `Template not found, invalid query: ${templateType}!`;
   }
 
+  const root = process.cwd();
   const baseTemplate = fs.readFileSync(
-    path.resolve(__dirname, '../public/templates/base-template.html'),
+    path.resolve(root, 'public/templates/base-template.html'),
     { encoding: 'utf-8' }
   );
 
