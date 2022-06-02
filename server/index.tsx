@@ -32,7 +32,10 @@ app.use('^/$', async (req, res, _next) => {
   }
   try {
     const templateData = await getTemplateData(req.headers, template);
-    const HTMLTemplate: string = renderTemplate(template, templateData);
+    const HTMLTemplate: string = renderTemplate(
+      template,
+      templateData as Record<string, unknown>
+    );
     res.send(HTMLTemplate);
   } catch (error) {
     res.send(`<div>Unable to render ${template}!</div>`);

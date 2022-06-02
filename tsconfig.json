@@ -19,6 +19,7 @@
   },
   "include": [
       "server/**/*",
+      "tests-visual-regression/**/*",
       "templates/**/*",
       "node_modules/@types/puppeteer/index.d.ts"
   ]
