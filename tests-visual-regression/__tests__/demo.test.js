@@ -1,5 +1,4 @@
 const puppeteer = require('puppeteer');
-const { toMatchImageSnapshot } = require('jest-image-snapshot');
 
 describe('demo template visual regression testing', () => {
   let browser;
@@ -10,13 +9,19 @@ describe('demo template visual regression testing', () => {
       headless: false,
       slowMo: 100,
     });
+    page = await browser.newPage();
   });
 
   afterAll(async () => {
-    await browser.close()
-  })
+    await browser.close();
+  });
 
-  test('foo', () => {
-    expect(true).toBe(true);
+  test('foo', async () => {
+    await page.goto(`${SEVER_HOST}/?template=demo`);
+    const image = await page.screenshot();
+    expect(image).toMatchImageSnapshot({
+      failureThresholdType: 'pixel',
+      failureThreshold: 100,
+    });
   });
 });
