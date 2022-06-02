@@ -112,11 +112,7 @@ app.get('/healthz', (_req, res, _next) => {
   return res.status(200).send('Build assets available');
 });
 
-if (process.env.NODE_ENV === 'development') {
-  app.listen(PORT, () => console.info('info', `Listening on port ${PORT}`));
-} else {
-  app.listen(PORT, () => console.info('info', `Listening on port ${PORT}`));
-}
+app.listen(PORT, () => console.info('info', `Listening on port ${PORT}`));
 
 const metricsApp = express();
 
