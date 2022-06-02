@@ -99,7 +99,8 @@
     "build:production": "NODE_ENV=production npm run build",
     "lint": "eslint server config templates browser",
     "start:server": "NODE_ENV=development npx concurrently \"npx webpack -c ./config/webpack.config.js -w\" \"npx nodemon ./dist/index.js\"",
-    "test": "jest"
+    "test": "jest",
+    "test:visual": "node visual-test.js"
   },
   "watch": {
     "build": {
