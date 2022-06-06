@@ -20,6 +20,10 @@ const AVAIABLE_SERVICES = {
     host: 'foo.bar',
     port: 8000,
   },
+  [ServiceNames.vulnerabilitiesSystem]: {
+    host: 'foo.bar',
+    port: 8000,
+  },
 };
 
 export type APIDescriptor<T = Record<string, unknown>, R = unknown> = {
