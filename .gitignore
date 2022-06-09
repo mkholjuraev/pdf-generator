@@ -3,6 +3,7 @@ build
 .vscode
 *.d.ts
 !server/config/clowder.d.ts
+!tests-visual-regression/global.d.ts
 dist
 public/*
 !public/favicon.ico

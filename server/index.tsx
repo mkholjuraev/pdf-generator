@@ -32,7 +32,10 @@ app.use('^/$', async (req, res, _next) => {
   }
   try {
     const templateData = await getTemplateData(req.headers, template);
-    const HTMLTemplate: string = renderTemplate(template, templateData);
+    const HTMLTemplate: string = renderTemplate(
+      template,
+      templateData as Record<string, unknown>
+    );
     res.send(HTMLTemplate);
   } catch (error) {
     res.send(`<div>Unable to render ${template}!</div>`);
@@ -112,11 +115,7 @@ app.get('/healthz', (_req, res, _next) => {
   return res.status(200).send('Build assets available');
 });
 
-if (process.env.NODE_ENV === 'development') {
-  app.listen(PORT, () => console.info('info', `Listening on port ${PORT}`));
-} else {
-  app.listen(PORT, () => console.info('info', `Listening on port ${PORT}`));
-}
+app.listen(PORT, () => console.info('info', `Listening on port ${PORT}`));
 
 const metricsApp = express();
 
