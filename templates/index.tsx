@@ -8,6 +8,7 @@ import VulnerabilitiesSystemTemplate from './vulnerabilities-system/Template';
 import ServiceNames from '../server/data-access/service-names';
 import VulnerabilityTemplate from './vulnerability/Template';
 import AdvisorTemplate from './advisor/Template';
+import ComplianceTemplate from './compliance/template';
 
 export const headerTeamplteMapper = {
   // 'automation-analytics': AutomationAnalyticsHeaderTemplate,
@@ -30,7 +31,7 @@ export const footerTemplateMapper = {
 const templates = {
   // 'automation-analytics': AutomationAnalyticsTemplate,
   [ServiceNames.demo]: DemoTemplate,
-  [ServiceNames.compliance]: DemoTemplate,
+  [ServiceNames.compliance]: ComplianceTemplate,
   [ServiceNames.vulnerability]: VulnerabilityTemplate,
   [ServiceNames.advisor]: AdvisorTemplate,
   [ServiceNames.vulnerabilitiesSystem]: VulnerabilitiesSystemTemplate,

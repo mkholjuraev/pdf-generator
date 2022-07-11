@@ -1,8 +1,11 @@
 const getHeaderDate = () => {
   const date = new Date();
-  return `${date.getDay()} ${date.toLocaleString('en-us', {
+  const day = date.getDate();
+  const month = date.getMonth();
+  const year = date.getFullYear();
+  return `${day} ${date.toLocaleString('en-us', {
     month: 'short',
-  })} ${date.getFullYear()} ${date.toLocaleString('en-us', {
+  })} ${year} ${date.toLocaleString('en-us', {
     hour: '2-digit',
     hour12: false,
     minute: 'numeric',

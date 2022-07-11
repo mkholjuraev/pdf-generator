@@ -1,21 +1,15 @@
-import { ServiceCallFunction } from '../call-service';
 import ServiceNames from '../service-names';
+import { ServiceCallFunction } from '../call-service';
+import { complianceData } from './complianceData';
 
-// TODO: Implement actuall compliance data accessor
+const getMock: ServiceCallFunction = () => Promise.resolve(complianceData);
+const responseProcessor = (data: typeof complianceData) => data;
 
-const demoData = {
-  title: 'Foo',
-  description: 'bar',
-};
-
-const getMock: ServiceCallFunction = () => Promise.resolve(demoData);
-const responseProcessor = (data: typeof demoData) => data;
-
-const demoDescriptor = {
+const complianceDescriptor = {
   responseProcessor,
   path: '/',
   service: ServiceNames.compliance,
   mock: getMock,
 };
 
-export default demoDescriptor;
+export default complianceDescriptor;
