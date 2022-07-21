@@ -7,6 +7,7 @@ import complianceDescriptor from './complianceDescriptor';
 import vulnerabilityDescriptor from './vulnerabilityDescriptor';
 import advisorDescriptor from './advisorDescriptor';
 import vulnerabilitiesSystemDescriptor from './vulnerabilitiesSystemDescriptor';
+import previewDescriptor from './previewDescriptor';
 import ServiceNames from './service-names';
 
 const templateMapper: {
@@ -20,6 +21,7 @@ const templateMapper: {
   [ServiceNames.vulnerabilitiesSystem]: prepareServiceCall(
     vulnerabilitiesSystemDescriptor
   ),
+  [ServiceNames.preview]: prepareServiceCall(previewDescriptor),
 };
 
 async function getTemplateData(
@@ -33,7 +35,7 @@ async function getTemplateData(
     const data = await dataAccessor(headers as AxiosRequestHeaders, options);
     return data;
   } else {
-    throw new Error(`Not API descriptor avaiable for ${template}!`);
+    throw new Error(`No API descriptor avaiable for ${template}!`);
   }
 }
 

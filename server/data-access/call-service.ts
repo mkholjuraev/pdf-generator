@@ -24,6 +24,10 @@ const AVAIABLE_SERVICES = {
     host: 'foo.bar',
     port: 8000,
   },
+  [ServiceNames.preview]: {
+    host: 'foo.bar',
+    port: 8000,
+  },
 };
 
 export type APIDescriptor<T = Record<string, unknown>, R = unknown> = {

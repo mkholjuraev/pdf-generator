@@ -17,10 +17,12 @@ export const headerTeamplteMapper = {
   [ServiceNames.vulnerability]: CommonHeader,
   [ServiceNames.advisor]: CommonHeader,
   [ServiceNames.vulnerabilitiesSystem]: CommonHeader,
+  [ServiceNames.preview]: CommonHeader,
 };
 
 export const footerTemplateMapper = {
   // 'automation-analytics': AutomationAnalyticsFooterTemplate,
+  [ServiceNames.preview]: CommonFooter,
   [ServiceNames.demo]: CommonFooter,
   [ServiceNames.compliance]: CommonFooter,
   [ServiceNames.vulnerability]: CommonFooter,

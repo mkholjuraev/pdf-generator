@@ -7,7 +7,7 @@ import templateMapper, {
   headerTeamplteMapper,
 } from '../../templates';
 import ServiceNames from '../data-access/service-names';
-import { renderToStaticMarkup } from 'react-dom/server';
+import { renderToString, renderToStaticMarkup } from 'react-dom/server';
 
 export function getHeaderandFooterTemplates(templateType: ServiceNames): {
   headerTemplate: string;
@@ -43,7 +43,7 @@ function renderTemplate(
   templateType: ServiceNames,
   templateData: Record<string, unknown>
 ) {
-  const Node: React.ComponentType<any> = templateMapper[templateType];
+  const Node: React.ComponentType<any> = templateMapper[templateType]; // eslint_disable_line
   if (typeof Node === 'undefined') {
     throw `Template not found, invalid query: ${templateType}!`;
   }
@@ -56,7 +56,7 @@ function renderTemplate(
 
   const template = baseTemplate.replace(
     '<div id="root"></div>',
-    `<div id="root">${renderToStaticMarkup(<Node {...templateData} />)}</div>`
+    `<div id="root">${renderToString(<Node {...templateData} />)}</div>`
   );
   return template;
 }

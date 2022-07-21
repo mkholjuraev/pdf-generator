@@ -1,10 +1,11 @@
 import { replaceString } from './helpers';
 import { resolve } from 'path';
-
 import puppeteer from 'puppeteer';
 import { v4 as uuidv4 } from 'uuid';
 import os from 'os';
-import { getHeaderandFooterTemplates } from '../server/render-template';
+import renderTemplate, {
+  getHeaderandFooterTemplates,
+} from '../server/render-template';
 import ServiceNames from '../server/data-access/service-names';
 import { glob } from 'glob';
 
@@ -54,6 +55,67 @@ const setWindowProperty = (
 const getNewPdfName = () => {
   const pdfFilename = `report_${uuidv4()}.pdf`;
   return `${os.tmpdir()}/${pdfFilename}`;
+};
+
+export const previewPdf = async (
+  url: string,
+  rhIdentity: string,
+  template: ServiceNames,
+  templateData: any
+) => {
+  const browser = await puppeteer.launch({
+    headless: true,
+    ...(IS_PRODUCTION
+      ? {
+          // we have a different dir structure than pupetter expects. We have to point it to the correct chromium executable
+          executablePath: CHROMIUM_PATH,
+        }
+      : {}),
+    args: ['--no-sandbox', '--disable-gpu'],
+  });
+  const page = await browser.newPage();
+  await page.setViewport({ width: pageWidth, height: pageHeight });
+  await page.setContent(renderTemplate(template, templateData));
+
+  // // Enables console logging in Headless mode - handy for debugging components
+  page.on('console', (msg) => console.log(`[Headless log] ${msg.text()}`));
+  const { headerTemplate, footerTemplate } =
+    getHeaderandFooterTemplates(template);
+
+  await setWindowProperty(
+    page,
+    'customPupeteerParams',
+    JSON.stringify({
+      pupeteerParams: {
+        pageWidth,
+        pageHeight,
+      },
+    }) as undefined // probably a typings issue in pupetter
+  );
+
+  await page.setExtraHTTPHeaders({
+    'x-rh-identity': rhIdentity,
+  });
+
+  const pageStatus = await page.goto(url, { waitUntil: 'networkidle2' });
+
+  const pdfBuffer = await page.pdf({
+    format: 'a4',
+    printBackground: true,
+    margin: margins,
+    displayHeaderFooter: true,
+    headerTemplate,
+    footerTemplate,
+  });
+
+  if (!pageStatus.ok()) {
+    throw new Error(
+      `Pupeteer error while loading the react app: ${pageStatus.statusText()}`
+    );
+  }
+
+  await browser.close();
+  return pdfBuffer;
 };
 
 const generatePdf = async (
