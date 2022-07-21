@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Request } from 'express';
 import fs from 'fs';
 import path from 'path';
 import cors from 'cors';
@@ -16,6 +16,12 @@ import config from './config';
 
 const PORT = config.webPort;
 const APIPrefix = '/api/crc-pdf-generator/v1';
+type PreviewOptions = unknown;
+type ReqQuery = {
+  orientation?: string;
+  template?: string;
+};
+type PreviewHandlerRequest = Request<PreviewOptions, any, unknown, ReqQuery>;
 
 const app = express();
 app.use(cors());
@@ -113,9 +119,12 @@ app.post(`${APIPrefix}/generate`, async (req, res) => {
   }
 });
 
-app.get(`/preview`, async (req, res) => {
+app.get(`/preview`, async (req: PreviewHandlerRequest, res) => {
   const template: ServiceNames = req.query.template as ServiceNames;
   const templateData = await getTemplateData(req.headers, template);
+  let orientationOption = '';
+
+  if (req.query?.orientation) orientationOption = req.query.orientation;
 
   const url = `http://localhost:${PORT}?template=${template}`;
   try {
@@ -131,6 +140,7 @@ app.get(`/preview`, async (req, res) => {
     const pdfBuffer = await previewPdf(
       url,
       template,
+      orientationOption, // could later turn into a full options object for other things outside orientation.
       templateData as Record<string, unknown>
     );
     res.set('Content-Type', 'application/pdf');
