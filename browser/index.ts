@@ -39,11 +39,7 @@ const margins = {
 const pageWidth = (A4Height - 20) * 4;
 const pageHeight = (A4Width - 40) * 4;
 
-const setWindowProperty = (
-  page: puppeteer.Page,
-  name: string,
-  value: undefined
-) =>
+const setWindowProperty = (page: puppeteer.Page, name: string, value: string) =>
   page.evaluateOnNewDocument(`
     Object.defineProperty(window, '${name}', {
       get() {
@@ -59,9 +55,8 @@ const getNewPdfName = () => {
 
 export const previewPdf = async (
   url: string,
-  rhIdentity: string,
   template: ServiceNames,
-  templateData: any
+  templateData: Record<string, unknown>
 ) => {
   const browser = await puppeteer.launch({
     headless: true,
@@ -90,12 +85,8 @@ export const previewPdf = async (
         pageWidth,
         pageHeight,
       },
-    }) as undefined // probably a typings issue in pupetter
+    })
   );
-
-  await page.setExtraHTTPHeaders({
-    'x-rh-identity': rhIdentity,
-  });
 
   const pageStatus = await page.goto(url, { waitUntil: 'networkidle2' });
 

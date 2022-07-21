@@ -114,35 +114,30 @@ app.post(`${APIPrefix}/generate`, async (req, res) => {
 });
 
 app.get(`/preview`, async (req, res) => {
-  const rhIdentity = req.headers['x-rh-identity'] as string;
-
-  if (!rhIdentity) {
-    return res.status(401).send('Unauthorized access not allowed');
-  }
-
   const template: ServiceNames = req.query.template as ServiceNames;
   const templateData = await getTemplateData(req.headers, template);
 
-  const tenant = JSON.parse(atob(rhIdentity))['identity']['internal']['org_id'];
   const url = `http://localhost:${PORT}?template=${template}`;
   try {
     const startGeneration = performance.now();
     let elapsed = performance.now() - startGeneration;
     console.info('info', `Total Data collection time: ${elapsed} ms`, {
-      tenant,
       elapsed,
     });
 
     // Generate the pdf
     const startRender = performance.now();
 
-    const pdfBuffer = await previewPdf(url, rhIdentity, template, templateData);
+    const pdfBuffer = await previewPdf(
+      url,
+      template,
+      templateData as Record<string, unknown>
+    );
     res.set('Content-Type', 'application/pdf');
     res.status(200).send(pdfBuffer);
 
     elapsed = performance.now() - startRender;
     console.info('info', `Total Rendering time: ${elapsed} ms`, {
-      tenant,
       elapsed,
     });
 
@@ -150,7 +145,7 @@ app.get(`/preview`, async (req, res) => {
     console.info(
       'info',
       `Total Data collection + PDF Rendering + Download time: ${elapsed} ms`,
-      { tenant, elapsed }
+      { elapsed }
     );
   } catch (error) {
     console.info('error', `${error.code}: ${error.message}`);
