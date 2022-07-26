@@ -33,7 +33,7 @@ async function getTemplateData(
     const data = await dataAccessor(headers as AxiosRequestHeaders, options);
     return data;
   } else {
-    throw new Error(`Not API descriptor avaiable for ${template}!`);
+    throw new Error(`No API descriptor avaiable for ${template}!`);
   }
 }
 

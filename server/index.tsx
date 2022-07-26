@@ -7,7 +7,7 @@ import { performance } from 'perf_hooks';
 import promBundle from 'express-prom-bundle';
 
 import logger from './logger';
-import generatePdf from '../browser';
+import generatePdf, { previewPdf } from '../browser';
 import { PDFNotFoundError, SendingFailedError } from './errors';
 import getTemplateData from './data-access';
 import renderTemplate from './render-template';
@@ -24,11 +24,13 @@ app.use(express.static(path.resolve(__dirname, '..', 'build')));
 app.use(express.static(path.resolve(__dirname, '../public')));
 app.use(logger);
 
+// Middlware that activates on all routes, responsible for rendering the correct
+// template/component into html to the requester.
 app.use('^/$', async (req, res, _next) => {
   let template: ServiceNames = req.query.template as ServiceNames;
   if (!template) {
     console.info('Missing template, using "demo"');
-    template = ServiceNames.demo;
+    template = ServiceNames.vulnerability;
   }
   try {
     const templateData = await getTemplateData(req.headers, template);
@@ -107,6 +109,46 @@ app.post(`${APIPrefix}/generate`, async (req, res) => {
     );
   } catch (error) {
     console.info('error', `${error.code}: ${error.message}`, { tenant });
+    res.status((error.code as number) || 500).send(error.message);
+  }
+});
+
+app.get(`/preview`, async (req, res) => {
+  const template: ServiceNames = req.query.template as ServiceNames;
+  const templateData = await getTemplateData(req.headers, template);
+
+  const url = `http://localhost:${PORT}?template=${template}`;
+  try {
+    const startGeneration = performance.now();
+    let elapsed = performance.now() - startGeneration;
+    console.info('info', `Total Data collection time: ${elapsed} ms`, {
+      elapsed,
+    });
+
+    // Generate the pdf
+    const startRender = performance.now();
+
+    const pdfBuffer = await previewPdf(
+      url,
+      template,
+      templateData as Record<string, unknown>
+    );
+    res.set('Content-Type', 'application/pdf');
+    res.status(200).send(pdfBuffer);
+
+    elapsed = performance.now() - startRender;
+    console.info('info', `Total Rendering time: ${elapsed} ms`, {
+      elapsed,
+    });
+
+    elapsed = performance.now() - startGeneration;
+    console.info(
+      'info',
+      `Total Data collection + PDF Rendering + Download time: ${elapsed} ms`,
+      { elapsed }
+    );
+  } catch (error) {
+    console.info('error', `${error.code}: ${error.message}`);
     res.status((error.code as number) || 500).send(error.message);
   }
 });
