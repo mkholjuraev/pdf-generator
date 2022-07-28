@@ -13,6 +13,7 @@ import getTemplateData from './data-access';
 import renderTemplate from './render-template';
 import ServiceNames from './data-access/service-names';
 import config from './config';
+import { processOrientationOption } from '../browser/helpers';
 
 const PORT = config.webPort;
 const APIPrefix = '/api/crc-pdf-generator/v1';
@@ -21,7 +22,12 @@ type ReqQuery = {
   orientation?: string;
   template?: string;
 };
-type PreviewHandlerRequest = Request<PreviewOptions, any, unknown, ReqQuery>;
+export type PreviewHandlerRequest = Request<
+  PreviewOptions,
+  any,
+  unknown,
+  ReqQuery
+>;
 
 const app = express();
 app.use(cors());
@@ -51,13 +57,15 @@ app.use('^/$', async (req, res, _next) => {
   }
 });
 
-app.post(`${APIPrefix}/generate`, async (req, res) => {
+app.post(`${APIPrefix}/generate`, async (req: PreviewHandlerRequest, res) => {
   const rhIdentity = req.headers['x-rh-identity'] as string;
+  const orientationOption = processOrientationOption(req);
 
   if (!rhIdentity) {
     return res.status(401).send('Unauthorized access not allowed');
   }
-  const template: ServiceNames = req.body.template;
+
+  const template: ServiceNames = req.query.template as ServiceNames;
 
   const tenant = JSON.parse(atob(rhIdentity))['identity']['internal']['org_id'];
   const url = `http://localhost:${PORT}?template=${template}`;
@@ -72,7 +80,7 @@ app.post(`${APIPrefix}/generate`, async (req, res) => {
 
     // Generate the pdf
     const startRender = performance.now();
-    const pathToPdf = await generatePdf(url, rhIdentity, template);
+    const pathToPdf = await generatePdf(url, rhIdentity, template, orientationOption);
     elapsed = performance.now() - startRender;
     console.info('info', `Total Rendering time: ${elapsed} ms`, {
       tenant,
@@ -122,9 +130,7 @@ app.post(`${APIPrefix}/generate`, async (req, res) => {
 app.get(`/preview`, async (req: PreviewHandlerRequest, res) => {
   const template: ServiceNames = req.query.template as ServiceNames;
   const templateData = await getTemplateData(req.headers, template);
-  let orientationOption = '';
-
-  if (req.query?.orientation) orientationOption = req.query.orientation;
+  const orientationOption = processOrientationOption(req);
 
   const url = `http://localhost:${PORT}?template=${template}`;
   try {

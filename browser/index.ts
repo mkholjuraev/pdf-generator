@@ -56,7 +56,7 @@ const getNewPdfName = () => {
 export const previewPdf = async (
   url: string,
   template: ServiceNames,
-  orientationOptions: string,
+  orientationOption: boolean,
   templateData: Record<string, unknown>
 ) => {
   const browser = await puppeteer.launch({
@@ -70,7 +70,6 @@ export const previewPdf = async (
     args: ['--no-sandbox', '--disable-gpu'],
   });
   const page = await browser.newPage();
-  const orientation = orientationOptions === 'landscape' ? true : false;
   await page.setViewport({ width: pageWidth, height: pageHeight });
   await page.setContent(renderTemplate(template, templateData));
 
@@ -99,7 +98,7 @@ export const previewPdf = async (
     displayHeaderFooter: true,
     headerTemplate,
     footerTemplate,
-    landscape: orientation,
+    landscape: orientationOption,
   });
 
   if (!pageStatus.ok()) {
@@ -115,7 +114,8 @@ export const previewPdf = async (
 const generatePdf = async (
   url: string,
   rhIdentity: string,
-  template: ServiceNames
+  template: ServiceNames,
+  orientationOption: boolean
 ) => {
   const pdfPath = getNewPdfName();
 
@@ -168,6 +168,7 @@ const generatePdf = async (
     displayHeaderFooter: true,
     headerTemplate,
     footerTemplate,
+    landscape: orientationOption,
   });
 
   await browser.close();
