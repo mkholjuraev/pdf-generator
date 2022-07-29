@@ -20,5 +20,8 @@ ENV NODE_ENV=production
 
 RUN npm run build
 
+# Remove all unecessary node_modules to reduce the total image size
+RUN find ./node_modules -maxdepth 1 ! -name puppeteer -type d -not -path './node_modules' -exec rm -rf {} +
+
 EXPOSE 8000
 CMD ["node", "./dist/index.js"]
