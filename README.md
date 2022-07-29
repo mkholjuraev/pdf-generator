@@ -15,3 +15,23 @@ making this approach much faster to make changes to the PDF.
 ```sh
 oc port-forward -n crc-pdf-generator svc/crc-pdf-generator-api 8000:8000
 ```
+
+# Templates and their Data
+`crc-pdf-generator` produces PDF Reports based on individual templates.
+
+These templates are styled utilizing `Patternfly` components and it's individual styling utility classes.
+
+Each of these templates are fed data (currently) through `DataDescriptors`, with a descriptor prepared for each individual
+template. 
+
+For more details on these elements , feel free to explore the different descriptors and templates already present
+on their underlying folders.
+
+# Developing your own Templates (on this alpha version)
+In order to have your own templates be generated through the service, please keep the following in mind:
+* `Add the service name to the service-names.js file`
+* `Following the structure of the demo descriptor (or any other) create a new data-descriptor file for your respective
+and put it in it's own folder within the data-access directory`
+* `In the call-service.ts file found in the same directory, add your new service-name to the AVAILABLE_SERVICES object,
+following the examples found there`
+* `Finally, create your React component within the templates directory and build your pdf template to be printed :)`
