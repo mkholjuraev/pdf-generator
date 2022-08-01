@@ -2,6 +2,7 @@ const defaultConfig = {
   webPort: 8000,
   metricsPort: 8080,
   metricsPath: '/metrics',
+  COMPLIANCE_URL: '',
 };
 
 function initializeConfig() {
@@ -22,6 +23,7 @@ function initializeConfig() {
 
       config = {
         ...clowderConfig,
+        COMPLIANCE_URL: process.env.COMPLIANCE_API_URL,
       };
       return config;
     }

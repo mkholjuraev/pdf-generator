@@ -40,6 +40,8 @@ objects:
             env:
               - name: CLOWDER_ENABLED
                 value: ${CLOWDER_ENABLED}
+              - name: COMPLIANCE_API_URL
+                value: ${COMPLIANCE_API_SCHEME}://${COMPLIANCE_API_HOST}:${COMPLIANCE_API_PORT}
             resources:
               limits:
                 cpu: ${CPU_LIMIT}
@@ -69,3 +71,12 @@ parameters:
     name: ENV_NAME
     value: "crc-pdf-generator"
     required: true
+  - description: Compliance API http scheme
+    name: COMPLIANCE_API_SCHEME
+    value: http
+  - description: Compliance API hostname
+    name: COMPLIANCE_API_HOST
+    required: true
+  - description: Compliance API port
+    name: COMPLIANCE_API_PORT
+    value: 8000
