@@ -57,6 +57,10 @@ app.use('^/$', async (req, res, _next) => {
   }
 });
 
+app.get(`${APIPrefix}/hello`, (req, res) => {
+  return res.status(200).send('<h1>Well this works!</h1>');
+});
+
 app.post(`${APIPrefix}/generate`, async (req, res) => {
   const rhIdentity = req.headers['x-rh-identity'] as string;
   const orientationOption = processOrientationOption(req);
