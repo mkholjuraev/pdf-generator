@@ -16,6 +16,19 @@ making this approach much faster to make changes to the PDF.
 oc port-forward -n crc-pdf-generator svc/crc-pdf-generator-api 8000:8000
 ```
 
+# Endpoints
+You currently have 2 choices for generating any of the available templates:
+
+The generate endpoint will automatically download the template if it is available (requires the above mentioned headers)
+* `POST http://localhost:8000/api/crc-pdf-generator/v1/generate` 
+
+The preview endpoint will instead return the pdf preview environment:
+* `GET http://localhost:8000/preview`
+
+# Endpoint Options
+* `?template=x // See service-names for available templates. Required unless you want a hello world.` 
+* `?orientation= landscape // optional`
+
 # Templates and their Data
 `crc-pdf-generator` produces PDF Reports based on individual templates.
 
