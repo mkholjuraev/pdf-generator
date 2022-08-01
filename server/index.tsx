@@ -151,8 +151,8 @@ app.get(`/preview`, async (req: PreviewHandlerRequest, res) => {
     const pdfBuffer = await previewPdf(
       url,
       template,
-      orientationOption, // could later turn into a full options object for other things outside orientation.
-      templateData as Record<string, unknown>
+      templateData as Record<string, unknown>,
+      orientationOption // could later turn into a full options object for other things outside orientation.
     );
     res.set('Content-Type', 'application/pdf');
     res.status(200).send(pdfBuffer);
