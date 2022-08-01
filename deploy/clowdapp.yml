@@ -73,10 +73,10 @@ parameters:
     required: true
   - description: Compliance API http scheme
     name: COMPLIANCE_API_SCHEME
-    value: http
+    value: "http"
   - description: Compliance API hostname
     name: COMPLIANCE_HOST
     required: true
   - description: Compliance API port
     name: COMPLIANCE_API_PORT
-    value: 8000
+    value: "8000"
