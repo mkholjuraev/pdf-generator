@@ -56,8 +56,8 @@ const getNewPdfName = () => {
 export const previewPdf = async (
   url: string,
   template: ServiceNames,
-  orientationOption: boolean,
-  templateData: Record<string, unknown>
+  templateData: Record<string, unknown>,
+  orientationOption?: boolean
 ) => {
   const browser = await puppeteer.launch({
     headless: true,
