@@ -57,7 +57,7 @@ app.use('^/$', async (req, res, _next) => {
   }
 });
 
-app.post(`${APIPrefix}/generate`, async (req: PreviewHandlerRequest, res) => {
+app.post(`${APIPrefix}/generate`, async (req, res) => {
   const rhIdentity = req.headers['x-rh-identity'] as string;
   const orientationOption = processOrientationOption(req);
 
@@ -80,7 +80,12 @@ app.post(`${APIPrefix}/generate`, async (req: PreviewHandlerRequest, res) => {
 
     // Generate the pdf
     const startRender = performance.now();
-    const pathToPdf = await generatePdf(url, rhIdentity, template, orientationOption);
+    const pathToPdf = await generatePdf(
+      url,
+      rhIdentity,
+      template,
+      orientationOption
+    );
     elapsed = performance.now() - startRender;
     console.info('info', `Total Rendering time: ${elapsed} ms`, {
       tenant,

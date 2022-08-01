@@ -9,6 +9,8 @@ export const processOrientationOption = (request) => {
   let orientationOption = '';
   if (request.query?.orientation) {
     orientationOption = request.query?.orientation;
+  } else if (request.body?.orientation) {
+    orientationOption = request.body?.orientation;
   }
 
   return orientationOption === 'landscape' ? true : false;
