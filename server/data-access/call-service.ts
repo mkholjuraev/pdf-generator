@@ -22,8 +22,10 @@ function prepareServiceCall<T = Record<string, unknown>>(
 ): ServiceCallFunction {
   const { service, path, responseProcessor } = descriptor;
   const serviceConfig = config.endpoints[service];
+  console.log({ serviceConfig, service, c: config.endpoints });
   if (!serviceConfig) {
-    throw new Error(`Trying to reach unusupported service ${service}!`);
+    return () =>
+      Promise.reject(`Trying to reach unusupported service ${service}!`);
   }
   const URL = `${serviceConfig.hostname}:${serviceConfig.port}${path}`;
   return async (headers, options) => {
