@@ -29,6 +29,13 @@ export type PreviewHandlerRequest = Request<
   ReqQuery
 >;
 
+export type GenerateHandlerReqyest = Request<
+  unknown,
+  unknown,
+  { template: ServiceNames },
+  unknown
+>;
+
 const app = express();
 app.use(cors());
 app.use(express.json({ limit: '5mb' }));
@@ -61,7 +68,7 @@ app.get(`${APIPrefix}/hello`, (req, res) => {
   return res.status(200).send('<h1>Well this works!</h1>');
 });
 
-app.post(`${APIPrefix}/generate`, async (req, res) => {
+app.post(`${APIPrefix}/generate`, async (req: GenerateHandlerReqyest, res) => {
   const rhIdentity = req.headers['x-rh-identity'] as string;
   const orientationOption = processOrientationOption(req);
 
@@ -69,7 +76,7 @@ app.post(`${APIPrefix}/generate`, async (req, res) => {
     return res.status(401).send('Unauthorized access not allowed');
   }
 
-  const template: ServiceNames = req.query.template as ServiceNames;
+  const template: ServiceNames = req.body.template;
 
   const tenant = JSON.parse(atob(rhIdentity))['identity']['internal']['org_id'];
   const url = `http://localhost:${PORT}?template=${template}`;

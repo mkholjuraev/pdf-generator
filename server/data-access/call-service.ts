@@ -22,7 +22,6 @@ function prepareServiceCall<T = Record<string, unknown>>(
 ): ServiceCallFunction {
   const { service, path, responseProcessor } = descriptor;
   const serviceConfig = config.endpoints[service];
-  console.log({ serviceConfig, service, c: config.endpoints });
   if (!serviceConfig) {
     return () =>
       Promise.reject(`Trying to reach unusupported service ${service}!`);
@@ -33,7 +32,12 @@ function prepareServiceCall<T = Record<string, unknown>>(
     if (IS_DEVELOPMENT) {
       data = descriptor.mock();
     } else {
-      data = await axios({ ...options, url: URL, headers });
+      try {
+        data = await axios({ ...options, url: URL, headers });
+      } catch (error) {
+        console.log('Unable to get report data: ', error);
+        return Promise.resolve(error);
+      }
     }
     return responseProcessor(data);
   };
