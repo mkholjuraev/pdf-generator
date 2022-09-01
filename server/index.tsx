@@ -7,12 +7,12 @@ import { performance } from 'perf_hooks';
 import promBundle from 'express-prom-bundle';
 
 import logger from './logger';
+import config from './config';
 import generatePdf, { previewPdf } from '../browser';
 import { PDFNotFoundError, SendingFailedError } from './errors';
 import getTemplateData from './data-access';
 import renderTemplate from './render-template';
 import ServiceNames from './data-access/service-names';
-import config from './config';
 import { processOrientationOption } from '../browser/helpers';
 
 const PORT = config.webPort;
@@ -33,7 +33,7 @@ export type GenerateHandlerReqyest = Request<
   unknown,
   unknown,
   { template: ServiceNames },
-  unknown
+  { template: ServiceNames }
 >;
 
 const app = express();
@@ -76,7 +76,7 @@ app.post(`${APIPrefix}/generate`, async (req: GenerateHandlerReqyest, res) => {
     return res.status(401).send('Unauthorized access not allowed');
   }
 
-  const template: ServiceNames = req.body.template;
+  const template: ServiceNames = req.query.template;
 
   const tenant = JSON.parse(atob(rhIdentity))['identity']['internal']['org_id'];
   const url = `http://localhost:${PORT}?template=${template}`;
