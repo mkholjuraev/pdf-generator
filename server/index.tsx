@@ -59,8 +59,8 @@ app.use('^/$', async (req, res, _next) => {
     );
     res.send(HTMLTemplate);
   } catch (error) {
+    console.log(error);
     res.send(`<div>Unable to render ${template}!</div>`);
-    console.error(error);
   }
 });
 
@@ -82,35 +82,19 @@ app.post(`${APIPrefix}/generate`, async (req: GenerateHandlerReqyest, res) => {
   const url = `http://localhost:${PORT}?template=${template}`;
 
   try {
-    const startGeneration = performance.now();
-    let elapsed = performance.now() - startGeneration;
-    console.info('info', `Total Data collection time: ${elapsed} ms`, {
-      tenant,
-      elapsed,
-    });
-
     // Generate the pdf
-    const startRender = performance.now();
     const pathToPdf = await generatePdf(
       url,
       rhIdentity,
       template,
       orientationOption
     );
-    elapsed = performance.now() - startRender;
-    console.info('info', `Total Rendering time: ${elapsed} ms`, {
-      tenant,
-      elapsed,
-    });
 
     const pdfFileName = pathToPdf.split('/').pop();
 
     if (!fs.existsSync(pathToPdf)) {
       throw new PDFNotFoundError(pdfFileName);
     }
-
-    console.info('info', `${pdfFileName} has been created.`, { tenant });
-    console.info('info', `Sending ${pdfFileName} to the client.`, { tenant });
 
     res.status(200).sendFile(pathToPdf, (err) => {
       if (err) {
@@ -125,18 +109,8 @@ app.post(`${APIPrefix}/generate`, async (req: GenerateHandlerReqyest, res) => {
             tenant,
           });
         }
-        console.info('info', `${pdfFileName} finished downloading.`, {
-          tenant,
-        });
       });
     });
-
-    elapsed = performance.now() - startGeneration;
-    console.info(
-      'info',
-      `Total Data collection + PDF Rendering + Download time: ${elapsed} ms`,
-      { tenant, elapsed }
-    );
   } catch (error) {
     console.info('error', `${error.code}: ${error.message}`, { tenant });
     res.status((error.code as number) || 500).send(error.message);
