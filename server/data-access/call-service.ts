@@ -25,7 +25,7 @@ function prepareServiceCall<T = Record<string, unknown>>(
     return () =>
       Promise.reject(`Trying to reach unusupported service ${service}!`);
   }
-  const URL = `${serviceConfig?.hostname}:${serviceConfig?.port}${path}`;
+  const URL = `http://${serviceConfig?.hostname}:${serviceConfig?.port}${path}`;
   console.log(
     'Prepared service call for: ',
     service,
