@@ -8,6 +8,7 @@ import renderTemplate, {
 } from '../server/render-template';
 import ServiceNames from '../server/data-access/service-names';
 import { glob } from 'glob';
+import { OPTIONS_HEADER_NAME } from '../server';
 
 const A4Width = 210;
 const A4Height = 297;
@@ -115,7 +116,8 @@ const generatePdf = async (
   url: string,
   rhIdentity: string,
   template: ServiceNames,
-  orientationOption: boolean
+  orientationOption: boolean,
+  dataOptions?: Record<string, any>
 ) => {
   const pdfPath = getNewPdfName();
 
@@ -148,6 +150,12 @@ const generatePdf = async (
   );
 
   await page.setExtraHTTPHeaders({
+    ...(dataOptions
+      ? {
+          [OPTIONS_HEADER_NAME]: JSON.stringify(dataOptions),
+        }
+      : {}),
+
     'x-rh-identity': rhIdentity,
   });
   const pageStatus = await page.goto(url, { waitUntil: 'networkidle2' });

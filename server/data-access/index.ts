@@ -1,4 +1,4 @@
-import { AxiosRequestConfig, AxiosRequestHeaders } from 'axios';
+import { AxiosRequestHeaders } from 'axios';
 import { IncomingHttpHeaders } from 'http';
 // import * as getAutomationAnalyticsDescriptor from './automation-analytics';
 import prepareServiceCall, { ServiceCallFunction } from './call-service';
@@ -25,15 +25,12 @@ const templateMapper: {
 async function getTemplateData(
   headers: IncomingHttpHeaders,
   template: ServiceNames,
-  options?: Omit<AxiosRequestConfig, 'headers'>
+  options?: Record<string, any>
 ): Promise<unknown> {
   const dataAccessor = templateMapper[template];
 
   if (typeof dataAccessor === 'function') {
-    const data = await dataAccessor(headers as AxiosRequestHeaders, {
-      ...options,
-      method: 'GET',
-    });
+    const data = await dataAccessor(headers as AxiosRequestHeaders, options);
     return data;
   } else {
     throw new Error(`No API descriptor avaiable for ${template}!`);

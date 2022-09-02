@@ -5,6 +5,7 @@ import cors from 'cors';
 import atob from 'atob';
 import { performance } from 'perf_hooks';
 import promBundle from 'express-prom-bundle';
+import type { IncomingHttpHeaders } from 'http';
 
 import logger from './logger';
 import config from './config';
@@ -18,6 +19,7 @@ import { getPolicyData } from './data-access/complianceDescriptor';
 
 const PORT = config.webPort;
 const APIPrefix = '/api/crc-pdf-generator/v1';
+export const OPTIONS_HEADER_NAME = 'x-pdf-gen-options';
 type PreviewOptions = unknown;
 type ReqQuery = {
   orientation?: string;
@@ -33,7 +35,7 @@ export type PreviewHandlerRequest = Request<
 export type GenerateHandlerReqyest = Request<
   unknown,
   unknown,
-  { template: ServiceNames },
+  Record<string, any>,
   { template: ServiceNames }
 >;
 
@@ -44,6 +46,12 @@ export type HelloHandlerRequest = Request<
   { policyId: string; totalHostCount: number }
 >;
 
+export interface PupetterBrowserRequest extends Request {
+  headers: IncomingHttpHeaders & {
+    [OPTIONS_HEADER_NAME]?: string;
+  };
+}
+
 const app = express();
 app.use(cors());
 app.use(express.json({ limit: '5mb' }));
@@ -53,14 +61,23 @@ app.use(logger);
 
 // Middlware that activates on all routes, responsible for rendering the correct
 // template/component into html to the requester.
-app.use('^/$', async (req, res, _next) => {
+app.use('^/$', async (req: PupetterBrowserRequest, res, _next) => {
   let template: ServiceNames = req.query.template as ServiceNames;
   if (!template) {
     console.info('Missing template, using "demo"');
     template = ServiceNames.vulnerability;
   }
   try {
-    const templateData = await getTemplateData(req.headers, template);
+    const configHeaders: string | undefined = req.headers[OPTIONS_HEADER_NAME];
+    if (configHeaders) {
+      delete req.headers[OPTIONS_HEADER_NAME];
+    }
+
+    const templateData = await getTemplateData(
+      req.headers,
+      template,
+      configHeaders ? JSON.parse(configHeaders) : undefined
+    );
     const HTMLTemplate: string = renderTemplate(
       template,
       templateData as Record<string, unknown>
@@ -96,6 +113,7 @@ app.post(`${APIPrefix}/generate`, async (req: GenerateHandlerReqyest, res) => {
   }
 
   const template: ServiceNames = req.query.template;
+  const dataOptions = req.body;
 
   const tenant = JSON.parse(atob(rhIdentity))['identity']['internal']['org_id'];
   const url = `http://localhost:${PORT}?template=${template}`;
@@ -106,7 +124,8 @@ app.post(`${APIPrefix}/generate`, async (req: GenerateHandlerReqyest, res) => {
       url,
       rhIdentity,
       template,
-      orientationOption
+      orientationOption,
+      dataOptions
     );
 
     const pdfFileName = pathToPdf.split('/').pop();

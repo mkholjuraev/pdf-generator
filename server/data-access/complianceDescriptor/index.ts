@@ -1,11 +1,43 @@
 import ServiceNames from '../service-names';
 import { ServiceCallFunction } from '../call-service';
 import { complianceData } from './complianceData';
-import axios, { AxiosRequestHeaders } from 'axios';
+import axios, { AxiosRequestHeaders, AxiosResponse } from 'axios';
 import config from '../../config';
 
 const getMock: ServiceCallFunction = () => Promise.resolve(complianceData);
 const responseProcessor = (data: typeof complianceData) => data;
+
+const getPolicyQuery = {
+  operationName: 'Profile',
+  query: `
+  query Profile($policyId: String!) {
+    profile(id: $policyId) {
+      id
+      name
+      refId
+      testResultHostCount
+      compliantHostCount
+      unsupportedHostCount
+      complianceThreshold
+      osMajorVersion
+      lastScanned
+      policyType
+      totalHostCount
+      policy {
+        id
+        name
+      }
+      benchmark {
+        id
+      }
+      businessObjective {
+        id
+        title
+      }
+    }
+  }
+`,
+};
 
 const getRulesQuery = {
   operationName: 'getProfiles',
@@ -71,6 +103,21 @@ const getSystemsQuery = {
     }
   }
 `,
+};
+
+type RuleResponse = {
+  data: {
+    profiles?: {
+      totalCount: number;
+      edges: {
+        node: {
+          topFailedRules: {
+            failedCount: number;
+          }[];
+        };
+      }[];
+    };
+  };
 };
 
 type Profile = {
@@ -150,11 +197,11 @@ export const nonReportingSystemsData = (systems: System[]) => {
 };
 
 type ExportSettings = {
-  compliantSystems: System[];
-  nonCompliantSystems: System[];
-  unsupportedSystems: System[];
-  topTenFailedRules: unknown[];
-  nonReportingSystems: System[];
+  compliantSystems: boolean;
+  nonCompliantSystems: boolean;
+  unsupportedSystems: boolean;
+  topTenFailedRules: boolean;
+  nonReportingSystems: boolean;
   userNotes?: Record<string, unknown>;
 };
 
@@ -210,7 +257,7 @@ const fetchBatched = (
   );
 };
 
-const fetchQQl = (
+const fetchQQl = <R = any>(
   query: Record<string, any>,
   headers: AxiosRequestHeaders,
   perPage: number,
@@ -218,13 +265,13 @@ const fetchQQl = (
   policyId: string | number
 ) => {
   const URL = `http://${config.endpoints.compliance.hostname}:${config.endpoints.compliance.port}/api/compliance/graphql`;
-  return axios.post(
+  return axios.post<any, AxiosResponse<R>>(
     URL,
     {
       ...query,
       variables: {
-        perPage,
-        page,
+        ...(perPage ? { perPage } : {}),
+        ...(page ? { page } : {}),
         filter: `policy_id = ${policyId}`,
         policyId,
       },
@@ -237,37 +284,54 @@ export const getPolicyData = async (
   headers: AxiosRequestHeaders,
   { policyId, totalHostCount }: { policyId: string; totalHostCount: number }
 ) => {
+  const {
+    data: { data: policy },
+  } = await fetchQQl(getPolicyQuery, headers, undefined, undefined, policyId);
   const fetchSystems = (perPage: number, page: number) =>
     fetchQQl(getSystemsQuery, headers, perPage, page, policyId);
   const fetchRules = (perPage = 10, page = 1) =>
-    fetchQQl(getRulesQuery, headers, page, perPage, policyId);
+    fetchQQl<RuleResponse>(getRulesQuery, headers, page, perPage, policyId);
 
   const batchedSystems = await fetchBatched(fetchSystems, totalHostCount);
-  const rules = await fetchRules();
-  console.log(
-    JSON.stringify(batchedSystems.map((r) => r.data as unknown)),
-    JSON.stringify(rules.data)
+  const { data: rules } = await fetchRules();
+  const systems = batchedSystems
+    .map((r) => r.data as unknown)
+    .flatMap(
+      ({
+        data: {
+          systems: { edges },
+        },
+      }: {
+        data: {
+          systems: {
+            edges: {
+              node: System;
+            }[];
+          };
+        };
+      }) => edges.map(({ node }) => node)
+    );
+  const rulesParsed = rules.data?.profiles.edges.flatMap(
+    (edge) => edge.node.topFailedRules
   );
-  // const query = {
-  //   ...qqlQuery,
-  //   variables: {
-  //     ...defaultVariables,
-  //     filter: `policy_id = ${policyId}`,
-  //     policyId: policyId,
-  //   },
-  // };
-  // const {
-  //   data: { data },
-  // } = await axios.post(URL, {
-  //   headers,
-  //   data: query,
-  // });
-  // const policy = data?.profile;
-  // const {
-  //   exportSettings,
-  //   setExportSetting,
-  //   isValid: settingsValid,
-  // } = useExportSettings();
+
+  const exportData = prepareForExport(
+    {
+      compliantSystems: true,
+      nonCompliantSystems: true,
+      unsupportedSystems: true,
+      topTenFailedRules: true,
+      nonReportingSystems: true,
+    },
+    systems,
+    rulesParsed
+  );
+  const PDFdata = {
+    policy,
+    ...exportData,
+  };
+  console.log(JSON.stringify(PDFdata));
+  return PDFdata;
 };
 
 const complianceDescriptor = {
@@ -277,6 +341,7 @@ const complianceDescriptor = {
     method: 'get',
   },
   service: ServiceNames.compliance,
+  request: getPolicyData,
   mock: getMock,
 };
 

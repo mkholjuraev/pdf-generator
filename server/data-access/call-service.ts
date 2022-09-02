@@ -9,6 +9,10 @@ export type APIDescriptor<T = Record<string, unknown>, R = unknown> = {
   path: string;
   responseProcessor: (...args: any[]) => R;
   mock: (...args: any[]) => Promise<T>;
+  request?: (
+    headers: AxiosRequestHeaders,
+    options: Record<string, any>
+  ) => Promise<R>;
 };
 
 export type ServiceCallFunction = (
@@ -19,31 +23,33 @@ export type ServiceCallFunction = (
 function prepareServiceCall<T = Record<string, unknown>>(
   descriptor: APIDescriptor<T>
 ): ServiceCallFunction {
-  const { service, path, responseProcessor } = descriptor;
+  // skip all and return mocked data
+  if (IS_DEVELOPMENT && descriptor.mock) {
+    return () => Promise.resolve(descriptor.mock());
+  }
+  const { service, path, responseProcessor, request } = descriptor;
   const serviceConfig = config.endpoints[service];
   if (!IS_DEVELOPMENT && !serviceConfig) {
     return () =>
       Promise.reject(`Trying to reach unusupported service ${service}!`);
   }
+
+  if (request) {
+    return (headers, options) => {
+      return request(headers, options).catch((error) => {
+        console.log(error);
+        return Promise.reject(error);
+      });
+    };
+  }
   const URL = `http://${serviceConfig?.hostname}:${serviceConfig?.port}${path}`;
-  console.log(
-    'Prepared service call for: ',
-    service,
-    ', at:',
-    URL,
-    config.endpoints
-  );
   return async (headers, options) => {
     let data;
-    if (IS_DEVELOPMENT) {
-      data = descriptor.mock();
-    } else {
-      try {
-        data = await axios({ ...options, url: URL, headers });
-      } catch (error) {
-        console.log('Unable to get report data: ', error);
-        return Promise.reject(error);
-      }
+    try {
+      data = await axios.get(URL, { ...options, headers });
+    } catch (error) {
+      console.log('Unable to get report data: ', error);
+      return Promise.reject(error);
     }
     return responseProcessor(data);
   };
