@@ -190,7 +190,10 @@ export const getPolicyData = async (
 
   const batchedSystems = await fetchBatched(fetchSystems, totalHostCount);
   const rules = await fetchRules();
-  console.log(batchedSystems, rules);
+  console.log(
+    JSON.stringify(batchedSystems.map((r) => r.data as unknown)),
+    JSON.stringify(rules.data)
+  );
   // const query = {
   //   ...qqlQuery,
   //   variables: {
