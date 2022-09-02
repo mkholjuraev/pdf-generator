@@ -164,9 +164,9 @@ const fetchQQl = (
   policyId: string | number
 ) => {
   const URL = `http://${config.endpoints.compliance.hostname}:${config.endpoints.compliance.port}/api/compliance/graphql`;
-  return axios.post(URL, {
-    headers,
-    data: {
+  return axios.post(
+    URL,
+    {
       ...query,
       variables: {
         perPage,
@@ -175,7 +175,8 @@ const fetchQQl = (
         policyId,
       },
     },
-  });
+    { headers }
+  );
 };
 
 export const getPolicyData = async (
