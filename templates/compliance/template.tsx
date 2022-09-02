@@ -1,9 +1,5 @@
-import React from 'react'
-import {
-  Text,
-  TextContent,
-  Title,
-} from '@patternfly/react-core';
+import React from 'react';
+import { Text, TextContent, Title } from '@patternfly/react-core';
 import Page from '../common/page';
 import PolicyDetailsTable from './components/PolicyDetailsTable';
 import SupportedSystemsTable from './components/SupportedSystemsTable';
@@ -21,7 +17,6 @@ import {
 const ComplianceTemplate = ({
   compliantSystemCount,
   nonCompliantSystemCount,
-  nonReportingSystemsCount,
   unsupportedSystemCount,
   compliantSystems,
   nonCompliantSystems,
@@ -32,22 +27,21 @@ const ComplianceTemplate = ({
   userNotes,
   policy,
   expectedSSGVersion,
-}:{
-  compliantSystemCount: number,
-  nonCompliantSystemCount: number,
-  nonReportingSystemsCount: number,
-  unsupportedSystemCount: number,
-  compliantSystems: ComplianceSystemsInterface[],
-  nonCompliantSystems: ComplianceSystemsInterface[],
-  unsupportedSystems: ComplianceSystemsInterface[],
-  nonReportingSystems: ComplianceSystemsInterface[],
-  totalHostCount: number,
-  topTenFailedRules: RulesCollection[],
-  userNotes: string,
-  policy: PolicyInterface,
-  expectedSSGVersion: string,
+}: {
+  compliantSystemCount: number;
+  nonCompliantSystemCount: number;
+  nonReportingSystemsCount: number;
+  unsupportedSystemCount: number;
+  compliantSystems: ComplianceSystemsInterface[];
+  nonCompliantSystems: ComplianceSystemsInterface[];
+  unsupportedSystems: ComplianceSystemsInterface[];
+  nonReportingSystems: ComplianceSystemsInterface[];
+  totalHostCount: number;
+  topTenFailedRules: RulesCollection[];
+  userNotes: string;
+  policy: PolicyInterface;
+  expectedSSGVersion: string;
 }) => {
-  
   return (
     <React.Fragment>
       <Page>
@@ -67,18 +61,13 @@ const ComplianceTemplate = ({
           <Text className="pf-u-mt-2xl pf-u-mb-lg pf-u-danger-color-100">
             Report prepared&nbsp;{getHeaderDate()}
           </Text>
-          { userNotes && (
-            <Text className="">
-              {userNotes}
-            </Text>
-          )}
+          {userNotes && <Text className="">{userNotes}</Text>}
         </TextContent>
         <PolicyDetailsTable
           policy={policy}
           nonCompliantSystemsCount={nonCompliantSystemCount}
           totalHostCount={totalHostCount}
           compliantSystemCount={compliantSystemCount}
-
           className="pf-u-mb-2xl"
         />
         <Title
@@ -118,7 +107,7 @@ const ComplianceTemplate = ({
         >
           Unsupported Systems:
         </Title>
-        <UnsupportedSystemsTable 
+        <UnsupportedSystemsTable
           systems={unsupportedSystems}
           expectedSSGVersion={expectedSSGVersion}
           className="pf-u-mb-2xl"
@@ -145,11 +134,8 @@ const ComplianceTemplate = ({
         >
           Top failed rules
         </Title>
-        <RulesTable 
-          topRules={topTenFailedRules}
-          className="pf-u-mb-2xl"
-        />
-     </Page>
+        <RulesTable topRules={topTenFailedRules} className="pf-u-mb-2xl" />
+      </Page>
     </React.Fragment>
   );
 };
