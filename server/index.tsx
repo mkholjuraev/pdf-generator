@@ -14,6 +14,7 @@ import getTemplateData from './data-access';
 import renderTemplate from './render-template';
 import ServiceNames from './data-access/service-names';
 import { processOrientationOption } from '../browser/helpers';
+import { getPolicyData } from './data-access/complianceDescriptor';
 
 const PORT = config.webPort;
 const APIPrefix = '/api/crc-pdf-generator/v1';
@@ -34,6 +35,13 @@ export type GenerateHandlerReqyest = Request<
   unknown,
   { template: ServiceNames },
   { template: ServiceNames }
+>;
+
+export type HelloHandlerRequest = Request<
+  unknown,
+  unknown,
+  unknown,
+  { policyId: string; totalHostCount: number }
 >;
 
 const app = express();
@@ -64,7 +72,18 @@ app.use('^/$', async (req, res, _next) => {
   }
 });
 
-app.get(`${APIPrefix}/hello`, (req, res) => {
+app.get(`${APIPrefix}/hello`, async (req: HelloHandlerRequest, res) => {
+  const rhIdentity = req.headers['x-rh-identity'] as string;
+  const policyId = req.query.policyId;
+  const totalHostCount = req.query.totalHostCount;
+  try {
+    await getPolicyData(
+      { 'x-rh-identity': rhIdentity },
+      { policyId, totalHostCount }
+    );
+  } catch (error) {
+    console.log(error);
+  }
   return res.status(200).send('<h1>Well this works!</h1>');
 });
 
