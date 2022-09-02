@@ -114,6 +114,7 @@ app.post(`${APIPrefix}/generate`, async (req: GenerateHandlerReqyest, res) => {
 
   const template: ServiceNames = req.query.template;
   const dataOptions = req.body;
+  console.log('Request body: ', JSON.stringify(req.body), req.body);
 
   const tenant = JSON.parse(atob(rhIdentity))['identity']['internal']['org_id'];
   const url = `http://localhost:${PORT}?template=${template}`;
