@@ -9,14 +9,68 @@ const responseProcessor = (data: typeof complianceData) => data;
 
 const getRulesQuery = {
   operationName: 'getProfiles',
-  query:
-    'query getProfiles($filter: String!, $policyId: ID!) {\\n  profiles(search: $filter) {\\n    totalCount\\n    edges {\\n      node {\\n        topFailedRules(policyId: $policyId) {\\n          refId\\n          title\\n          remediationAvailable\\n          severity\\n          identifier\\n          failedCount\\n          __typename\\n        }\\n        __typename\\n      }\\n      __typename\\n    }\\n    __typename\\n  }\\n}\\n',
+  query: `
+  query getProfiles($filter: String!, $policyId: ID!) {
+    profiles(search: $filter) {
+      totalCount
+      edges {
+        node {
+          topFailedRules(policyId: $policyId) {
+            refId
+            title
+            remediationAvailable
+            severity
+            identifier
+            failedCount
+          }
+        }
+      }
+    }
+  }
+`,
 };
 
 const getSystemsQuery = {
   operationName: 'getSystems',
-  query:
-    'query getSystems($filter: String!, $policyId: ID, $perPage: Int, $page: Int, $sortBy: [String!], $tags: [String!]) {\\n  systems(\\n    search: $filter\\n    limit: $perPage\\n    offset: $page\\n    sortBy: $sortBy\\n    tags: $tags\\n  ) {\\n    totalCount\\n    edges {\\n      node {\\n        id\\n        name\\n        osMajorVersion\\n        osMinorVersion\\n        insightsId\\n        testResultProfiles(policyId: $policyId) {\\n          lastScanned\\n          compliant\\n          score\\n          supported\\n          benchmark {\\n            version\\n            __typename\\n          }\\n          rulesFailed\\n          __typename\\n        }\\n        __typename\\n      }\\n      __typename\\n    }\\n    __typename\\n  }\\n}\\n',
+  query: `
+  query getSystems(
+    $filter: String!
+    $policyId: ID
+    $perPage: Int
+    $page: Int
+    $sortBy: [String!]
+    $tags: [String!]
+  ) {
+    systems(
+      search: $filter
+      limit: $perPage
+      offset: $page
+      sortBy: $sortBy
+      tags: $tags
+    ) {
+      totalCount
+      edges {
+        node {
+          id
+          name
+          osMajorVersion
+          osMinorVersion
+          insightsId
+          testResultProfiles(policyId: $policyId) {
+            lastScanned
+            compliant
+            score
+            supported
+            benchmark {
+              version
+            }
+            rulesFailed
+          }
+        }
+      }
+    }
+  }
+`,
 };
 
 type Profile = {
