@@ -284,9 +284,14 @@ export const getPolicyData = async (
   headers: AxiosRequestHeaders,
   { policyId, totalHostCount }: { policyId: string; totalHostCount: number }
 ) => {
-  const {
-    data: { data: policy },
-  } = await fetchQQl(getPolicyQuery, headers, undefined, undefined, policyId);
+  const { data } = await fetchQQl(
+    getPolicyQuery,
+    headers,
+    undefined,
+    undefined,
+    policyId
+  );
+  console.log('Polici: ', data);
   const fetchSystems = (perPage: number, page: number) =>
     fetchQQl(getSystemsQuery, headers, perPage, page, policyId);
   const fetchRules = (perPage = 10, page = 1) =>
@@ -327,7 +332,7 @@ export const getPolicyData = async (
     rulesParsed
   );
   const PDFdata = {
-    policy,
+    policy: data.data.profile || {},
     ...exportData,
   };
   console.log(JSON.stringify(PDFdata));
