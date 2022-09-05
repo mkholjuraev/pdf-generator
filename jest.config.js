@@ -11,4 +11,5 @@ module.exports = {
   transform: {
     ...tsjPreset.transform,
   },
+  preset: 'jest-puppeteer',
 };
