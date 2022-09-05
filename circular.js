@@ -20,10 +20,10 @@ async function checkCircular() {
 async function run() {
   try {
     await checkCircular();
-    process.exit(1);
+    process.exit(0);
   } catch (error) {
     console.log(error);
-    process.exit(0);
+    process.exit(1);
   }
 }
 

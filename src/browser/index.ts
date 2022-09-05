@@ -9,10 +9,10 @@ import renderTemplate, {
 import ServiceNames from '../server/data-access/service-names';
 import { glob } from 'glob';
 import { OPTIONS_HEADER_NAME } from '../server';
+import { IS_PRODUCTION } from '../common/consts';
 
 const A4Width = 210;
 const A4Height = 297;
-const IS_PRODUCTION = process.env.NODE_ENV === 'production';
 
 function getChromiumExectuablePath() {
   const paths = glob.sync(

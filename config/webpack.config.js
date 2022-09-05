@@ -8,10 +8,7 @@ const {
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const path = require('path');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { merge } = require('webpack-merge');
-const { TsconfigPathsPlugin } = require('tsconfig-paths-webpack-plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
 const searchIgnoredStyles = require('./search-ignored-styles');
 
 // call default generator then pair different variations of uri with each base
@@ -42,7 +39,6 @@ const baseConfig = {
   devtool: 'source-map',
   resolve: {
     extensions: ['.ts', '.tsx', '.js'],
-    plugins: [new TsconfigPathsPlugin()],
     alias: {
       ...searchIgnoredStyles(path.resolve(__dirname, '../')),
     },
@@ -52,7 +48,7 @@ const baseConfig = {
 const stylesConfig = {
   mode: 'production',
   name: 'styles',
-  entry: path.resolve(__dirname, '../styles/styles.scss'),
+  entry: path.resolve(__dirname, '../src/styles/styles.scss'),
   output: {
     path: path.resolve(__dirname, '../public'),
     filename: 'styles.css',
@@ -109,7 +105,7 @@ const serverConfig = {
         /Critical\sdependency:\sthe\srequest\sof\sa\sdependency\sis\san\sexpression/,
     },
   ],
-  entry: path.resolve(__dirname, '../server/index.tsx'),
+  entry: path.resolve(__dirname, '../src/server/index.ts'),
   output: {
     path: path.resolve(__dirname, '../dist'),
     filename: 'index.js',
@@ -146,65 +142,6 @@ const serverConfig = {
   ],
 };
 
-const babelConfig = {
-  presets: [
-    '@babel/preset-env',
-    '@babel/preset-react',
-    '@babel/preset-typescript',
-  ],
-  plugins: ['@babel/plugin-transform-runtime'],
-};
-
-// eslint-disable-next-line no-unused-vars
-const clientConfig = {
-  name: 'client',
-  target: 'web',
-  optimization: {
-    splitChunks: {
-      chunks: 'all',
-    },
-  },
-  entry: {
-    index: path.resolve(__dirname, '../templates/index.tsx'),
-  },
-  output: {
-    path: path.resolve(__dirname, '../dist', 'public'),
-    filename: 'js/[name].js',
-  },
-  module: {
-    rules: [
-      {
-        test: /\.tsx?$/,
-        exclude: /node_modules/,
-        use: { loader: 'babel-loader', options: babelConfig },
-      },
-      {
-        test: /\.(jpg|png|gif|svg)$/,
-        use: {
-          loader: 'file-loader',
-          options: {
-            outputPath: 'images',
-            name: '[name].[contenthash].[ext]',
-          },
-        },
-      },
-    ],
-  },
-  plugins: [
-    new CleanWebpackPlugin(),
-    new HtmlWebpackPlugin({
-      template: './index.html',
-    }),
-    new CopyWebpackPlugin({
-      patterns: [{ from: 'resources/favicon.ico' }],
-    }),
-    new DefinePlugin({
-      __SERVER__: JSON.stringify(false),
-    }),
-  ],
-};
-
-// const clConfig = merge(baseConfig, clientConfig);
 const srConfig = merge(baseConfig, serverConfig);
 
 module.exports = [srConfig, stylesConfig];
