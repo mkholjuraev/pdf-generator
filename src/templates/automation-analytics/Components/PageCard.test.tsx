@@ -7,16 +7,16 @@ import { CardHeaderMain, CardTitle } from '@patternfly/react-core';
 beforeEach(cleanup);
 
 describe('PageCard', () => {
-  it('should render successfully', async () => {
+  it('should render successfully', () => {
     expect(PageOptionsContext).toBeDefined();
-    expect(screen.findByTestId('Card')).toBeTruthy;
+    expect(screen.findByTestId('Card')).toBeTruthy();
   });
 });
 
 describe('<PageCard />', () => {
   it('renders the expected content', () => {
     render(
-      <PageCard isOpen={true} title={'Danger!'} variant={'warning'}>
+      <PageCard isOpen title="Danger!" variant="warning">
         <CardHeaderMain>
           <CardTitle>All 100 rows</CardTitle>
         </CardHeaderMain>

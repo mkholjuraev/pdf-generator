@@ -4,6 +4,9 @@ import PageOptionsContext from '../PageOptionsContext';
 
 interface Props {
   children: React.ReactChild | React.ReactChild[];
+  isOpen?: boolean;
+  title?: string;
+  variant?: string;
 }
 
 const PageCard: FC<Props> = ({ children }) => {

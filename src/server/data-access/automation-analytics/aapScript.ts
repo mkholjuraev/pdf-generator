@@ -1,11 +1,27 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 import { PDFNotImplementedError, PDFRequestError } from '../../errors';
 import reports from '../../../templates/automation-analytics/schemas';
-import axios from 'axios';
+import axios, { AxiosRequestHeaders } from 'axios';
 import atob from 'atob';
 
-const getFilterData = (queryParams, selectOptions) => {
-  let params = {};
-  let filters = {};
+type Queryparams = {
+  sort_options: string | string[];
+  sort_order: string | string[];
+  limit: number;
+  offset: number;
+  include_others?: boolean;
+};
+
+type SelectOptions = {
+  [key: string]: { key?: number }[];
+};
+
+const getFilterData = (
+  queryParams: Queryparams,
+  selectOptions: SelectOptions
+) => {
+  const params: { [key: string]: any[] } = {};
+  const filters: SelectOptions = {};
   for (const [key, val] of Object.entries(queryParams)) {
     if (typeof val === 'object' && val?.length > 0) {
       params[key] = val?.filter((v) => v?.length > 0);
@@ -13,7 +29,7 @@ const getFilterData = (queryParams, selectOptions) => {
   }
 
   for (const [key, val] of Object.entries(params)) {
-    let item = val.map((x) => {
+    const item = val.map((x) => {
       if (selectOptions) {
         if (!isNaN(x)) {
           return selectOptions[key]?.find((obj) => obj?.key === parseInt(x));
@@ -27,20 +43,25 @@ const getFilterData = (queryParams, selectOptions) => {
   return filters;
 };
 
-const getData = (baseURL, headers, queryParams, selectOptions) => {
+const getData = (
+  baseURL: URL,
+  headers: AxiosRequestHeaders,
+  queryParams: Queryparams,
+  selectOptions: SelectOptions
+) => {
   const { offset, limit, sort_options, sort_order, ...rest } = queryParams;
   const url = baseURL;
 
   url.search = new URLSearchParams({
     sort_by:
       sort_options && sort_order ? `${sort_options}:${sort_order}` : undefined,
-    offset,
-    limit,
+    offset: offset.toString(),
+    limit: limit.toString(),
   }).toString();
 
   return axios
     .post(url.toString(), rest, { headers })
-    .then((response) => {
+    .then((response: { data: Record<string, unknown> }) => {
       const filters = getFilterData(queryParams, selectOptions);
       return { ...response.data, filters };
     })
@@ -50,15 +71,18 @@ const getData = (baseURL, headers, queryParams, selectOptions) => {
 };
 
 const getExtraData = (
-  baseUrl,
-  headers,
-  queryParams,
-  dataSize,
-  selectOptions
+  baseUrl: URL,
+  headers: AxiosRequestHeaders,
+  queryParams: Queryparams,
+  dataSize: number,
+  selectOptions: SelectOptions
 ) => {
   const maxOffset = dataSize - queryParams.limit > 100 ? 100 : dataSize;
 
-  let promises = [];
+  let promises: Promise<{
+    filters: SelectOptions & { meta?: number };
+    meta?: { legend: string };
+  }>[] = [];
   for (let offset = 0; offset < maxOffset; offset += 25) {
     promises = [
       ...promises,
@@ -78,7 +102,9 @@ const getExtraData = (
 
   return Promise.all(promises)
     .then((responses) =>
-      responses.map(({ meta }) => meta.legend).reduce((a, b) => a.concat(b), [])
+      responses
+        .map(({ meta }) => meta?.legend)
+        .reduce((a, b) => a.concat(b), [])
     )
     .catch((err) => {
       throw new PDFRequestError(err);
@@ -86,7 +112,7 @@ const getExtraData = (
 };
 
 const getParamsForGenerator = async (
-  headers,
+  headers: AxiosRequestHeaders,
   {
     slug,
     schemaParams,
@@ -101,6 +127,19 @@ const getParamsForGenerator = async (
     },
     // Added by the electron server
     rhIdentity,
+  }: {
+    rhIdentity: string;
+    slug: string;
+    schemaParams: unknown;
+    dataFetchingParams: {
+      queryParams: Queryparams;
+      selectOptions: SelectOptions;
+      showExtraRows?: boolean;
+      apiHost: string;
+      apiPort: string;
+      endpointUrl: URL;
+      chartSeriesHiddenProps: unknown;
+    };
   }
 ) => {
   if (!reports.find(({ layoutProps }) => layoutProps.slug === slug)) {
@@ -108,7 +147,7 @@ const getParamsForGenerator = async (
   }
   const fastApiUrl = new URL(endpointUrl, `http://${apiHost}:${apiPort}`);
 
-  const calculateSize = (input) => {
+  const calculateSize = (input: any) => {
     const str = JSON.stringify(input);
     const newStr = new TextEncoder().encode(str).length;
     return parseFloat((newStr / 1000).toFixed(2));
@@ -128,7 +167,7 @@ const getParamsForGenerator = async (
         fastApiUrl,
         headers,
         queryParams,
-        data.meta.count,
+        (data as unknown as { meta: { count: number } }).meta.count,
         selectOptions
       )
     : [];

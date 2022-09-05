@@ -39,11 +39,19 @@ const Square = styled.div`
 
 const whiteSpace = 0.15; // Currently in percent of total bar width
 
-function title(str) {
+function title(str: string) {
   return str[0].toUpperCase() + str.slice(1).toLowerCase();
 }
 
-const Breakdown = ({ categoryCount, categoryColor, showPercent = false }) => {
+const Breakdown = ({
+  categoryCount,
+  categoryColor,
+  showPercent = false,
+}: {
+  categoryCount: { [key: string]: number };
+  categoryColor: { [key: string]: string };
+  showPercent?: boolean;
+}) => {
   const totalCount = Object.values(categoryCount).reduce(
     (accumulated, currentVal) => accumulated + currentVal
   );

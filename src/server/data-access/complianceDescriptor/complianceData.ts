@@ -433,7 +433,6 @@ export const complianceData = {
       version: '0.1.57',
       __typename: 'Benchmark',
     },
-    businessObjective: null,
     complianceThreshold: 95,
     compliantHostCount: 10,
     id: '37b22908-31b7-492b-9b9c-3b1061d34a34',

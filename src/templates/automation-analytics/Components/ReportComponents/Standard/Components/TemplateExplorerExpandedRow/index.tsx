@@ -5,7 +5,37 @@ import { ExpandableRowContent, Td, Tr } from '@patternfly/react-table';
 import Breakdown from './BreakdownChart';
 import { categoryColor } from '../../../../../constants';
 
-const TableExpandedRow = ({ item }) => {
+const TableExpandedRow = ({
+  item,
+}: {
+  item: {
+    successful_count?: number;
+    skipped_count?: number;
+    failed_count?: number;
+    error_count?: number;
+    average_host_task_ok_count_per_host?: number;
+    average_host_task_skipped_count_per_host?: number;
+    average_host_task_changed_count_per_host?: number;
+    average_host_task_failed_count_per_host?: number;
+    average_host_task_unreachable_count_per_host?: number;
+    ok_host_count?: number;
+    skipped_host_count?: number;
+    changed_host_count?: number;
+    failed_host_count?: number;
+    unreachable_host_count?: number;
+    total_count?: number;
+    host_count?: number;
+    host_task_count?: number;
+    most_failed_tasks?: {
+      label: string;
+      value: string;
+      task_name: string;
+      module_name: string;
+    }[];
+    total_cluster_count?: number;
+    total_org_count?: number;
+  };
+}) => {
   const totalCount = item
     ? {
         ok: item?.successful_count ?? 0,
@@ -35,7 +65,7 @@ const TableExpandedRow = ({ item }) => {
       }
     : null;
 
-  const taskInfo = (task) => {
+  const taskInfo = (task: { task_name: string; module_name: string }) => {
     return [
       {
         label: 'Task name',
@@ -48,7 +78,10 @@ const TableExpandedRow = ({ item }) => {
     ];
   };
 
-  const expandedInfo = (item) => {
+  const expandedInfo = (item: {
+    total_cluster_count?: number;
+    total_org_count?: number;
+  }) => {
     return [
       {
         label: 'Clusters',

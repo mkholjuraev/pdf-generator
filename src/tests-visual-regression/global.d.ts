@@ -3,4 +3,7 @@ export {};
 
 declare global {
   var SEVER_HOST: string;
+  interface Window {
+    customPupeteerParams?: string;
+  }
 }
