@@ -4,7 +4,7 @@ import config from '../config';
 
 const IS_DEVELOPMENT = process.env.NODE_ENV === 'development';
 
-export type APIDescriptor<T = Record<string, unknown>, R = unknown> = {
+export type APIDescriptor<T = any, R = unknown> = {
   service: ServiceNames;
   path: string;
   responseProcessor: (...args: any[]) => R;
@@ -13,6 +13,12 @@ export type APIDescriptor<T = Record<string, unknown>, R = unknown> = {
     headers: AxiosRequestHeaders,
     options: Record<string, any>
   ) => Promise<R>;
+};
+
+export type ServiceDescriptor = {
+  templates: {
+    [key: string]: APIDescriptor;
+  };
 };
 
 export type ServiceCallFunction = (

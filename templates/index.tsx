@@ -1,6 +1,3 @@
-// import AutomationAnalyticsTemplate from './automation-analytics/App';
-// import AutomationAnalyticsHeaderTemplate from './automation-analytics/header-template';
-// import AutomationAnalyticsFooterTemplate from './automation-analytics/footer-template';
 import DemoTemplate from './demo/Template';
 import CommonHeader from './common/common-header';
 import CommonFooter from './common/common-footer';
@@ -10,31 +7,54 @@ import VulnerabilityTemplate from './vulnerability/Template';
 import AdvisorTemplate from './advisor/Template';
 import ComplianceTemplate from './compliance/template';
 
-export const headerTeamplteMapper = {
-  // 'automation-analytics': AutomationAnalyticsHeaderTemplate,
-  [ServiceNames.demo]: CommonHeader,
-  [ServiceNames.compliance]: CommonHeader,
-  [ServiceNames.vulnerability]: CommonHeader,
-  [ServiceNames.advisor]: CommonHeader,
-  [ServiceNames.vulnerabilitiesSystem]: CommonHeader,
+export type TemplateElement = (props: any) => JSX.Element;
+
+export type ServiceTemplate = {
+  template: TemplateElement;
+  header: TemplateElement;
+  footer: TemplateElement;
 };
 
-export const footerTemplateMapper = {
-  // 'automation-analytics': AutomationAnalyticsFooterTemplate,
-  [ServiceNames.demo]: CommonFooter,
-  [ServiceNames.compliance]: CommonFooter,
-  [ServiceNames.vulnerability]: CommonFooter,
-  [ServiceNames.advisor]: CommonFooter,
-  [ServiceNames.vulnerabilitiesSystem]: CommonFooter,
+export type TemplateMapper = {
+  [key in ServiceNames]: {
+    [key: string]: ServiceTemplate;
+  };
 };
 
-const templates = {
-  // 'automation-analytics': AutomationAnalyticsTemplate,
-  [ServiceNames.demo]: DemoTemplate,
-  [ServiceNames.compliance]: ComplianceTemplate,
-  [ServiceNames.vulnerability]: VulnerabilityTemplate,
-  [ServiceNames.advisor]: AdvisorTemplate,
-  [ServiceNames.vulnerabilitiesSystem]: VulnerabilitiesSystemTemplate,
+const templates: TemplateMapper = {
+  [ServiceNames.demo]: {
+    demo: {
+      template: DemoTemplate,
+      header: CommonHeader,
+      footer: CommonFooter,
+    },
+  },
+  [ServiceNames.compliance]: {
+    report: {
+      template: ComplianceTemplate,
+      header: CommonHeader,
+      footer: CommonFooter,
+    },
+  },
+  [ServiceNames.vulnerability]: {
+    vulnerabilities: {
+      template: VulnerabilityTemplate,
+      header: CommonHeader,
+      footer: CommonFooter,
+    },
+    systems: {
+      template: VulnerabilitiesSystemTemplate,
+      header: CommonHeader,
+      footer: CommonFooter,
+    },
+  },
+  [ServiceNames.advisor]: {
+    advisor: {
+      template: AdvisorTemplate,
+      header: CommonHeader,
+      footer: CommonFooter,
+    },
+  },
 };
 
 export default templates;

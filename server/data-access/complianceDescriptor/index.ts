@@ -1,5 +1,5 @@
 import ServiceNames from '../service-names';
-import { ServiceCallFunction } from '../call-service';
+import { ServiceCallFunction, ServiceDescriptor } from '../call-service';
 import { complianceData } from './complianceData';
 import axios, { AxiosRequestHeaders, AxiosResponse } from 'axios';
 import config from '../../config';
@@ -339,15 +339,16 @@ export const getPolicyData = async (
   return PDFdata;
 };
 
-const complianceDescriptor = {
-  responseProcessor,
-  path: '/api/compliance/v1/status',
-  options: {
-    method: 'get',
+const complianceDescriptor: ServiceDescriptor = {
+  templates: {
+    report: {
+      service: ServiceNames.demo,
+      responseProcessor,
+      path: '/api/compliance/v1/status',
+      request: getPolicyData,
+      mock: getMock,
+    },
   },
-  service: ServiceNames.compliance,
-  request: getPolicyData,
-  mock: getMock,
 };
 
 export default complianceDescriptor;

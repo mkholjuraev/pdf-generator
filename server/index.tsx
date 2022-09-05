@@ -23,7 +23,8 @@ export const OPTIONS_HEADER_NAME = 'x-pdf-gen-options';
 type PreviewOptions = unknown;
 type ReqQuery = {
   orientation?: string;
-  template?: string;
+  template: string;
+  service: ServiceNames;
 };
 export type PreviewHandlerRequest = Request<
   PreviewOptions,
@@ -36,7 +37,7 @@ export type GenerateHandlerReqyest = Request<
   unknown,
   unknown,
   Record<string, any>,
-  { template: ServiceNames }
+  { service: ServiceNames; template: string }
 >;
 
 export type HelloHandlerRequest = Request<
@@ -46,7 +47,13 @@ export type HelloHandlerRequest = Request<
   { policyId: string; totalHostCount: number }
 >;
 
-export interface PupetterBrowserRequest extends Request {
+export interface PupetterBrowserRequest
+  extends Request<
+    unknown,
+    unknown,
+    unknown,
+    { service: ServiceNames; template: string }
+  > {
   headers: IncomingHttpHeaders & {
     [OPTIONS_HEADER_NAME]?: string;
   };
@@ -62,11 +69,21 @@ app.use(logger);
 // Middlware that activates on all routes, responsible for rendering the correct
 // template/component into html to the requester.
 app.use('^/$', async (req: PupetterBrowserRequest, res, _next) => {
-  let template: ServiceNames = req.query.template as ServiceNames;
+  let service: ServiceNames = req.query.service;
+  let template: string = req.query.template;
+  if (!service) {
+    console.info('Missing service, using "demo"');
+    service = ServiceNames.demo;
+  }
   if (!template) {
     console.info('Missing template, using "demo"');
-    template = ServiceNames.vulnerability;
+    template = 'demo';
   }
+
+  const templateConfig = {
+    service,
+    template,
+  };
   try {
     const configHeaders: string | undefined = req.headers[OPTIONS_HEADER_NAME];
     if (configHeaders) {
@@ -75,11 +92,11 @@ app.use('^/$', async (req: PupetterBrowserRequest, res, _next) => {
 
     const templateData = await getTemplateData(
       req.headers,
-      template,
+      templateConfig,
       configHeaders ? JSON.parse(configHeaders) : undefined
     );
     const HTMLTemplate: string = renderTemplate(
-      template,
+      templateConfig,
       templateData as Record<string, unknown>
     );
     res.send(HTMLTemplate);
@@ -112,19 +129,23 @@ app.post(`${APIPrefix}/generate`, async (req: GenerateHandlerReqyest, res) => {
     return res.status(401).send('Unauthorized access not allowed');
   }
 
-  const template: ServiceNames = req.query.template;
+  const service = req.body.service;
+  const template = req.body.template;
   const dataOptions = req.body;
   console.log('Request body: ', JSON.stringify(req.body), req.body);
 
   const tenant = JSON.parse(atob(rhIdentity))['identity']['internal']['org_id'];
-  const url = `http://localhost:${PORT}?template=${template}`;
+  const url = `http://localhost:${PORT}?template=${template}&service=${service}`;
 
   try {
     // Generate the pdf
     const pathToPdf = await generatePdf(
       url,
       rhIdentity,
-      template,
+      {
+        service,
+        template,
+      },
       orientationOption,
       dataOptions
     );
@@ -157,8 +178,12 @@ app.post(`${APIPrefix}/generate`, async (req: GenerateHandlerReqyest, res) => {
 });
 
 app.get(`/preview`, async (req: PreviewHandlerRequest, res) => {
-  const template: ServiceNames = req.query.template as ServiceNames;
-  const templateData = await getTemplateData(req.headers, template);
+  const service: ServiceNames = req.query.service;
+  const template: string = req.query.service;
+  const templateData = await getTemplateData(req.headers, {
+    service,
+    template,
+  });
   const orientationOption = processOrientationOption(req);
 
   const url = `http://localhost:${PORT}?template=${template}`;
@@ -174,7 +199,10 @@ app.get(`/preview`, async (req: PreviewHandlerRequest, res) => {
 
     const pdfBuffer = await previewPdf(
       url,
-      template,
+      {
+        service,
+        template,
+      },
       templateData as Record<string, unknown>,
       orientationOption // could later turn into a full options object for other things outside orientation.
     );

@@ -6,34 +6,52 @@ import demoDescriptor from './demoDescriptor';
 import complianceDescriptor from './complianceDescriptor';
 import vulnerabilityDescriptor from './vulnerabilityDescriptor';
 import advisorDescriptor from './advisorDescriptor';
-import vulnerabilitiesSystemDescriptor from './vulnerabilitiesSystemDescriptor';
 import ServiceNames from './service-names';
+import templates from '../../templates';
 
-const templateMapper: {
-  [key in ServiceNames]: ServiceCallFunction;
-} = {
+type TemplateAccessMapper<T> = {
+  [Service in keyof T]: {
+    [Accessor in keyof T[Service]]: ServiceCallFunction;
+  };
+};
+
+const templateMapper: TemplateAccessMapper<typeof templates> = {
   // 'automation-analytics': prepareServiceCall(getAutomationAnalyticsDescriptor),
-  [ServiceNames.demo]: prepareServiceCall(demoDescriptor),
-  [ServiceNames.compliance]: prepareServiceCall(complianceDescriptor),
-  [ServiceNames.vulnerability]: prepareServiceCall(vulnerabilityDescriptor),
-  [ServiceNames.advisor]: prepareServiceCall(advisorDescriptor),
-  [ServiceNames.vulnerabilitiesSystem]: prepareServiceCall(
-    vulnerabilitiesSystemDescriptor
-  ),
+  [ServiceNames.demo]: {
+    demo: prepareServiceCall(demoDescriptor.templates.demo),
+  },
+  [ServiceNames.compliance]: {
+    report: prepareServiceCall(complianceDescriptor.templates.report),
+  },
+  [ServiceNames.vulnerability]: {
+    vulnerabilities: prepareServiceCall(
+      vulnerabilityDescriptor.templates.vulnerabilities
+    ),
+    systems: prepareServiceCall(vulnerabilityDescriptor.templates.systems),
+  },
+  [ServiceNames.advisor]: {
+    advisor: prepareServiceCall(advisorDescriptor.templates.advisor),
+  },
 };
 
 async function getTemplateData(
   headers: IncomingHttpHeaders,
-  template: ServiceNames,
+  templateConfig: {
+    service: ServiceNames;
+    template: string;
+  },
   options?: Record<string, any>
 ): Promise<unknown> {
-  const dataAccessor = templateMapper[template];
+  const dataAccessor =
+    templateMapper?.[templateConfig.service]?.[templateConfig.template];
 
   if (typeof dataAccessor === 'function') {
     const data = await dataAccessor(headers as AxiosRequestHeaders, options);
     return data;
   } else {
-    throw new Error(`No API descriptor avaiable for ${template}!`);
+    throw new Error(
+      `No API descriptor avaiable for ${templateConfig.service}: ${templateConfig.template}!`
+    );
   }
 }
 

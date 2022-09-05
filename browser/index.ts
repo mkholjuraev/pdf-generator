@@ -56,7 +56,7 @@ const getNewPdfName = () => {
 
 export const previewPdf = async (
   url: string,
-  template: ServiceNames,
+  templateConfig: { service: ServiceNames; template: string },
   templateData: Record<string, unknown>,
   orientationOption?: boolean
 ) => {
@@ -72,12 +72,12 @@ export const previewPdf = async (
   });
   const page = await browser.newPage();
   await page.setViewport({ width: pageWidth, height: pageHeight });
-  await page.setContent(renderTemplate(template, templateData));
+  await page.setContent(renderTemplate(templateConfig, templateData));
 
   // // Enables console logging in Headless mode - handy for debugging components
   page.on('console', (msg) => console.log(`[Headless log] ${msg.text()}`));
   const { headerTemplate, footerTemplate } =
-    getHeaderandFooterTemplates(template);
+    getHeaderandFooterTemplates(templateConfig);
 
   await setWindowProperty(
     page,
@@ -115,7 +115,7 @@ export const previewPdf = async (
 const generatePdf = async (
   url: string,
   rhIdentity: string,
-  template: ServiceNames,
+  templateConfig: { service: ServiceNames; template: string },
   orientationOption: boolean,
   dataOptions?: Record<string, any>
 ) => {
@@ -166,7 +166,7 @@ const generatePdf = async (
   }
 
   const { headerTemplate, footerTemplate } =
-    getHeaderandFooterTemplates(template);
+    getHeaderandFooterTemplates(templateConfig);
 
   await page.pdf({
     path: pdfPath,

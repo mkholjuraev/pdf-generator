@@ -1,4 +1,4 @@
-import { ServiceCallFunction } from '../call-service';
+import { ServiceCallFunction, ServiceDescriptor } from '../call-service';
 import ServiceNames from '../service-names';
 
 const demoData = {
@@ -9,11 +9,15 @@ const demoData = {
 const getMock: ServiceCallFunction = () => Promise.resolve(demoData);
 const responseProcessor = (data: typeof demoData) => data;
 
-const demoDescriptor = {
-  responseProcessor,
-  path: '/',
-  service: ServiceNames.demo,
-  mock: getMock,
+const demoDescriptor: ServiceDescriptor = {
+  templates: {
+    demo: {
+      service: ServiceNames.demo,
+      path: '/',
+      mock: getMock,
+      responseProcessor,
+    },
+  },
 };
 
 export default demoDescriptor;
