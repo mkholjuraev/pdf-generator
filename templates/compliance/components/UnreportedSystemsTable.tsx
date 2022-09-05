@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import {
   TableComposable,
   Thead,
@@ -9,9 +9,11 @@ import {
 } from '@patternfly/react-table';
 import { SystemsTableProps } from '../utils/interfaces';
 
-const UnreportedSystemsTable: React.FC<SystemsTableProps & React.HTMLAttributes<HTMLDivElement>> = ({ systems }) => {
+const UnreportedSystemsTable: React.FC<
+  SystemsTableProps & React.HTMLAttributes<HTMLDivElement>
+> = ({ systems }) => {
   return (
-    <TableComposable variant='compact' isStriped>
+    <TableComposable variant="compact" isStriped>
       <Thead>
         <Tr>
           <Th>System name</Th>
@@ -22,12 +24,12 @@ const UnreportedSystemsTable: React.FC<SystemsTableProps & React.HTMLAttributes<
         {systems.map((systemObj, index) => (
           <Tr key={index}>
             <Td dataLabel="System name">{systemObj.name}</Td>
-            <Td dataLabel='RHEL'>{`${systemObj.osMajorVersion}.${systemObj.osMinorVersion}`}</Td>
+            <Td dataLabel="RHEL">{`${systemObj.osMajorVersion}.${systemObj.osMinorVersion}`}</Td>
           </Tr>
         ))}
       </Tbody>
     </TableComposable>
   );
-}
+};
 
-export default UnreportedSystemsTable
+export default UnreportedSystemsTable;

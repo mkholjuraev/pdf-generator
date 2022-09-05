@@ -1,11 +1,4 @@
-import puppeteer, { Browser, Page } from "puppeteer";
-
-const margins = {
-  top: '2cm',
-  bottom: '2cm',
-  right: '1cm',
-  left: '1cm',
-};
+import puppeteer, { Browser, Page } from 'puppeteer';
 
 describe('demo template visual regression testing', () => {
   let browser: Browser;

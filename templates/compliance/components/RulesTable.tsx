@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import {
   TableComposable,
   Thead,
@@ -10,20 +10,22 @@ import {
 
 export interface RulesInterface {
   topRules: {
-    compliant: boolean,
-    identifier: string,
-    refId: string,
-    remediationAvailable: boolean,
-    severity: string,
-    systemsCount: number,
-    title: string,
-    _typename: string,
-  }[]
+    compliant: boolean;
+    identifier: string;
+    refId: string;
+    remediationAvailable: boolean;
+    severity: string;
+    systemsCount: number;
+    title: string;
+    _typename: string;
+  }[];
 }
 
-const RulesTable: React.FC<RulesInterface & React.HTMLAttributes<HTMLDivElement>> = ({ topRules }) => {
+const RulesTable: React.FC<
+  RulesInterface & React.HTMLAttributes<HTMLDivElement>
+> = ({ topRules }) => {
   return (
-    <TableComposable variant='compact' isStriped>
+    <TableComposable variant="compact" isStriped>
       <Thead>
         <Tr>
           <Th modifier="wrap">Rule name</Th>
@@ -43,7 +45,7 @@ const RulesTable: React.FC<RulesInterface & React.HTMLAttributes<HTMLDivElement>
         ))}
       </Tbody>
     </TableComposable>
-  )
-}
+  );
+};
 
-export default RulesTable
+export default RulesTable;

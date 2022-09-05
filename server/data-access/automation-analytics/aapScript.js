@@ -1,7 +1,6 @@
 import { PDFNotImplementedError, PDFRequestError } from '../../errors';
 import reports from '../../../templates/automation-analytics/schemas';
 import axios from 'axios';
-import logger from '../../logger';
 import atob from 'atob';
 
 const getFilterData = (queryParams, selectOptions) => {

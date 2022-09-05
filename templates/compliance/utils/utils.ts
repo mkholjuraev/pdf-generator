@@ -1,13 +1,16 @@
-import { 
-  ProfileInterface,
-  ComplianceSystemsInterface,
-} from './interfaces';
+import { ProfileInterface, ComplianceSystemsInterface } from './interfaces';
 
 export const NEVER = 'Never';
 export const SEVERITY_LEVELS = ['high', 'medium', 'low', 'unknown'];
 
-export const fixedPercentage = (value: number, fixed = 0, withPercent = true) => {
-  const fixedValue = value ? parseFloat(value.toString()).toFixed(fixed) : undefined;
+export const fixedPercentage = (
+  value: number,
+  fixed = 0,
+  withPercent = true
+) => {
+  const fixedValue = value
+    ? parseFloat(value.toString()).toFixed(fixed)
+    : undefined;
   return fixedValue ? fixedValue + (withPercent ? '%' : '') : 'N/A';
 };
 
@@ -28,7 +31,7 @@ export const systemRulesPassed = (system: ComplianceSystemsInterface) => {
     : [];
 };
 
-export const systemRulesFailed = (system:ComplianceSystemsInterface) =>
+export const systemRulesFailed = (system: ComplianceSystemsInterface) =>
   system.testResultProfiles
     ? profilesRulesFailed(system.testResultProfiles)
     : [];
@@ -36,7 +39,9 @@ export const systemRulesFailed = (system:ComplianceSystemsInterface) =>
 export const systemSupportedByProfiles = (profiles: ProfileInterface[]) =>
   profiles.reduce((acc, profile) => acc && !!profile.supported, true);
 
-export const systemsWithRuleObjectsFailed = (systems: ComplianceSystemsInterface[]) =>
+export const systemsWithRuleObjectsFailed = (
+  systems: ComplianceSystemsInterface[]
+) =>
   systems.map((system) => ({
     ...system,
     ruleObjectsFailed: systemRulesFailed(system),
@@ -44,7 +49,9 @@ export const systemsWithRuleObjectsFailed = (systems: ComplianceSystemsInterface
     profiles: system.testResultProfiles,
   }));
 
-export const toRulesArrayWithProfile = (profilesWithRules: ProfileInterface[]) =>
+export const toRulesArrayWithProfile = (
+  profilesWithRules: ProfileInterface[]
+) =>
   profilesWithRules.flatMap((profileWithRules) =>
     profileWithRules.rules.map((rule) => {
       const identifier = rule.identifier && JSON.parse(rule.identifier);
@@ -56,7 +63,7 @@ export const toRulesArrayWithProfile = (profilesWithRules: ProfileInterface[]) =
     })
   );
 
-export const complianceScoreData = ( profiles: ProfileInterface[] ) => {
+export const complianceScoreData = (profiles: ProfileInterface[]) => {
   const scoreTotal = profiles.reduce((acc, profile) => acc + profile.score, 0);
   const rulesPassed = profilesRulesPassed(profiles).length;
   const rulesFailed = profilesRulesFailed(profiles).length;

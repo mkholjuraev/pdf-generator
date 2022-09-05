@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import {
   TableComposable,
   Thead,
@@ -9,13 +9,15 @@ import {
 } from '@patternfly/react-table';
 import { SystemsTableProps } from '../utils/interfaces';
 
-interface UnsupportedSystemsProps extends SystemsTableProps{
-  expectedSSGVersion: string,
-};
+interface UnsupportedSystemsProps extends SystemsTableProps {
+  expectedSSGVersion: string;
+}
 
-const UnsupportedSystemsTable: React.FC<UnsupportedSystemsProps & React.HTMLAttributes<HTMLDivElement>> = ({ systems, expectedSSGVersion }) => {
+const UnsupportedSystemsTable: React.FC<
+  UnsupportedSystemsProps & React.HTMLAttributes<HTMLDivElement>
+> = ({ systems, expectedSSGVersion }) => {
   return (
-    <TableComposable variant='compact' isStriped>
+    <TableComposable variant="compact" isStriped>
       <Thead>
         <Tr>
           <Th modifier="wrap">System name</Th>
@@ -29,7 +31,9 @@ const UnsupportedSystemsTable: React.FC<UnsupportedSystemsProps & React.HTMLAttr
           <Tr key={index}>
             <Td dataLabel="System name">{systemObj.name}</Td>
             <Td dataLabel="OS">{`${systemObj.osMajorVersion}.${systemObj.osMinorVersion}`}</Td>
-            <Td dataLabel="Running SSG version">{systemObj.testResultProfiles[0].ssgVersion}</Td>
+            <Td dataLabel="Running SSG version">
+              {systemObj.testResultProfiles[0].ssgVersion}
+            </Td>
             <Td dataLabel="Expected SSG version">{`${expectedSSGVersion}`}</Td>
           </Tr>
         ))}

@@ -10,9 +10,11 @@ import {
 import { complianceScoreData, fixedPercentage } from '../utils/utils';
 import { SystemsTableProps } from '../utils/interfaces';
 
-const SupportedSystemsTable: React.FC<SystemsTableProps & React.HTMLAttributes<HTMLDivElement>> = ({ systems }) => {
+const SupportedSystemsTable: React.FC<
+  SystemsTableProps & React.HTMLAttributes<HTMLDivElement>
+> = ({ systems }) => {
   return (
-    <TableComposable variant='compact' isStriped>
+    <TableComposable variant="compact" isStriped>
       <Thead>
         <Tr>
           <Th modifier="wrap">System name</Th>
@@ -25,9 +27,16 @@ const SupportedSystemsTable: React.FC<SystemsTableProps & React.HTMLAttributes<H
         {systems.map((systemObj, index) => (
           <Tr key={index}>
             <Td dataLabel="System name">{systemObj.name}</Td>
-            <Td dataLabel='RHEL'>{`${systemObj.osMajorVersion}.${systemObj.osMinorVersion}`}</Td>
-            <Td dataLabel='Failed Rules'>{complianceScoreData(systemObj.testResultProfiles).rulesFailed || ''}</Td>
-            <Td dataLabel='Compliance Score'>{fixedPercentage(complianceScoreData(systemObj.testResultProfiles).score)}</Td>
+            <Td dataLabel="RHEL">{`${systemObj.osMajorVersion}.${systemObj.osMinorVersion}`}</Td>
+            <Td dataLabel="Failed Rules">
+              {complianceScoreData(systemObj.testResultProfiles).rulesFailed ||
+                ''}
+            </Td>
+            <Td dataLabel="Compliance Score">
+              {fixedPercentage(
+                complianceScoreData(systemObj.testResultProfiles).score
+              )}
+            </Td>
           </Tr>
         ))}
       </Tbody>

@@ -53,6 +53,7 @@
     "@types/express": "^4.17.13",
     "@types/fs-extra": "^9.0.13",
     "@types/jest": "^27.5.2",
+    "@types/jest-image-snapshot": "^5.1.0",
     "@types/morgan": "^1.9.3",
     "@types/puppeteer": "^5.4.4",
     "@types/styled-components": "^5.1.22",
@@ -100,7 +101,7 @@
     "build": "webpack -c ./config/webpack.config.js",
     "build:test": "NODE_ENV=development npm run build",
     "build:production": "NODE_ENV=production npm run build",
-    "lint": "eslint server config templates browser",
+    "lint": "eslint server config templates browser tests-visual-regression",
     "start:server": "NODE_ENV=development npx concurrently \"npx webpack -c ./config/webpack.config.js -w\" \"npx nodemon ./dist/index.js\"",
     "test": "jest",
     "test:visual": "node visual-test.js"

@@ -30,7 +30,9 @@
         "./templates/**/*.ts",
         "./templates/**/*.tsx",
         "./browser/**/*.ts",
-        "./browser/**/*.tsx"
+        "./browser/**/*.tsx",
+        "./tests-visual-regression/**/*.ts",
+        "./tests-visual-regression/**/*.tsx"
       ],
       "extends": [
         "plugin:@typescript-eslint/recommended",
