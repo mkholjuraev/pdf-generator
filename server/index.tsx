@@ -3,11 +3,11 @@ import fs from 'fs';
 import path from 'path';
 import cors from 'cors';
 import atob from 'atob';
-import { performance } from 'perf_hooks';
 import promBundle from 'express-prom-bundle';
 import type { IncomingHttpHeaders } from 'http';
+import winston from 'winston';
+import expressWinston from 'express-winston';
 
-import logger from './logger';
 import config from './config';
 import generatePdf, { previewPdf } from '../browser';
 import { PDFNotFoundError, SendingFailedError } from './errors';
@@ -64,7 +64,20 @@ app.use(cors());
 app.use(express.json({ limit: '5mb' }));
 app.use(express.static(path.resolve(__dirname, '..', 'build')));
 app.use(express.static(path.resolve(__dirname, '../public')));
-app.use(logger);
+app.use(
+  expressWinston.logger({
+    transports: [new winston.transports.Console()],
+    requestWhitelist: ['url', 'method', 'httpVersion', 'originalUrl', 'query'],
+    format: winston.format.combine(
+      winston.format.colorize(),
+      winston.format.json()
+    ),
+    meta: false,
+    msg: 'HTTP {{req.method}} {{req.url}}',
+    expressFormat: true,
+    colorize: false,
+  })
+);
 
 // Middlware that activates on all routes, responsible for rendering the correct
 // template/component into html to the requester.
@@ -132,7 +145,6 @@ app.post(`${APIPrefix}/generate`, async (req: GenerateHandlerReqyest, res) => {
   const service = req.body.service;
   const template = req.body.template;
   const dataOptions = req.body;
-  console.log('Request body: ', JSON.stringify(req.body), req.body);
 
   const tenant = JSON.parse(atob(rhIdentity))['identity']['internal']['org_id'];
   const url = `http://localhost:${PORT}?template=${template}&service=${service}`;
@@ -159,7 +171,6 @@ app.post(`${APIPrefix}/generate`, async (req: GenerateHandlerReqyest, res) => {
     res.status(200).sendFile(pathToPdf, (err) => {
       if (err) {
         const errorMessage = new SendingFailedError(pdfFileName, err);
-        console.info('error', errorMessage.message, { tenant });
         throw errorMessage;
       }
 
@@ -172,7 +183,6 @@ app.post(`${APIPrefix}/generate`, async (req: GenerateHandlerReqyest, res) => {
       });
     });
   } catch (error) {
-    console.info('error', `${error.code}: ${error.message}`, { tenant });
     res.status((error.code as number) || 500).send(error.message);
   }
 });
@@ -188,15 +198,6 @@ app.get(`/preview`, async (req: PreviewHandlerRequest, res) => {
 
   const url = `http://localhost:${PORT}?template=${template}`;
   try {
-    const startGeneration = performance.now();
-    let elapsed = performance.now() - startGeneration;
-    console.info('info', `Total Data collection time: ${elapsed} ms`, {
-      elapsed,
-    });
-
-    // Generate the pdf
-    const startRender = performance.now();
-
     const pdfBuffer = await previewPdf(
       url,
       {
@@ -208,18 +209,6 @@ app.get(`/preview`, async (req: PreviewHandlerRequest, res) => {
     );
     res.set('Content-Type', 'application/pdf');
     res.status(200).send(pdfBuffer);
-
-    elapsed = performance.now() - startRender;
-    console.info('info', `Total Rendering time: ${elapsed} ms`, {
-      elapsed,
-    });
-
-    elapsed = performance.now() - startGeneration;
-    console.info(
-      'info',
-      `Total Data collection + PDF Rendering + Download time: ${elapsed} ms`,
-      { elapsed }
-    );
   } catch (error) {
     console.info('error', `${error.code}: ${error.message}`);
     res.status((error.code as number) || 500).send(error.message);

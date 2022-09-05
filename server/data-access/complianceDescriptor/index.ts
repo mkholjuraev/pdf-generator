@@ -291,7 +291,6 @@ export const getPolicyData = async (
     undefined,
     policyId
   );
-  console.log('Polici: ', data, { policyId, totalHostCount });
   const fetchSystems = (perPage: number, page: number) =>
     fetchQQl(getSystemsQuery, headers, perPage, page, policyId);
   const fetchRules = (perPage = 10, page = 1) =>
@@ -335,7 +334,6 @@ export const getPolicyData = async (
     policy: data.data.profile || {},
     ...exportData,
   };
-  console.log(JSON.stringify(PDFdata));
   return PDFdata;
 };
 
