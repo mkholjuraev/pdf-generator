@@ -1,4 +1,4 @@
-import ServiceNames from '../service-names';
+import ServiceNames from '../../../common/service-names';
 import { ServiceCallFunction, ServiceDescriptor } from '../call-service';
 import { complianceData } from './complianceData';
 import axios, { AxiosRequestHeaders, AxiosResponse } from 'axios';

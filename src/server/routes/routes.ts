@@ -3,23 +3,24 @@ import { Router, Request } from 'express';
 import type { IncomingHttpHeaders } from 'http';
 
 import getTemplateData from '../data-access';
-import ServiceNames from '../data-access/service-names';
+import ServiceNames from '../../common/service-names';
 import renderTemplate from '../render-template';
 import { processOrientationOption } from '../../browser/helpers';
 import generatePdf, { previewPdf } from '../../browser';
 import { SendingFailedError, PDFNotFoundError } from '../errors';
 import config from '../../common/config';
 import { OPTIONS_HEADER_NAME } from '../../common/consts';
+import { PreviewReqQuery } from '../../common/types';
 
 const PORT = config.webPort;
 
 type PreviewOptions = unknown;
-type ReqQuery = {
-  orientation?: string;
-  template: string;
-  service: ServiceNames;
-};
-type PreviewHandlerRequest = Request<PreviewOptions, any, unknown, ReqQuery>;
+type PreviewHandlerRequest = Request<
+  PreviewOptions,
+  any,
+  unknown,
+  PreviewReqQuery
+>;
 
 export type GenerateHandlerReqyest = Request<
   unknown,

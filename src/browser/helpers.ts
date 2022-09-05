@@ -1,11 +1,13 @@
-var path = require('path');
-global.appRoot = path.resolve(__dirname);
+import { Request } from 'express';
+import { PreviewReqBody, PreviewReqQuery } from '../common/types';
 
-export const replaceString = (string) => {
+export const replaceString = (string: string) => {
   return string.replace(/[-[\]{}()'`*+?.,\\^$|#]/g, '\\$&');
 };
 
-export const processOrientationOption = (request) => {
+export const processOrientationOption = (
+  request: Request<unknown, unknown, PreviewReqBody, PreviewReqQuery>
+) => {
   let orientationOption = '';
   if (request.query?.orientation) {
     orientationOption = request.query?.orientation;

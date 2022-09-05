@@ -1,5 +1,5 @@
 import axios, { AxiosRequestHeaders, AxiosRequestConfig } from 'axios';
-import ServiceNames from './service-names';
+import ServiceNames from '../../common/service-names';
 import config from '../../common/config';
 import { IS_DEVELOPMENT } from '../../common/consts';
 

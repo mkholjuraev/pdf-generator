@@ -3,7 +3,7 @@ import fs from 'fs';
 import path from 'path';
 
 import templateMapper from '../../templates';
-import ServiceNames from '../data-access/service-names';
+import ServiceNames from '../../common/service-names';
 import { renderToString, renderToStaticMarkup } from 'react-dom/server';
 
 export function getHeaderandFooterTemplates({

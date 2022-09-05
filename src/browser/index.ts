@@ -6,7 +6,7 @@ import os from 'os';
 import renderTemplate, {
   getHeaderandFooterTemplates,
 } from '../server/render-template';
-import ServiceNames from '../server/data-access/service-names';
+import ServiceNames from '../common/service-names';
 import { glob } from 'glob';
 import { IS_PRODUCTION, OPTIONS_HEADER_NAME } from '../common/consts';
 

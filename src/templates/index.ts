@@ -2,7 +2,7 @@ import DemoTemplate from './demo/Template';
 import CommonHeader from './common/common-header';
 import CommonFooter from './common/common-footer';
 import VulnerabilitiesSystemTemplate from './vulnerabilities-system/Template';
-import ServiceNames from '../server/data-access/service-names';
+import ServiceNames from '../common/service-names';
 import VulnerabilityTemplate from './vulnerability/Template';
 import AdvisorTemplate from './advisor/Template';
 import ComplianceTemplate from './compliance/template';

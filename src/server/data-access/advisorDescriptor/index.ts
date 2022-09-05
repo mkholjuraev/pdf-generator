@@ -1,5 +1,5 @@
 import { ServiceCallFunction, ServiceDescriptor } from '../call-service';
-import ServiceNames from '../service-names';
+import ServiceNames from '../../../common/service-names';
 
 const advisorData = [
   {

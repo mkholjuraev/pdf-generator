@@ -6,7 +6,7 @@ import demoDescriptor from './demoDescriptor';
 import complianceDescriptor from './complianceDescriptor';
 import vulnerabilityDescriptor from './vulnerabilityDescriptor';
 import advisorDescriptor from './advisorDescriptor';
-import ServiceNames from './service-names';
+import ServiceNames from '../../common/service-names';
 import templates from '../../templates';
 
 type TemplateAccessMapper<T> = {
