@@ -6,7 +6,7 @@ import {
   DescriptionListGroup,
   DescriptionListTerm,
 } from '@patternfly/react-core';
-import { Template } from '../types';
+import { Template } from '../../types';
 
 interface Props {
   item: Template;
@@ -84,5 +84,8 @@ const ExpandedRowContents: FunctionComponent<Props> = ({ item }) => (
     </DescriptionList>
   </Td>
 );
+
+export type AutomationCalculatorExpandRowsComponentType =
+  typeof ExpandedRowContents;
 
 export default ExpandedRowContents;

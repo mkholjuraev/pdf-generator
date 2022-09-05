@@ -8,8 +8,8 @@ import {
   Thead,
   Tr,
 } from '../../../StyledPatternfly/Table';
-import { AutomationCalculatorExpandRowsComponentType } from '../../types';
-import { Template } from '../types';
+import { Template } from '../../types';
+import type { AutomationCalculatorExpandRowsComponentType } from './ExpandedRowContents';
 import Row from './Row';
 
 interface Props {

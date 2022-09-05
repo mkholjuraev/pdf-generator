@@ -8,8 +8,7 @@ import renderTemplate, {
 } from '../server/render-template';
 import ServiceNames from '../server/data-access/service-names';
 import { glob } from 'glob';
-import { OPTIONS_HEADER_NAME } from '../server';
-import { IS_PRODUCTION } from '../common/consts';
+import { IS_PRODUCTION, OPTIONS_HEADER_NAME } from '../common/consts';
 
 const A4Width = 210;
 const A4Height = 297;

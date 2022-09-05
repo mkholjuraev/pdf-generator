@@ -6,11 +6,10 @@ import promBundle from 'express-prom-bundle';
 import winston from 'winston';
 import expressWinston from 'express-winston';
 
-import config from './config';
+import config from '../common/config';
 import router from './routes/routes';
 
 const PORT = config.webPort;
-export const OPTIONS_HEADER_NAME = 'x-pdf-gen-options';
 
 const app = express();
 app.use(cors());

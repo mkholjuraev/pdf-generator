@@ -1,8 +1,7 @@
 import axios, { AxiosRequestHeaders, AxiosRequestConfig } from 'axios';
 import ServiceNames from './service-names';
-import config from '../config';
-
-const IS_DEVELOPMENT = process.env.NODE_ENV === 'development';
+import config from '../../common/config';
+import { IS_DEVELOPMENT } from '../../common/consts';
 
 export type APIDescriptor<T = any, R = unknown> = {
   service: ServiceNames;

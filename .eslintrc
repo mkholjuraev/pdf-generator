@@ -23,16 +23,8 @@
   "overrides": [
     {
       "files": [
-        "./config/**/*.ts",
-        "./config/**/*.tsx",
-        "./server/**/*.ts",
-        "./server/**/*.tsx",
-        "./templates/**/*.ts",
-        "./templates/**/*.tsx",
-        "./browser/**/*.ts",
-        "./browser/**/*.tsx",
-        "./tests-visual-regression/**/*.ts",
-        "./tests-visual-regression/**/*.tsx"
+        "./src/**/*.ts",
+        "./src/**/*.tsx"
       ],
       "extends": [
         "plugin:@typescript-eslint/recommended",

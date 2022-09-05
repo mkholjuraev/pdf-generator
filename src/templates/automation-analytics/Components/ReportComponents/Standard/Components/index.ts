@@ -1,10 +1,8 @@
-import ExpandedRowContents from '../../AutomationCalculator/TemplatesTable/ExpandedRowContents';
-import TemplateExplorerExpandedRow from './TemplateExplorerExpandedRow';
-import {
+import ExpandedRowContents, {
   AutomationCalculatorExpandRowsComponentType,
-  ExpandRowsComponentType,
-  ReportStandardExpandedRow,
-} from './types';
+} from '../../AutomationCalculator/TemplatesTable/ExpandedRowContents';
+import TemplateExplorerExpandedRow from './TemplateExplorerExpandedRow';
+import { ExpandRowsComponentType, ReportStandardExpandedRow } from './types';
 
 export const expandedRowMapper = (
   type: ReportStandardExpandedRow | undefined

@@ -104,7 +104,7 @@
     "build:test": "NODE_ENV=development npm run build",
     "build:production": "NODE_ENV=production npm run build",
     "circular": "madge --circular --warning --webpackConfig ./config/webpack.config.js --extensions ts,tsx ./",
-    "lint": "eslint server config templates browser tests-visual-regression",
+    "lint": "eslint src",
     "start:server": "NODE_ENV=development npx concurrently \"npx webpack -c ./config/webpack.config.js -w\" \"npx nodemon ./dist/index.js\"",
     "test": "jest",
     "test:visual": "node visual-test.js"

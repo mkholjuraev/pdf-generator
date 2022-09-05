@@ -9,7 +9,7 @@ import styled from 'styled-components';
 import PageCard from '../../PageCard';
 import { CardTitle, CardSubtitle } from '../../StyledPatternfly';
 import Table from './Table';
-import { ReportStandardProps } from './types';
+import { ReportStandardProps } from '../types';
 import { expandedRowMapper } from './Components';
 import Chart from '../../ChartHelpers/Chart';
 

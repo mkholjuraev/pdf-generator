@@ -7,7 +7,11 @@ import {
   Thead,
   Tr,
 } from '../../../StyledPatternfly';
-import { ExpandRowsComponentType, LegendEntry, TableHeaders } from '../types';
+import {
+  ExpandRowsComponentType,
+  LegendEntry,
+  TableHeaders,
+} from '../../types';
 
 import TableRow from './TableRow';
 

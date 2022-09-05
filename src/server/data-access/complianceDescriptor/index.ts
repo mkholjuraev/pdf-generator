@@ -2,7 +2,7 @@ import ServiceNames from '../service-names';
 import { ServiceCallFunction, ServiceDescriptor } from '../call-service';
 import { complianceData } from './complianceData';
 import axios, { AxiosRequestHeaders, AxiosResponse } from 'axios';
-import config from '../../config';
+import config from '../../../common/config';
 
 const getMock: ServiceCallFunction = () => Promise.resolve(complianceData);
 const responseProcessor = (data: typeof complianceData) => data;

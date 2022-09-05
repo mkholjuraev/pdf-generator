@@ -1,4 +1,4 @@
-import ServiceNames from '../data-access/service-names';
+import ServiceNames from '../server/data-access/service-names';
 import { ClowderEndpoint, Clowder } from './clowder';
 
 export type ServicesEndpoints = {

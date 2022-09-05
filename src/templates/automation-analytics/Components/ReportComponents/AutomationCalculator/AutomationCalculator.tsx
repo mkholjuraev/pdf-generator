@@ -1,7 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 import React, { Fragment, FunctionComponent } from 'react';
-
 import {
   Card,
   CardBody,
@@ -14,21 +13,14 @@ import {
   Chip,
   ChipGroup as PatternflyChipGroup,
 } from '@patternfly/react-core';
-
+import styled from 'styled-components';
 import { CardTitle, CardSubtitle } from '../../StyledPatternfly';
-
-// Chart
 import Chart from '../../ChartHelpers/Chart';
-
-// Local imports
 import TotalSavings from './TotalSavings';
 import TemplatesTable from './TemplatesTable';
-
 import PageCard from '../../PageCard';
-
-import { ReportAutomationCalculatorProps, Template } from './types';
+import { ReportAutomationCalculatorProps, Template } from '../types';
 import { AutomationCalculatorExpandedRowMapper } from '../Standard/Components';
-import styled from 'styled-components';
 
 const calculateDelta = (a: string | number, b: string | number): number => {
   const n1 = +a;

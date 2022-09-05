@@ -1,7 +1,11 @@
 import React, { FC, Fragment } from 'react';
 import { Td, Tr } from '../../../StyledPatternfly';
 import { getText } from '../helpers';
-import { ExpandRowsComponentType, LegendEntry, TableHeaders } from '../types';
+import {
+  ExpandRowsComponentType,
+  LegendEntry,
+  TableHeaders,
+} from '../../types';
 
 interface Props {
   legendEntry: LegendEntry;

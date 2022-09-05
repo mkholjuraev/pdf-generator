@@ -2,14 +2,14 @@ import fs from 'fs';
 import { Router, Request } from 'express';
 import type { IncomingHttpHeaders } from 'http';
 
-import { OPTIONS_HEADER_NAME } from '../';
 import getTemplateData from '../data-access';
 import ServiceNames from '../data-access/service-names';
 import renderTemplate from '../render-template';
 import { processOrientationOption } from '../../browser/helpers';
 import generatePdf, { previewPdf } from '../../browser';
 import { SendingFailedError, PDFNotFoundError } from '../errors';
-import config from '../config';
+import config from '../../common/config';
+import { OPTIONS_HEADER_NAME } from '../../common/consts';
 
 const PORT = config.webPort;
 
