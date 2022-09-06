@@ -1,5 +1,6 @@
 import fs from 'fs';
 import { Router, Request } from 'express';
+import httpContext from 'express-http-context';
 
 import getTemplateData from '../data-access';
 import ServiceNames from '../../common/service-names';
@@ -18,7 +19,7 @@ type PreviewHandlerRequest = Request<
   PreviewReqQuery
 >;
 
-export type GenerateHandlerReqyest = Request<
+export type GenerateHandlerRequest = Request<
   unknown,
   unknown,
   Record<string, any>,
@@ -88,21 +89,12 @@ router.get(`${config.APIPrefix}/hello`, (_req, res) => {
 
 router.post(
   `${config.APIPrefix}/generate`,
-  async (req: GenerateHandlerReqyest, res) => {
-    const rhIdentity = req.headers['x-rh-identity'] as string;
+  async (req: GenerateHandlerRequest, res) => {
+    const rhIdentity = httpContext.get(config.IDENTITY_HEADER_KEY);
     const orientationOption = processOrientationOption(req);
-
-    if (!rhIdentity) {
-      return res.status(401).send('Unauthorized access not allowed');
-    }
-
     const service = req.body.service;
     const template = req.body.template;
     const dataOptions = req.body;
-
-    const tenant = JSON.parse(atob(rhIdentity))['identity']['internal'][
-      'org_id'
-    ];
     const url = `http://localhost:${config.webPort}?template=${template}&service=${service}`;
 
     try {
@@ -132,9 +124,7 @@ router.post(
 
         fs.unlink(pathToPdf, (err) => {
           if (err) {
-            console.info('warn', `Failed to unlink ${pdfFileName}: ${err}`, {
-              tenant,
-            });
+            console.info('warn', `Failed to unlink ${pdfFileName}: ${err}`);
           }
         });
       });

@@ -14,6 +14,8 @@ const defaultConfig: {
   IS_PRODUCTION: boolean;
   IS_DEVELOPMENT: boolean;
   OPTIONS_HEADER_NAME: 'x-pdf-gen-options';
+  IDENTITY_CONTEXT_KEY: 'identity';
+  IDENTITY_HEADER_KEY: 'x-rh-identity';
 } = {
   webPort: 8000,
   metricsPort: 8080,
@@ -23,6 +25,8 @@ const defaultConfig: {
   IS_PRODUCTION: process.env.NODE_ENV === 'production',
   IS_DEVELOPMENT: process.env.NODE_ENV === 'development',
   OPTIONS_HEADER_NAME: 'x-pdf-gen-options',
+  IDENTITY_CONTEXT_KEY: 'identity',
+  IDENTITY_HEADER_KEY: 'x-rh-identity',
 };
 
 /**

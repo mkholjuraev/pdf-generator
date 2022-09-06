@@ -119,7 +119,7 @@ const generatePdf = async (
   dataOptions?: Record<string, any>
 ) => {
   const pdfPath = getNewPdfName();
-
+  console.log(rhIdentity);
   const browser = await puppeteer.launch({
     headless: true,
     ...(config.IS_PRODUCTION

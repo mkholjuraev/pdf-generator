@@ -2,12 +2,14 @@ import express from 'express';
 import path from 'path';
 import cors from 'cors';
 import promBundle from 'express-prom-bundle';
+import httpContext from 'express-http-context';
 
 import winston from 'winston';
 import expressWinston from 'express-winston';
 
 import config from '../common/config';
 import router from './routes/routes';
+import identityMiddleware from '../middleware/identity-middleware';
 
 const PORT = config.webPort;
 
@@ -30,6 +32,8 @@ app.use(
     colorize: false,
   })
 );
+app.use(httpContext.middleware);
+app.use(identityMiddleware);
 app.use('/', router);
 
 app.listen(PORT, () => console.info('info', `Listening on port ${PORT}`));
