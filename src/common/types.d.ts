@@ -9,3 +9,10 @@ export type PreviewReqQuery = {
   template: string;
   service: ServiceNames;
 };
+
+declare module 'http' {
+  // globaly declare custom headers
+  interface IncomingHttpHeaders {
+    'x-pdf-gen-options'?: string;
+  }
+}

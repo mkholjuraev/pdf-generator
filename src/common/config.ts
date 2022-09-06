@@ -10,11 +10,19 @@ const defaultConfig: {
   metricsPort: number;
   metricsPath: string;
   endpoints: Partial<ServicesEndpoints>;
+  APIPrefix: string;
+  IS_PRODUCTION: boolean;
+  IS_DEVELOPMENT: boolean;
+  OPTIONS_HEADER_NAME: 'x-pdf-gen-options';
 } = {
   webPort: 8000,
   metricsPort: 8080,
   metricsPath: '/metrics',
   endpoints: {},
+  APIPrefix: '/api/crc-pdf-generator/v1',
+  IS_PRODUCTION: process.env.NODE_ENV === 'production',
+  IS_DEVELOPMENT: process.env.NODE_ENV === 'development',
+  OPTIONS_HEADER_NAME: 'x-pdf-gen-options',
 };
 
 /**
@@ -39,7 +47,7 @@ function initializeConfig() {
   let isClowderEnabled = false;
   const endpoints: Partial<ServicesEndpoints> = {};
   try {
-    let config = {
+    let config: typeof defaultConfig = {
       ...defaultConfig,
     };
     /**
@@ -58,6 +66,7 @@ function initializeConfig() {
       }
 
       config = {
+        ...defaultConfig,
         ...clowderConfig,
         endpoints,
       };
@@ -68,6 +77,6 @@ function initializeConfig() {
   }
 }
 
-const instanceConfig = initializeConfig();
+const instanceConfig: typeof defaultConfig = initializeConfig();
 
 export default instanceConfig;

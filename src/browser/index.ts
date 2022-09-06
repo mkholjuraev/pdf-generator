@@ -8,7 +8,7 @@ import renderTemplate, {
 } from '../server/render-template';
 import ServiceNames from '../common/service-names';
 import { glob } from 'glob';
-import { IS_PRODUCTION, OPTIONS_HEADER_NAME } from '../common/consts';
+import config from '../common/config';
 
 const A4Width = 210;
 const A4Height = 297;
@@ -27,7 +27,7 @@ function getChromiumExectuablePath() {
   }
 }
 
-const CHROMIUM_PATH = IS_PRODUCTION && getChromiumExectuablePath();
+const CHROMIUM_PATH = config.IS_PRODUCTION && getChromiumExectuablePath();
 
 const margins = {
   top: '2cm',
@@ -61,7 +61,7 @@ export const previewPdf = async (
 ) => {
   const browser = await puppeteer.launch({
     headless: true,
-    ...(IS_PRODUCTION
+    ...(config.IS_PRODUCTION
       ? {
           // we have a different dir structure than pupetter expects. We have to point it to the correct chromium executable
           executablePath: CHROMIUM_PATH,
@@ -122,7 +122,7 @@ const generatePdf = async (
 
   const browser = await puppeteer.launch({
     headless: true,
-    ...(IS_PRODUCTION
+    ...(config.IS_PRODUCTION
       ? {
           // we have a different dir structure than pupetter expects. We have to point it to the correct chromium executable
           executablePath: CHROMIUM_PATH,
@@ -151,7 +151,7 @@ const generatePdf = async (
   await page.setExtraHTTPHeaders({
     ...(dataOptions
       ? {
-          [OPTIONS_HEADER_NAME]: JSON.stringify(dataOptions),
+          [config.OPTIONS_HEADER_NAME]: JSON.stringify(dataOptions),
         }
       : {}),
 

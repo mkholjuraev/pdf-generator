@@ -1,6 +1,5 @@
 import fs from 'fs';
 import { Router, Request } from 'express';
-import type { IncomingHttpHeaders } from 'http';
 
 import getTemplateData from '../data-access';
 import ServiceNames from '../../common/service-names';
@@ -9,10 +8,7 @@ import { processOrientationOption } from '../../browser/helpers';
 import generatePdf, { previewPdf } from '../../browser';
 import { SendingFailedError, PDFNotFoundError } from '../errors';
 import config from '../../common/config';
-import { OPTIONS_HEADER_NAME } from '../../common/consts';
 import { PreviewReqQuery } from '../../common/types';
-
-const PORT = config.webPort;
 
 type PreviewOptions = unknown;
 type PreviewHandlerRequest = Request<
@@ -36,19 +32,12 @@ export type HelloHandlerRequest = Request<
   { policyId: string; totalHostCount: number }
 >;
 
-export interface PupetterBrowserRequest
-  extends Request<
-    unknown,
-    unknown,
-    unknown,
-    { service: ServiceNames; template: string }
-  > {
-  headers: IncomingHttpHeaders & {
-    [OPTIONS_HEADER_NAME]?: string;
-  };
-}
-
-const APIPrefix = '/api/crc-pdf-generator/v1';
+export type PupetterBrowserRequest = Request<
+  unknown,
+  unknown,
+  unknown,
+  { service: ServiceNames; template: string }
+>;
 
 const router = Router();
 
@@ -71,9 +60,10 @@ router.use('^/$', async (req: PupetterBrowserRequest, res, _next) => {
     template,
   };
   try {
-    const configHeaders: string | undefined = req.headers[OPTIONS_HEADER_NAME];
+    const configHeaders: string | undefined =
+      req.headers[config.OPTIONS_HEADER_NAME];
     if (configHeaders) {
-      delete req.headers[OPTIONS_HEADER_NAME];
+      delete req.headers[config.OPTIONS_HEADER_NAME];
     }
 
     const templateData = await getTemplateData(
@@ -92,12 +82,12 @@ router.use('^/$', async (req: PupetterBrowserRequest, res, _next) => {
   }
 });
 
-router.get(`${APIPrefix}/hello`, (_req, res) => {
+router.get(`${config.APIPrefix}/hello`, (_req, res) => {
   return res.status(200).send('<h1>Well this works!</h1>');
 });
 
 router.post(
-  `${APIPrefix}/generate`,
+  `${config.APIPrefix}/generate`,
   async (req: GenerateHandlerReqyest, res) => {
     const rhIdentity = req.headers['x-rh-identity'] as string;
     const orientationOption = processOrientationOption(req);
@@ -113,7 +103,7 @@ router.post(
     const tenant = JSON.parse(atob(rhIdentity))['identity']['internal'][
       'org_id'
     ];
-    const url = `http://localhost:${PORT}?template=${template}&service=${service}`;
+    const url = `http://localhost:${config.webPort}?template=${template}&service=${service}`;
 
     try {
       // Generate the pdf
@@ -163,7 +153,7 @@ router.get(`/preview`, async (req: PreviewHandlerRequest, res) => {
   });
   const orientationOption = processOrientationOption(req);
 
-  const url = `http://localhost:${PORT}?template=${template}`;
+  const url = `http://localhost:${config.webPort}?template=${template}`;
   try {
     const pdfBuffer = await previewPdf(
       url,
