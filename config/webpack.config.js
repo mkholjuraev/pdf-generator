@@ -111,6 +111,10 @@ const serverConfig = {
     filename: 'index.js',
     publicPath: './', // file-loader prepends publicPath to the emited url. without this, react will complain about server and client mismatch
   },
+  externals: {
+    // puppeteer cannot be bundled via webpack. It will break the rendering. Pupetter will be loaded via node_modules even in prod version
+    puppeteer: "require('puppeteer')",
+  },
   module: {
     rules: [
       { test: /\.(js|tsx?)$/, loader: 'ts-loader', exclude: /node_modules/ },
