@@ -1,7 +1,7 @@
 const { defaults: tsjPreset } = require('ts-jest/presets');
 
 module.exports = {
-  rootDir: './tests-visual-regression',
+  rootDir: './src/tests-visual-regression',
   bail: 0,
   testTimeout: 30000,
   moduleNameMapper: {
@@ -11,4 +11,5 @@ module.exports = {
   transform: {
     ...tsjPreset.transform,
   },
+  preset: 'jest-puppeteer',
 };

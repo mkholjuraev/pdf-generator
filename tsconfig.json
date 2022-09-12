@@ -1,26 +1,22 @@
 {
-  "compilerOptions": {
-      "module": "commonjs",
-      "esModuleInterop": true,
-      "target": "es6",
-      "allowJs": true,
-      "jsx": "react",
-      "noImplicitAny": true,
-      "moduleResolution": "node",
+    "compilerOptions": {
+      "outDir": "./build/",
       "sourceMap": true,
-      "outDir": "dist",
-      "baseUrl": ".",
-      "lib": ["es2015", "dom"],
-      "paths": {
-          "*": [
-              "node_modules/*"
-          ]
-      }
-  },
-  "include": [
-      "server/**/*",
-      "tests-visual-regression/**/*",
-      "templates/**/*",
-      "node_modules/@types/puppeteer/index.d.ts"
-  ]
-}
+      "noImplicitAny": true,
+      "module": "esnext",
+      "target": "esnext",
+      "jsx": "react",
+      "allowJs": false,
+      "moduleResolution": "node",
+      "removeComments": false,
+      "strict": false,
+      "allowSyntheticDefaultImports": true,
+      "esModuleInterop": true,
+      "forceConsistentCasingInFileNames": true,
+      "resolveJsonModule": true,
+      "types": ["node", "jest"],
+    },
+    "include": ["src/**/*.ts", "src/**/*.tsx"],
+    "exclude": ["node_modules", "**/*.cy.tsx"]
+  }
+  
