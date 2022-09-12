@@ -4,7 +4,7 @@ import config from '../../common/config';
 
 export type APIDescriptor<T = any, R = unknown> = {
   service: ServiceNames;
-  path: string;
+  path?: string;
   responseProcessor: (...args: any[]) => R;
   mock: (...args: any[]) => Promise<T>;
   request?: (
