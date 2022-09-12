@@ -6,7 +6,7 @@ For local development you can edit the passed data in the `src/index.js` file. T
 in the browser just do:
 ```
  npm ci
- npm start:server
+ npm run start:server
 ```
 This will start the react scripts and will serve just the react app on localhost:8000.
 
