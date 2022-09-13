@@ -12,7 +12,7 @@ objects:
       dependencies:
       - compliance
       deployments:
-        - name: api
+        - name: service
           minReplicas: ${{MIN_REPLICAS}}
           webServices:
             public:
