@@ -340,7 +340,7 @@ export const getPolicyData = async (
 const complianceDescriptor: ServiceDescriptor = {
   templates: {
     report: {
-      service: ServiceNames.demo,
+      service: ServiceNames.compliance,
       responseProcessor,
       path: '/api/compliance/v1/status',
       request: getPolicyData,
