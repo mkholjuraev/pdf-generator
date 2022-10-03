@@ -28,7 +28,7 @@ function getChromiumExectuablePath() {
   }
 }
 
-const CHROMIUM_PATH = config.IS_PRODUCTION && getChromiumExectuablePath();
+const CHROMIUM_PATH = getChromiumExectuablePath();
 
 const margins = {
   top: '2cm',
@@ -72,7 +72,7 @@ export const previewPdf = async (
           ?.landscape;
   const browser = await puppeteer.launch({
     headless: true,
-    ...(config.IS_PRODUCTION
+    ...(config?.IS_PRODUCTION
       ? {
           // we have a different dir structure than pupetter expects. We have to point it to the correct chromium executable
           executablePath: CHROMIUM_PATH,
@@ -112,9 +112,9 @@ export const previewPdf = async (
     landscape,
   });
 
-  if (!pageStatus.ok()) {
+  if (!pageStatus?.ok()) {
     throw new Error(
-      `Pupeteer error while loading the react app: ${pageStatus.statusText()}`
+      `Pupeteer error while loading the react app: ${pageStatus?.statusText()}`
     );
   }
 
@@ -126,7 +126,7 @@ const generatePdf = async (
   url: string,
   rhIdentity: string,
   templateConfig: { service: ServiceNames; template: string },
-  orientationOption: boolean,
+  orientationOption: boolean | undefined,
   dataOptions?: Record<string, any>
 ) => {
   const browserMargins = {
@@ -142,7 +142,7 @@ const generatePdf = async (
   const pdfPath = getNewPdfName();
   const browser = await puppeteer.launch({
     headless: true,
-    ...(config.IS_PRODUCTION
+    ...(config?.IS_PRODUCTION
       ? {
           // we have a different dir structure than pupetter expects. We have to point it to the correct chromium executable
           executablePath: CHROMIUM_PATH,
@@ -165,22 +165,23 @@ const generatePdf = async (
         pageWidth,
         pageHeight,
       },
-    }) as undefined // probably a typings issue in pupetter
+    })
+    // }) as undefined // probably a typings issue in pupetter
   );
 
   await page.setExtraHTTPHeaders({
     ...(dataOptions
       ? {
-          [config.OPTIONS_HEADER_NAME]: JSON.stringify(dataOptions),
+          [config?.OPTIONS_HEADER_NAME as string]: JSON.stringify(dataOptions),
         }
       : {}),
 
     'x-rh-identity': rhIdentity,
   });
   const pageStatus = await page.goto(url, { waitUntil: 'networkidle2' });
-  if (!pageStatus.ok()) {
+  if (!pageStatus?.ok()) {
     throw new Error(
-      `Pupeteer error while loading the react app: ${pageStatus.statusText()}`
+      `Pupeteer error while loading the react app: ${pageStatus?.statusText()}`
     );
   }
 

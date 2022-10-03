@@ -42,12 +42,12 @@ function prepareServiceCall<T = Record<string, unknown>>(
   descriptor: APIDescriptor<T>
 ): ServiceCallFunction {
   // skip all and return mocked data
-  if (config.IS_DEVELOPMENT && descriptor.mock) {
+  if (config?.IS_DEVELOPMENT && descriptor.mock) {
     return () => Promise.resolve(descriptor.mock());
   }
   const { service, path, responseProcessor, request } = descriptor;
-  const serviceConfig = config.endpoints[getServiceEndpointMap(service)];
-  if (!config.IS_DEVELOPMENT && !serviceConfig) {
+  const serviceConfig = config?.endpoints[getServiceEndpointMap(service)];
+  if (!config?.IS_DEVELOPMENT && !serviceConfig) {
     return () =>
       Promise.reject(`Trying to reach unusupported service ${service}!`);
   }

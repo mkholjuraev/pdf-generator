@@ -208,7 +208,7 @@ type ExportSettings = {
 export const prepareForExport = (
   exportSettings: ExportSettings,
   systems: System[],
-  topTenFailedRules: unknown[]
+  topTenFailedRules: number[]
 ) => {
   const compliantSystems = compliantSystemsData(systems);
   const nonCompliantSystems = nonCompliantSystemsData(systems);
@@ -260,11 +260,11 @@ const fetchBatched = (
 const fetchQQl = <R = any>(
   query: Record<string, any>,
   headers: AxiosRequestHeaders,
-  perPage: number,
-  page: number,
+  perPage: number | undefined,
+  page: number | undefined,
   policyId: string | number
 ) => {
-  const URL = `http://${config.endpoints.compliance?.hostname}:${config.endpoints.compliance?.port}/api/compliance/graphql`;
+  const URL = `http://${config?.endpoints?.compliance?.hostname}:${config?.endpoints?.compliance?.port}/api/compliance/graphql`;
   return axios.post<any, AxiosResponse<R>>(
     URL,
     {
@@ -315,7 +315,7 @@ export const getPolicyData = async (
         };
       }) => edges.map(({ node }) => node)
     );
-  const rulesParsed = rules.data?.profiles.edges.flatMap(
+  const rulesParsed = rules.data?.profiles?.edges.flatMap(
     (edge) => edge.node.topFailedRules
   );
 
