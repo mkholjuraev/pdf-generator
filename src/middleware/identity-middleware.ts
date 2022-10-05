@@ -8,7 +8,7 @@ const identityMiddleware: Handler = (req, _res, next) => {
     const rhIdentity = req.headers[config?.IDENTITY_HEADER_KEY as string];
     if (rhIdentity) {
       const identityObject = JSON.parse(
-        Buffer.from(rhIdentity, 'base64').toString()
+        Buffer.from(rhIdentity as string, 'base64').toString()
       );
       httpContext.set(config?.IDENTITY_HEADER_KEY as string, rhIdentity);
       httpContext.set(config?.IDENTITY_CONTEXT_KEY as string, identityObject);

@@ -4,7 +4,8 @@ import cors from 'cors';
 import promBundle from 'express-prom-bundle';
 import httpContext from 'express-http-context';
 
-import winston, { LoggerOptionsWithTransports } from 'winston';
+import winston from 'winston';
+import { LoggerOptionsWithTransports } from 'express-winston';
 import expressWinston from 'express-winston';
 
 import config from '../common/config';

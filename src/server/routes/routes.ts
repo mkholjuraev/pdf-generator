@@ -11,15 +11,7 @@ import { SendingFailedError, PDFNotFoundError } from '../errors';
 import config from '../../common/config';
 import { PreviewReqBody, PreviewReqQuery } from '../../common/types';
 
-// type PreviewOptions = unknown;
-// type PreviewHandlerRequest = Request<
-//   PreviewOptions,
-//   any,
-//   unknown,
-//   PreviewReqQuery
-// >;
-
-type PreviewHandlerRequest = Request<
+export type PreviewHandlerRequest = Request<
   unknown,
   unknown,
   PreviewReqBody,

@@ -2,7 +2,8 @@ import React, { Fragment } from 'react';
 import { Flex, FlexItem, Grid, GridItem } from '@patternfly/react-core';
 import { ExpandableRowContent, Td, Tr } from '@patternfly/react-table';
 
-import Breakdown, { CategoryCount } from './BreakdownChart';
+import Breakdown from './BreakdownChart';
+// import CategoryCount from './BreakdownChart';
 import { categoryColor } from '../../../../../constants';
 
 const TableExpandedRow = ({
@@ -93,6 +94,8 @@ const TableExpandedRow = ({
       },
     ];
   };
+
+  type CategoryCount = { [key: string]: number };
 
   const jobStatusGridItem = (
     <Fragment>

@@ -208,7 +208,7 @@ type ExportSettings = {
 export const prepareForExport = (
   exportSettings: ExportSettings,
   systems: System[],
-  topTenFailedRules: number[]
+  topTenFailedRules: undefined | unknown[]
 ) => {
   const compliantSystems = compliantSystemsData(systems);
   const nonCompliantSystems = nonCompliantSystemsData(systems);
@@ -282,7 +282,7 @@ const fetchQQl = <R = any>(
 
 export const getPolicyData = async (
   headers: AxiosRequestHeaders,
-  { policyId, totalHostCount }: { policyId: string; totalHostCount: number }
+  { policyId, totalHostCount }: { policyId: string; totalHostCount: number } // We have options defined as Record<string, any> in API Descriptor
 ) => {
   const { data } = await fetchQQl(
     getPolicyQuery,
@@ -299,7 +299,7 @@ export const getPolicyData = async (
   const batchedSystems = await fetchBatched(fetchSystems, totalHostCount);
   const { data: rules } = await fetchRules();
   const systems = batchedSystems
-    .map((r) => r.data as unknown)
+    .map((r) => r.data as any)
     .flatMap(
       ({
         data: {

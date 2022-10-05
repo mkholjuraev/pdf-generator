@@ -9,7 +9,7 @@ export type APIDescriptor<T = any, R = unknown> = {
   mock: (...args: any[]) => Promise<T>;
   request?: (
     headers: AxiosRequestHeaders,
-    options: Record<string, any>
+    options: Record<string, any> // { policyId: string, totalHostCount: number }// Record<string, any> // Shape is completely off, but is it always the same?
   ) => Promise<R>;
 };
 
