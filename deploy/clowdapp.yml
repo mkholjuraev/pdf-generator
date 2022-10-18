@@ -9,7 +9,7 @@ objects:
       name: crc-pdf-generator
     spec:
       envName: ${ENV_NAME}
-      dependencies:
+      optionalDependencies:
       - compliance
       deployments:
         - name: api
