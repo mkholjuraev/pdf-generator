@@ -11,6 +11,7 @@ objects:
       envName: ${ENV_NAME}
       optionalDependencies:
       - compliance
+      - advisor
       deployments:
         - name: api
           minReplicas: ${{MIN_REPLICAS}}
