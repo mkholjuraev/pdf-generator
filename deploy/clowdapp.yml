@@ -10,8 +10,8 @@ objects:
     spec:
       envName: ${ENV_NAME}
       optionalDependencies:
+      - advisor-backend
       - compliance
-      - advisor
       deployments:
         - name: api
           minReplicas: ${{MIN_REPLICAS}}
