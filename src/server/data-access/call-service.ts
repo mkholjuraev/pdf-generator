@@ -1,6 +1,6 @@
 import axios, { AxiosRequestHeaders, AxiosRequestConfig } from 'axios';
 import ServiceNames from '../../common/service-names';
-import config from '../../common/config';
+import config, { ServicesEndpoints } from '../../common/config';
 
 export type APIDescriptor<T = any, R = unknown> = {
   service: ServiceNames;
@@ -24,6 +24,18 @@ export type ServiceCallFunction = (
   options: Omit<AxiosRequestConfig, 'headers'>
 ) => Promise<unknown>;
 
+const getServiceEndpointMap = (
+  service: ServiceNames
+): keyof ServicesEndpoints => {
+  const stuff = {
+    [ServiceNames.compliance]: ServiceNames.compliance,
+    // // advisor does not have matching names
+    [ServiceNames.advisor]: 'advisor-backend',
+    [ServiceNames.vulnerability]: ServiceNames.vulnerability,
+    [ServiceNames.demo]: ServiceNames.demo,
+  };
+  return stuff[service] as unknown as keyof ServicesEndpoints;
+};
 function prepareServiceCall<T = Record<string, unknown>>(
   descriptor: APIDescriptor<T>
 ): ServiceCallFunction {
@@ -32,7 +44,7 @@ function prepareServiceCall<T = Record<string, unknown>>(
     return () => Promise.resolve(descriptor.mock());
   }
   const { service, path, responseProcessor, request } = descriptor;
-  const serviceConfig = config.endpoints[service];
+  const serviceConfig = config.endpoints[getServiceEndpointMap(service)];
   if (!config.IS_DEVELOPMENT && !serviceConfig) {
     return () =>
       Promise.reject(`Trying to reach unusupported service ${service}!`);

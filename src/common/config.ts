@@ -1,9 +1,12 @@
 import ServiceNames from './service-names';
 import { ClowderEndpoint, Clowder } from './clowder';
 
-export type ServicesEndpoints = {
-  [key in ServiceNames]: ClowderEndpoint;
-} & { 'advisor-backend': ClowderEndpoint };
+export type ServicesEndpoints = Omit<
+  {
+    [key in ServiceNames]: ClowderEndpoint;
+  } & { 'advisor-backend': ClowderEndpoint },
+  'advisor'
+>;
 
 const defaultConfig: {
   webPort: number;
@@ -65,7 +68,7 @@ function initializeConfig() {
       const clowderConfig = clowder.LoadedConfig;
       if (clowderConfig.endpoints) {
         clowderConfig.endpoints.forEach((endpoint) => {
-          endpoints[endpoint.app as ServiceNames] = endpoint;
+          endpoints[endpoint.app as keyof ServicesEndpoints] = endpoint;
         });
       }
 
