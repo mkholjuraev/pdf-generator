@@ -3,7 +3,7 @@ import { ClowderEndpoint, Clowder } from './clowder';
 
 export type ServicesEndpoints = {
   [key in ServiceNames]: ClowderEndpoint;
-};
+} & { 'advisor-backend': ClowderEndpoint };
 
 const defaultConfig: {
   webPort: number;

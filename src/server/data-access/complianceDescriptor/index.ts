@@ -264,7 +264,7 @@ const fetchQQl = <R = any>(
   page: number,
   policyId: string | number
 ) => {
-  const URL = `http://${config.endpoints.compliance.hostname}:${config.endpoints.compliance.port}/api/compliance/graphql`;
+  const URL = `http://${config.endpoints.compliance?.hostname}:${config.endpoints.compliance?.port}/api/compliance/graphql`;
   return axios.post<any, AxiosResponse<R>>(
     URL,
     {

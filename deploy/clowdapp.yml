@@ -10,6 +10,7 @@ objects:
     spec:
       envName: ${ENV_NAME}
       optionalDependencies:
+      - advisor-backend
       - compliance
       deployments:
         - name: api
