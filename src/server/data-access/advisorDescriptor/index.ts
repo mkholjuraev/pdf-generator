@@ -4,7 +4,7 @@ import config from '../../../common/config';
 import advisorData from './advisorData';
 import axios, { AxiosRequestHeaders } from 'axios';
 
-const BASE_URL = `http://${config.endpoints['advisor-backend']?.hostname}:${config.endpoints['advisor-backend']?.port}/api/advisor`;
+const BASE_URL = `http://${config.endpoints['advisor-backend']?.hostname}:${config.endpoints['advisor-backend']?.port}/api/advisor/v1`;
 const STATS_SYSTEMS_FETCH_URL = `${BASE_URL}/stats/systems/`;
 const STATS_REPORTS_FETCH_URL = `${BASE_URL}/stats/reports/`;
 const RULES_FETCH_URL = `${BASE_URL}/rule/`;
