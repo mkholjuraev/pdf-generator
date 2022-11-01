@@ -11,16 +11,27 @@ const RULES_FETCH_URL = `${BASE_URL}/rule/`;
 
 const getAdvisorData = async (
   headers: AxiosRequestHeaders
-): Promise<typeof advisorData> => {
+): Promise<{ data: typeof advisorData }> => {
   const [
     { data: statsSystems },
     { data: statsReports },
     { data: topActiveRec },
   ] = await Promise.all([
-    axios.get<typeof advisorData[0]>(STATS_SYSTEMS_FETCH_URL, { headers }),
-    axios.get<typeof advisorData[1]>(STATS_REPORTS_FETCH_URL, { headers }),
+    axios.get<typeof advisorData[0]>(STATS_SYSTEMS_FETCH_URL, {
+      // do not pass all headers, advisor backend will return invalid content type
+      headers: {
+        'x-rh-identity': headers['x-rh-identity'],
+      },
+    }),
+    axios.get<typeof advisorData[1]>(STATS_REPORTS_FETCH_URL, {
+      headers: {
+        'x-rh-identity': headers['x-rh-identity'],
+      },
+    }),
     axios.get<typeof advisorData[2]>(RULES_FETCH_URL, {
-      headers,
+      headers: {
+        'x-rh-identity': headers['x-rh-identity'],
+      },
       params: {
         limit: 3,
         sort: '-total_risk,-impacted_count',
@@ -28,8 +39,7 @@ const getAdvisorData = async (
       },
     }),
   ]);
-
-  return [statsReports, statsSystems, topActiveRec];
+  return { data: [statsReports, statsSystems, topActiveRec] };
 };
 
 const getMock: ServiceCallFunction = () =>
