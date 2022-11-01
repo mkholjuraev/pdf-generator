@@ -9,15 +9,17 @@ const STATS_SYSTEMS_FETCH_URL = `${BASE_URL}/stats/systems/`;
 const STATS_REPORTS_FETCH_URL = `${BASE_URL}/stats/reports/`;
 const RULES_FETCH_URL = `${BASE_URL}/rule/`;
 
-const getAdvisorData = async (headers: AxiosRequestHeaders) => {
+const getAdvisorData = async (
+  headers: AxiosRequestHeaders
+): Promise<typeof advisorData> => {
   const [
     { data: statsSystems },
     { data: statsReports },
     { data: topActiveRec },
   ] = await Promise.all([
-    axios.get(STATS_SYSTEMS_FETCH_URL, { headers }),
-    axios.get(STATS_REPORTS_FETCH_URL, { headers }),
-    axios.get(RULES_FETCH_URL, {
+    axios.get<typeof advisorData[0]>(STATS_SYSTEMS_FETCH_URL, { headers }),
+    axios.get<typeof advisorData[1]>(STATS_REPORTS_FETCH_URL, { headers }),
+    axios.get<typeof advisorData[2]>(RULES_FETCH_URL, {
       headers,
       params: {
         limit: 3,
@@ -27,13 +29,7 @@ const getAdvisorData = async (headers: AxiosRequestHeaders) => {
     }),
   ]);
 
-  return [
-    {
-      statsReports,
-      statsSystems,
-      topActiveRec,
-    },
-  ];
+  return [statsReports, statsSystems, topActiveRec];
 };
 
 const getMock: ServiceCallFunction = () =>
