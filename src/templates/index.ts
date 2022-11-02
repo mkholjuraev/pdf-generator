@@ -6,6 +6,7 @@ import ServiceNames from '../common/service-names';
 import VulnerabilityTemplate from './vulnerability/Template';
 import AdvisorTemplate from './advisor/Template';
 import ComplianceTemplate from './compliance/template';
+import RosExecutiveTemplate from './ros/executive-report';
 
 export type TemplateElement = (props: any) => JSX.Element;
 
@@ -51,6 +52,13 @@ const templates: TemplateMapper = {
   [ServiceNames.advisor]: {
     advisor: {
       template: AdvisorTemplate,
+      header: CommonHeader,
+      footer: CommonFooter,
+    },
+  },
+  [ServiceNames.ros]: {
+    executiveReport: {
+      template: RosExecutiveTemplate,
       header: CommonHeader,
       footer: CommonFooter,
     },
