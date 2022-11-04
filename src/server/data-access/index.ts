@@ -8,6 +8,7 @@ import vulnerabilityDescriptor from './vulnerabilityDescriptor';
 import advisorDescriptor from './advisorDescriptor';
 import ServiceNames from '../../common/service-names';
 import templates from '../../templates';
+import rosDescriptor from './rosDescriptor';
 
 type TemplateAccessMapper<T> = {
   [Service in keyof T]: {
@@ -31,6 +32,11 @@ const templateMapper: TemplateAccessMapper<typeof templates> = {
   },
   [ServiceNames.advisor]: {
     advisor: prepareServiceCall(advisorDescriptor.templates.advisor),
+  },
+  [ServiceNames.ros]: {
+    executiveReport: prepareServiceCall(
+      rosDescriptor.templates.executiveReport
+    ),
   },
 };
 

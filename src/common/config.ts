@@ -4,8 +4,8 @@ import { ClowderEndpoint, Clowder } from './clowder';
 export type ServicesEndpoints = Omit<
   {
     [key in ServiceNames]: ClowderEndpoint;
-  } & { 'advisor-backend': ClowderEndpoint },
-  'advisor'
+  } & { 'advisor-backend': ClowderEndpoint; 'ros-backend': ClowderEndpoint },
+  'advisor' | 'ros'
 >;
 
 const defaultConfig: {
