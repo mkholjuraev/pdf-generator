@@ -33,6 +33,7 @@ const getServiceEndpointMap = (
     [ServiceNames.advisor]: 'advisor-backend',
     [ServiceNames.vulnerability]: ServiceNames.vulnerability,
     [ServiceNames.demo]: ServiceNames.demo,
+    [ServiceNames.ros]: 'ros-backend',
   };
   return stuff[service] as unknown as keyof ServicesEndpoints;
 };

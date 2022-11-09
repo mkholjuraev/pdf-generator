@@ -136,14 +136,14 @@ router.post(
 
 router.get(`/preview`, async (req: PreviewHandlerRequest, res) => {
   const service: ServiceNames = req.query.service;
-  const template: string = req.query.service;
+  const template: string = req.query.template;
   const templateData = await getTemplateData(req.headers, {
     service,
     template,
   });
   const orientationOption = processOrientationOption(req);
 
-  const url = `http://localhost:${config.webPort}?template=${template}`;
+  const url = `http://localhost:${config.webPort}?service=${service}&template=${template}`;
   try {
     const pdfBuffer = await previewPdf(
       url,

@@ -12,10 +12,12 @@ objects:
       optionalDependencies:
       - advisor-backend
       - compliance
+      - ros-backend
       deployments:
         - name: api
           minReplicas: ${{MIN_REPLICAS}}
           webServices:
+            apiPath: /crc-pdf-generator/
             public:
               enabled: true
           podSpec:
