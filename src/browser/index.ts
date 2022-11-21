@@ -9,6 +9,7 @@ import renderTemplate, {
 import ServiceNames from '../common/service-names';
 import { glob } from 'glob';
 import config from '../common/config';
+import templates from '../templates';
 
 const A4Width = 210;
 const A4Height = 297;
@@ -59,6 +60,16 @@ export const previewPdf = async (
   templateData: Record<string, unknown>,
   orientationOption?: boolean
 ) => {
+  const browserMargins = {
+    ...margins,
+    ...templates?.[templateConfig.service]?.[templateConfig.template]
+      ?.browserMargins,
+  };
+  const landscape =
+    typeof orientationOption !== 'undefined'
+      ? orientationOption
+      : templates?.[templateConfig.service]?.[templateConfig.template]
+          ?.landscape;
   const browser = await puppeteer.launch({
     headless: true,
     ...(config.IS_PRODUCTION
@@ -94,11 +105,11 @@ export const previewPdf = async (
   const pdfBuffer = await page.pdf({
     format: 'a4',
     printBackground: true,
-    margin: margins,
+    margin: browserMargins,
     displayHeaderFooter: true,
     headerTemplate,
     footerTemplate,
-    landscape: orientationOption,
+    landscape,
   });
 
   if (!pageStatus.ok()) {
@@ -118,6 +129,16 @@ const generatePdf = async (
   orientationOption: boolean,
   dataOptions?: Record<string, any>
 ) => {
+  const browserMargins = {
+    ...margins,
+    ...templates?.[templateConfig.service]?.[templateConfig.template]
+      ?.browserMargins,
+  };
+  const landscape =
+    typeof orientationOption !== 'undefined'
+      ? orientationOption
+      : templates?.[templateConfig.service]?.[templateConfig.template]
+          ?.landscape;
   const pdfPath = getNewPdfName();
   const browser = await puppeteer.launch({
     headless: true,
@@ -170,11 +191,11 @@ const generatePdf = async (
     path: pdfPath,
     format: 'a4',
     printBackground: true,
-    margin: margins,
+    margin: browserMargins,
     displayHeaderFooter: true,
     headerTemplate,
     footerTemplate,
-    landscape: orientationOption,
+    landscape,
   });
 
   await browser.close();
