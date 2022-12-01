@@ -15,5 +15,9 @@ export const processOrientationOption = (
     orientationOption = request.body?.orientation;
   }
 
-  return orientationOption === 'landscape' ? true : false;
+  if (orientationOption === 'landscape') {
+    return true;
+  }
+
+  return undefined;
 };

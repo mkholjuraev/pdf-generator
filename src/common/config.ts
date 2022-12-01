@@ -4,8 +4,12 @@ import { ClowderEndpoint, Clowder } from './clowder';
 export type ServicesEndpoints = Omit<
   {
     [key in ServiceNames]: ClowderEndpoint;
-  } & { 'advisor-backend': ClowderEndpoint; 'ros-backend': ClowderEndpoint },
-  'advisor' | 'ros'
+  } & {
+    'advisor-backend': ClowderEndpoint;
+    'ros-backend': ClowderEndpoint;
+    'vulnerability-engine-manager-service': ClowderEndpoint;
+  },
+  'advisor' | 'ros' | 'vulnerability'
 >;
 
 const defaultConfig: {
@@ -68,7 +72,12 @@ function initializeConfig() {
       const clowderConfig = clowder.LoadedConfig;
       if (clowderConfig.endpoints) {
         clowderConfig.endpoints.forEach((endpoint) => {
-          endpoints[endpoint.app as keyof ServicesEndpoints] = endpoint;
+          // special case for vulnerability
+          if (endpoint.name === 'manager-service') {
+            endpoints['vulnerability-engine-manager-service'] = endpoint;
+          } else {
+            endpoints[endpoint.app as keyof ServicesEndpoints] = endpoint;
+          }
         });
       }
 

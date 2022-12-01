@@ -29,6 +29,7 @@ const templateMapper: TemplateAccessMapper<typeof templates> = {
       vulnerabilityDescriptor.templates.vulnerabilities
     ),
     systems: prepareServiceCall(vulnerabilityDescriptor.templates.systems),
+    cve: prepareServiceCall(vulnerabilityDescriptor.templates.cve),
   },
   [ServiceNames.advisor]: {
     advisor: prepareServiceCall(advisorDescriptor.templates.advisor),

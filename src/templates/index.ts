@@ -1,12 +1,14 @@
 import DemoTemplate from './demo/Template';
 import CommonHeader from './common/common-header';
 import CommonFooter from './common/common-footer';
-import VulnerabilitiesSystemTemplate from './vulnerabilities-system/Template';
+import VulnerabilitiesSystemTemplate from './vulnerability/vulnerabilities-system/Template';
 import ServiceNames from '../common/service-names';
-import VulnerabilityTemplate from './vulnerability/Template';
+import VulnerabilityTemplate from './vulnerability/executive-report/Template';
 import AdvisorTemplate from './advisor/Template';
 import ComplianceTemplate from './compliance/template';
 import RosExecutiveTemplate from './ros/executive-report';
+import CveReport from './vulnerability/cve-report/Template';
+import CveFooter from './vulnerability/cve-report/CveFooter';
 
 export type TemplateElement = (props: any) => JSX.Element;
 
@@ -14,6 +16,13 @@ export type ServiceTemplate = {
   template: TemplateElement;
   header: TemplateElement;
   footer: TemplateElement;
+  browserMargins?: {
+    top?: string;
+    bottom?: string;
+    right?: string;
+    left?: string;
+  };
+  landscape?: boolean;
 };
 
 export type TemplateMapper = {
@@ -47,6 +56,15 @@ const templates: TemplateMapper = {
       template: VulnerabilitiesSystemTemplate,
       header: CommonHeader,
       footer: CommonFooter,
+    },
+    cve: {
+      template: CveReport,
+      header: CommonHeader,
+      footer: CveFooter,
+      landscape: true,
+      browserMargins: {
+        bottom: '2.5cm',
+      },
     },
   },
   [ServiceNames.advisor]: {
