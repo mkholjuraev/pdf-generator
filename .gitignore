@@ -11,3 +11,4 @@ public/*
 !public/robots.txt
 !public/templates
 !public/images
+.DS_Store
