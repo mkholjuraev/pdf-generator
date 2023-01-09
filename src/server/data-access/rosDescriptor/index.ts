@@ -4,7 +4,7 @@ import config from '../../../common/config';
 import rosData from './rosData';
 import axios, { AxiosRequestHeaders } from 'axios';
 
-const BASE_URL = `http://${config.endpoints['ros-backend']?.hostname}:${config.endpoints['ros-backend']?.port}/api/ros/v1`;
+const BASE_URL = `http://${config?.endpoints['ros-backend']?.hostname}:${config?.endpoints['ros-backend']?.port}/api/ros/v1`;
 const EXECUTIVE_REPORT_URL = `${BASE_URL}/executive_report`;
 
 const getExecutiveReport = async (headers: AxiosRequestHeaders) => {
