@@ -244,8 +244,8 @@ export const prepareForExport = (
   };
 };
 
-const fetchBatched = (
-  fetchFunction: (batchSize: number, page: number) => Promise<any>,
+const fetchBatched = <T>(
+  fetchFunction: (batchSize: number, page: number) => Promise<T>,
   total: number,
   batchSize = 50
 ) => {
@@ -282,7 +282,7 @@ const fetchQQl = <R = any>(
 
 export const getPolicyData = async (
   headers: AxiosRequestHeaders,
-  { policyId, totalHostCount }: { policyId: string; totalHostCount: number } // We have options defined as Record<string, any> in API Descriptor
+  { policyId, totalHostCount }: Record<string, any>
 ) => {
   const { data } = await fetchQQl(
     getPolicyQuery,
@@ -296,23 +296,25 @@ export const getPolicyData = async (
   const fetchRules = (perPage = 10, page = 1) =>
     fetchQQl<RuleResponse>(getRulesQuery, headers, page, perPage, policyId);
 
-  const batchedSystems = await fetchBatched(fetchSystems, totalHostCount);
+  const batchedSystems = await fetchBatched<{
+    data: {
+      data: {
+        systems: {
+          edges: {
+            node: System;
+          }[];
+        };
+      };
+    };
+  }>(fetchSystems, totalHostCount);
   const { data: rules } = await fetchRules();
   const systems = batchedSystems
-    .map((r) => r.data as any)
+    .map((r) => r.data)
     .flatMap(
       ({
         data: {
           systems: { edges },
         },
-      }: {
-        data: {
-          systems: {
-            edges: {
-              node: System;
-            }[];
-          };
-        };
       }) => edges.map(({ node }) => node)
     );
   const rulesParsed = rules.data?.profiles?.edges.flatMap(
