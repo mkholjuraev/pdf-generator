@@ -28,7 +28,9 @@ function getChromiumExectuablePath() {
   }
 }
 
-const CHROMIUM_PATH = getChromiumExectuablePath();
+const CHROMIUM_PATH = config?.IS_PRODUCTION
+  ? getChromiumExectuablePath()
+  : undefined;
 
 const margins = {
   top: '2cm',
