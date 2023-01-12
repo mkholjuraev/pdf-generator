@@ -9,7 +9,7 @@
       "allowJs": false,
       "moduleResolution": "node",
       "removeComments": false,
-      "strict": false,
+      "strict": true,
       "allowSyntheticDefaultImports": true,
       "esModuleInterop": true,
       "forceConsistentCasingInFileNames": true,

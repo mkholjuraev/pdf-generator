@@ -9,7 +9,7 @@ export type APIDescriptor<T = any, R = unknown> = {
   mock: (...args: any[]) => Promise<T>;
   request?: (
     headers: AxiosRequestHeaders,
-    options: Record<string, any>
+    options: Record<string, any> // { policyId: string, totalHostCount: number }// Record<string, any> // Shape is completely off, but is it always the same?
   ) => Promise<R>;
 };
 
@@ -42,12 +42,12 @@ function prepareServiceCall<T = Record<string, unknown>>(
   descriptor: APIDescriptor<T>
 ): ServiceCallFunction {
   // skip all and return mocked data
-  if (config.IS_DEVELOPMENT && descriptor.mock) {
+  if (config?.IS_DEVELOPMENT && descriptor.mock) {
     return () => Promise.resolve(descriptor.mock());
   }
   const { service, path, responseProcessor, request } = descriptor;
-  const serviceConfig = config.endpoints[getServiceEndpointMap(service)];
-  if (!config.IS_DEVELOPMENT && !serviceConfig) {
+  const serviceConfig = config?.endpoints[getServiceEndpointMap(service)];
+  if (!config?.IS_DEVELOPMENT && !serviceConfig) {
     return () =>
       Promise.reject(`Trying to reach unusupported service ${service}!`);
   }

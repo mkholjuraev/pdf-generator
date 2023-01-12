@@ -5,13 +5,14 @@ import promBundle from 'express-prom-bundle';
 import httpContext from 'express-http-context';
 
 import winston from 'winston';
+import { LoggerOptionsWithTransports } from 'express-winston';
 import expressWinston from 'express-winston';
 
 import config from '../common/config';
 import router from './routes/routes';
 import identityMiddleware from '../middleware/identity-middleware';
 
-const PORT = config.webPort;
+const PORT = config?.webPort;
 
 const app = express();
 app.use(cors());
@@ -30,7 +31,7 @@ app.use(
     msg: 'HTTP {{req.method}} {{req.url}}',
     expressFormat: true,
     colorize: false,
-  })
+  } as LoggerOptionsWithTransports)
 );
 app.use(httpContext.middleware);
 app.use(identityMiddleware);
@@ -45,13 +46,13 @@ const metricsMiddleware = promBundle({
   includePath: true,
   includeStatusCode: true,
   includeUp: true,
-  metricsPath: config.metricsPath,
+  metricsPath: config?.metricsPath,
   promClient: {
     collectDefaultMetrics: {},
   },
 });
 
 metricsApp.use(metricsMiddleware);
-metricsApp.listen(config.metricsPort, () => {
-  console.info(`Metrics server listening on port ${config.metricsPort}`);
+metricsApp.listen(config?.metricsPort, () => {
+  console.info(`Metrics server listening on port ${config?.metricsPort}`);
 });

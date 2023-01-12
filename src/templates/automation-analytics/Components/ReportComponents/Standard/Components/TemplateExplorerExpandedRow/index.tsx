@@ -5,6 +5,8 @@ import { ExpandableRowContent, Td, Tr } from '@patternfly/react-table';
 import Breakdown from './BreakdownChart';
 import { categoryColor } from '../../../../../constants';
 
+type CategoryCount = { [key: string]: number };
+
 const TableExpandedRow = ({
   item,
 }: {
@@ -107,7 +109,7 @@ const TableExpandedRow = ({
         </FlexItem>
       </Flex>
       <Breakdown
-        categoryCount={totalCount}
+        categoryCount={totalCount as CategoryCount}
         categoryColor={categoryColor}
         showPercent
       />
@@ -127,7 +129,7 @@ const TableExpandedRow = ({
         </FlexItem>
       </Flex>
       <Breakdown
-        categoryCount={totalHostCount}
+        categoryCount={totalHostCount as CategoryCount}
         categoryColor={categoryColor}
         showPercent
       />
@@ -147,7 +149,7 @@ const TableExpandedRow = ({
         </FlexItem>
       </Flex>
       <Breakdown
-        categoryCount={totalTaskCount}
+        categoryCount={totalTaskCount as CategoryCount}
         categoryColor={categoryColor}
         showPercent
       />

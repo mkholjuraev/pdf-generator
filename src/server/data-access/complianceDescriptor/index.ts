@@ -208,7 +208,7 @@ type ExportSettings = {
 export const prepareForExport = (
   exportSettings: ExportSettings,
   systems: System[],
-  topTenFailedRules: unknown[]
+  topTenFailedRules: undefined | unknown[]
 ) => {
   const compliantSystems = compliantSystemsData(systems);
   const nonCompliantSystems = nonCompliantSystemsData(systems);
@@ -244,8 +244,8 @@ export const prepareForExport = (
   };
 };
 
-const fetchBatched = (
-  fetchFunction: (batchSize: number, page: number) => Promise<any>,
+const fetchBatched = <T>(
+  fetchFunction: (batchSize: number, page: number) => Promise<T>,
   total: number,
   batchSize = 50
 ) => {
@@ -260,11 +260,11 @@ const fetchBatched = (
 const fetchQQl = <R = any>(
   query: Record<string, any>,
   headers: AxiosRequestHeaders,
-  perPage: number,
-  page: number,
+  perPage: number | undefined,
+  page: number | undefined,
   policyId: string | number
 ) => {
-  const URL = `http://${config.endpoints.compliance?.hostname}:${config.endpoints.compliance?.port}/api/compliance/graphql`;
+  const URL = `http://${config?.endpoints?.compliance?.hostname}:${config?.endpoints?.compliance?.port}/api/compliance/graphql`;
   return axios.post<any, AxiosResponse<R>>(
     URL,
     {
@@ -282,7 +282,7 @@ const fetchQQl = <R = any>(
 
 export const getPolicyData = async (
   headers: AxiosRequestHeaders,
-  { policyId, totalHostCount }: { policyId: string; totalHostCount: number }
+  { policyId, totalHostCount }: Record<string, any>
 ) => {
   const { data } = await fetchQQl(
     getPolicyQuery,
@@ -296,26 +296,28 @@ export const getPolicyData = async (
   const fetchRules = (perPage = 10, page = 1) =>
     fetchQQl<RuleResponse>(getRulesQuery, headers, page, perPage, policyId);
 
-  const batchedSystems = await fetchBatched(fetchSystems, totalHostCount);
+  const batchedSystems = await fetchBatched<{
+    data: {
+      data: {
+        systems: {
+          edges: {
+            node: System;
+          }[];
+        };
+      };
+    };
+  }>(fetchSystems, totalHostCount);
   const { data: rules } = await fetchRules();
   const systems = batchedSystems
-    .map((r) => r.data as unknown)
+    .map((r) => r.data)
     .flatMap(
       ({
         data: {
           systems: { edges },
         },
-      }: {
-        data: {
-          systems: {
-            edges: {
-              node: System;
-            }[];
-          };
-        };
       }) => edges.map(({ node }) => node)
     );
-  const rulesParsed = rules.data?.profiles.edges.flatMap(
+  const rulesParsed = rules.data?.profiles?.edges.flatMap(
     (edge) => edge.node.topFailedRules
   );
 

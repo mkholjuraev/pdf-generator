@@ -9,13 +9,12 @@ import { processOrientationOption } from '../../browser/helpers';
 import generatePdf, { previewPdf } from '../../browser';
 import { SendingFailedError, PDFNotFoundError } from '../errors';
 import config from '../../common/config';
-import { PreviewReqQuery } from '../../common/types';
+import { PreviewReqBody, PreviewReqQuery } from '../../common/types';
 
-type PreviewOptions = unknown;
-type PreviewHandlerRequest = Request<
-  PreviewOptions,
-  any,
+export type PreviewHandlerRequest = Request<
   unknown,
+  unknown,
+  PreviewReqBody,
   PreviewReqQuery
 >;
 
@@ -61,16 +60,16 @@ router.use('^/$', async (req: PupetterBrowserRequest, res, _next) => {
     template,
   };
   try {
-    const configHeaders: string | undefined =
-      req.headers[config.OPTIONS_HEADER_NAME];
+    const configHeaders: string | string[] | undefined =
+      req.headers[config?.OPTIONS_HEADER_NAME as string];
     if (configHeaders) {
-      delete req.headers[config.OPTIONS_HEADER_NAME];
+      delete req.headers[config?.OPTIONS_HEADER_NAME as string];
     }
 
     const templateData = await getTemplateData(
       req.headers,
       templateConfig,
-      configHeaders ? JSON.parse(configHeaders) : undefined
+      configHeaders ? JSON.parse(configHeaders as string) : undefined
     );
     const HTMLTemplate: string = renderTemplate(
       templateConfig,
@@ -83,19 +82,19 @@ router.use('^/$', async (req: PupetterBrowserRequest, res, _next) => {
   }
 });
 
-router.get(`${config.APIPrefix}/hello`, (_req, res) => {
+router.get(`${config?.APIPrefix}/hello`, (_req, res) => {
   return res.status(200).send('<h1>Well this works!</h1>');
 });
 
 router.post(
-  `${config.APIPrefix}/generate`,
+  `${config?.APIPrefix}/generate`,
   async (req: GenerateHandlerRequest, res) => {
-    const rhIdentity = httpContext.get(config.IDENTITY_HEADER_KEY);
+    const rhIdentity = httpContext.get(config?.IDENTITY_HEADER_KEY as string);
     const orientationOption = processOrientationOption(req);
     const service = req.body.service;
     const template = req.body.template;
     const dataOptions = req.body;
-    const url = `http://localhost:${config.webPort}?template=${template}&service=${service}`;
+    const url = `http://localhost:${config?.webPort}?template=${template}&service=${service}`;
 
     try {
       // Generate the pdf
@@ -113,12 +112,15 @@ router.post(
       const pdfFileName = pathToPdf.split('/').pop();
 
       if (!fs.existsSync(pathToPdf)) {
-        throw new PDFNotFoundError(pdfFileName);
+        throw new PDFNotFoundError(pdfFileName as string);
       }
 
       res.status(200).sendFile(pathToPdf, (err) => {
         if (err) {
-          const errorMessage = new SendingFailedError(pdfFileName, err);
+          const errorMessage = new SendingFailedError(
+            pdfFileName as string,
+            err
+          );
           throw errorMessage;
         }
 
@@ -128,8 +130,9 @@ router.post(
           }
         });
       });
-    } catch (error) {
-      res.status((error.code as number) || 500).send(error.message);
+    } catch (error: unknown) {
+      if (error instanceof Error) res.status(500).send(error.message); // same as below, 500 is only preliminary for now.
+      // res.status((error.code as number) || 500).send(error.message);
     }
   }
 );
@@ -143,7 +146,7 @@ router.get(`/preview`, async (req: PreviewHandlerRequest, res) => {
   });
   const orientationOption = processOrientationOption(req);
 
-  const url = `http://localhost:${config.webPort}?service=${service}&template=${template}`;
+  const url = `http://localhost:${config?.webPort}?service=${service}&template=${template}`;
   try {
     const pdfBuffer = await previewPdf(
       url,
@@ -156,9 +159,14 @@ router.get(`/preview`, async (req: PreviewHandlerRequest, res) => {
     );
     res.set('Content-Type', 'application/pdf');
     res.status(200).send(pdfBuffer);
-  } catch (error) {
-    console.info('error', `${error.code}: ${error.message}`);
-    res.status((error.code as number) || 500).send(error.message);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      // error.code is not part of the Error definition for TS inside of Node. Choices: delete the usage of code, or, force a new definition.
+      // console.info('error', `${error.code}: ${error.message}`);
+      console.info('error', `${error.message}`);
+      // res.status((error.code as number) || 500).send(error.message);
+      res.status(500).send(error.message); // only here as example, we don't want to force a 500 every time.
+    }
   }
 });
 

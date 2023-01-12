@@ -20,9 +20,9 @@ const defaultConfig: {
   APIPrefix: string;
   IS_PRODUCTION: boolean;
   IS_DEVELOPMENT: boolean;
-  OPTIONS_HEADER_NAME: 'x-pdf-gen-options';
-  IDENTITY_CONTEXT_KEY: 'identity';
-  IDENTITY_HEADER_KEY: 'x-rh-identity';
+  OPTIONS_HEADER_NAME: string;
+  IDENTITY_CONTEXT_KEY: string;
+  IDENTITY_HEADER_KEY: string;
 } = {
   webPort: 8000,
   metricsPort: 8080,
@@ -93,6 +93,6 @@ function initializeConfig() {
   }
 }
 
-const instanceConfig: typeof defaultConfig = initializeConfig();
+const instanceConfig = initializeConfig();
 
 export default instanceConfig;

@@ -10,7 +10,7 @@ import moduleUsageByJobTemplate from './moduleUsageByJobTemplate';
 import moduleUsageByTask from './moduleUsageByTask';
 import automationCalculator from './automationCalculator';
 import aa21OnboardingReport from './aa21OnboardingReport';
-import { ReportSchema } from './types';
+import { ReportSchema, SchemaParams } from './types';
 import hydrateSchema from '../Utilities/hydrateSchema';
 
 const reports: ReportSchema[] = [
@@ -32,8 +32,8 @@ export const getReport = ({
   slug,
   schemaParams,
 }: {
-  slug: string;
-  schemaParams: Record<string, string>;
+  slug: string | undefined;
+  schemaParams: Record<string, string> | undefined;
 }): ReportSchema => {
   const report = reports.find(({ layoutProps }) => layoutProps.slug === slug);
 
@@ -43,7 +43,7 @@ export const getReport = ({
   }
 
   report.layoutProps.schema = hydrateSchema(report.layoutProps.schema)(
-    schemaParams
+    schemaParams as SchemaParams
   );
 
   return report;

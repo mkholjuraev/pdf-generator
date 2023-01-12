@@ -1,9 +1,9 @@
 import React from 'react';
 
 export interface PageOptionsContextType {
-  pageWidth: number;
-  pageHeight: number;
-  chartSeriesHiddenProps: boolean[];
+  pageWidth?: number;
+  pageHeight?: number;
+  chartSeriesHiddenProps: boolean[] | undefined;
 }
 
 const PageOptionsContext = React.createContext<PageOptionsContextType>({

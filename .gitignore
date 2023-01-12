@@ -1,5 +1,6 @@
 node_modules
 build
+.DS_Store
 .vscode
 *.d.ts
 !src/**/*.d.ts
@@ -10,3 +11,4 @@ public/*
 !public/robots.txt
 !public/templates
 !public/images
+.DS_Store

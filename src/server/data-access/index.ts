@@ -53,7 +53,10 @@ async function getTemplateData(
     templateMapper?.[templateConfig.service]?.[templateConfig.template];
 
   if (typeof dataAccessor === 'function') {
-    const data = await dataAccessor(headers as AxiosRequestHeaders, options);
+    const data = await dataAccessor(
+      headers as AxiosRequestHeaders,
+      options as Record<string, any>
+    );
     return data;
   } else {
     throw new Error(
