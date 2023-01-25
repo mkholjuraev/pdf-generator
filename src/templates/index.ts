@@ -56,6 +56,10 @@ const templates: TemplateMapper = {
       template: VulnerabilitiesSystemTemplate,
       header: CommonHeader,
       footer: CommonFooter,
+      landscape: true,
+      browserMargins: {
+        bottom: '2.5cm'
+      }
     },
     cve: {
       template: CveReport,
