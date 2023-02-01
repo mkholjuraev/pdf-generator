@@ -8,6 +8,7 @@ import {
   StackItem,
   Text,
   TextContent,
+  TextVariants,
   Title,
 } from '@patternfly/react-core';
 import {
@@ -61,6 +62,14 @@ const DescriptionList = ({
   </Grid>
 );
 
+export const pluralize = (count: number, singular: string, plural?: string) => {
+  if (!plural) {
+      plural = `${singular}s`;
+  }
+
+  return `${count === 1 ? singular : plural}`;
+};
+
 const RosExecutiveTemplate = ({ data }: { data: typeof rosData }) => {
   const {
     conditions: {
@@ -82,7 +91,8 @@ const RosExecutiveTemplate = ({ data }: { data: typeof rosData }) => {
         percentage: waitingForDataPercentage,
       },
     },
-    meta: { total_count, non_optimized_count, conditions_count },
+    meta: { conditions_count: conditionsCount, non_optimized_count: nonOptimizedCount, non_psi_count: nonPSICount,
+      psi_enabled_count: psiEnabledCount, total_count: totalCount, stale_count: staleCount },
   } = data;
 
   const breakdownData = [
@@ -133,6 +143,8 @@ const RosExecutiveTemplate = ({ data }: { data: typeof rosData }) => {
     },
   ];
 
+  const newLine = '\n';
+
   const blueColorScale = getThemeColors(ChartThemeColor.blue).pie.colorScale;
   const breakdownColors = getThemeColors(ChartThemeColor.multiOrdered).pie
     .colorScale;
@@ -142,7 +154,7 @@ const RosExecutiveTemplate = ({ data }: { data: typeof rosData }) => {
       <Page>
         <Title
           headingLevel="h1"
-          className="pf-u-danger-color-200 pf-u-font-size-4xl pf-u-mb-lg"
+          className="pf-u-danger-color-100 pf-u-font-size-4xl pf-u-mb-lg"
         >
           Resource optimization service report
         </Title>
@@ -150,39 +162,28 @@ const RosExecutiveTemplate = ({ data }: { data: typeof rosData }) => {
           <StackItem>
             <TextContent>
               <Text>
-                This executive summary highlights the performance for your
-                registered systems included in the resource optimization
-                service. This report gives you an overview of:
+              This executive summary highlights the performance for your registered systems included in the resource optimization service.
               </Text>
-              <List>
-                <ListItem>The number of systems registered</ListItem>
-                <ListItem>
-                  Number of registered systems in a non-optimal state
-                </ListItem>
-                <ListItem>Number of system performance issues</ListItem>
-                <ListItem>Number of system performance issues</ListItem>
-                <ListItem>Description of system performance levels</ListItem>
-                <ListItem>
-                  Performance level details for system resources operating in a
-                  non-optimal state
-                </ListItem>
-              </List>
             </TextContent>
           </StackItem>
           <StackItem>
             <Title
               headingLevel="h2"
               size="xl"
-              className="pf-u-danger-color-200"
+              className="pf-u-danger-color-100"
             >
               Registered systems
             </Title>
+
             <TextContent>
-              <Text>
-                There are {total_count} systems registered in the resource
-                optimization service. The service identified {optimizedCount} of{' '}
-                {total_count} systems as optimized, and {non_optimized_count} of{' '}
-                {total_count} registered systems as having a non-optimal state.
+              <Text component={TextVariants.p}>
+              There {pluralize(totalCount, 'is', 'are')} {totalCount} registered {pluralize(totalCount, 'system')} in the resource optimization service.
+              </Text>
+            </TextContent>
+            
+            <TextContent>
+              <Text style={{ textAlign: 'right' }} component="small">
+              Suggestions for stale systems might no longer apply due to systems not being refreshed in 7 days.*
               </Text>
             </TextContent>
           </StackItem>
@@ -190,7 +191,7 @@ const RosExecutiveTemplate = ({ data }: { data: typeof rosData }) => {
             <Title
               headingLevel="h2"
               size="xl"
-              className="pf-u-danger-color-200"
+              className="pf-u-danger-color-100"
             >
               Breakdown of registered systems
             </Title>
@@ -236,20 +237,20 @@ const RosExecutiveTemplate = ({ data }: { data: typeof rosData }) => {
             <Title
               headingLevel="h2"
               size="xl"
-              className="pf-u-danger-color-200"
+              className="pf-u-danger-color-100"
             >
               System performance issues{' '}
             </Title>
             <TextContent>
               <Text>
-                There are {conditions_count} system performance issues
+                There are {conditionsCount} system performance issues
               </Text>
             </TextContent>
             <div style={{ display: 'flex' }}>
               <div className="pf-u-m-lg" style={{ width: 150, height: 150 }}>
                 <ChartDonut
                   subTitle="Conditions"
-                  title={conditions_count.toString()}
+                  title={conditionsCount.toString()}
                   data={performanceData}
                 />
               </div>
@@ -271,7 +272,7 @@ const RosExecutiveTemplate = ({ data }: { data: typeof rosData }) => {
             <Title
               headingLevel="h2"
               size="xl"
-              className="pf-u-danger-color-200"
+              className="pf-u-danger-color-100"
             >
               Breakdown of occurences
             </Title>
@@ -324,8 +325,13 @@ const RosExecutiveTemplate = ({ data }: { data: typeof rosData }) => {
               >
                 Under pressure conditions are only reported for systems where
                 Kernel Pressure Stall Information is enabled. Check the
-                documentation for details.* Description of conditions are on the
-                second page of the report*
+                documentation for details.*
+              </Text>
+              <Text
+                style={{ textAlign: 'right' }}
+                component="small"
+              >
+                Description of conditions are on the second page of the report*
               </Text>
             </TextContent>
           </StackItem>
@@ -333,7 +339,7 @@ const RosExecutiveTemplate = ({ data }: { data: typeof rosData }) => {
             <Title
               headingLevel="h2"
               size="xl"
-              className="pf-u-danger-color-200 pf-u-mb-md"
+              className="pf-u-danger-color-100 pf-u-mb-md"
             >
               Description of states
             </Title>
@@ -385,7 +391,7 @@ const RosExecutiveTemplate = ({ data }: { data: typeof rosData }) => {
             <Title
               headingLevel="h2"
               size="xl"
-              className="pf-u-danger-color-200 pf-u-mb-md"
+              className="pf-u-danger-color-100 pf-u-mb-md"
             >
               Description of conditions
             </Title>

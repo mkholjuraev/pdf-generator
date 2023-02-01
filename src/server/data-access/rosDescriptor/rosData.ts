@@ -35,6 +35,8 @@ const rosData = {
     non_optimized_count: 30,
     conditions_count: 32,
     non_psi_count: 1,
+    psi_enabled_count: 7,
+    stale_count: 10
   },
 };
 
