@@ -4,6 +4,7 @@ import CommonFooter from './common/common-footer';
 import VulnerabilitiesSystemTemplate from './vulnerability/vulnerabilities-system/Template';
 import ServiceNames from '../common/service-names';
 import VulnerabilityTemplate from './vulnerability/executive-report/Template';
+import VulnerabilityExecutiveReportTemplate from './vulnerability/executive-report/Template';
 import AdvisorTemplate from './advisor/Template';
 import ComplianceTemplate from './compliance/template';
 import RosExecutiveTemplate from './ros/executive-report';
@@ -70,6 +71,12 @@ const templates: TemplateMapper = {
         bottom: '2.5cm',
       },
     },
+    executive: {
+      template: VulnerabilityExecutiveReportTemplate,
+      header: CommonHeader,
+      footer: CommonFooter,
+      landscape: true,
+    }
   },
   [ServiceNames.advisor]: {
     advisor: {
