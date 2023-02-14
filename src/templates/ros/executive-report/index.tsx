@@ -143,8 +143,6 @@ const RosExecutiveTemplate = ({ data }: { data: typeof rosData }) => {
     },
   ];
 
-  const newLine = '\n';
-
   const blueColorScale = getThemeColors(ChartThemeColor.blue).pie.colorScale;
   const breakdownColors = getThemeColors(ChartThemeColor.multiOrdered).pie
     .colorScale;
@@ -158,43 +156,59 @@ const RosExecutiveTemplate = ({ data }: { data: typeof rosData }) => {
         >
           Resource optimization service report
         </Title>
-        <Stack hasGutter>
+        <Stack>
           <StackItem>
             <TextContent>
-              <Text>
+              <Text className='pf-u-font-size-xs'>
               This executive summary highlights the performance for your registered systems included in the resource optimization service.
               </Text>
             </TextContent>
           </StackItem>
           <StackItem>
             <Title
-              headingLevel="h2"
-              size="xl"
-              className="pf-u-danger-color-100"
+              headingLevel="h5"
+              size="md"
+              style={{marginTop: '8px', color: 'var(--pf-global--danger-color--100)'}}
             >
               Registered systems
             </Title>
 
-            <TextContent>
-              <Text component={TextVariants.p}>
-              There {pluralize(totalCount, 'is', 'are')} {totalCount} registered {pluralize(totalCount, 'system')} in the resource optimization service.
+            <TextContent style={{margin: '8px 0'}}>
+              <Text className='pf-u-font-size-xs' component={TextVariants.p} style={{lineHeight: '50%'}}>
+                There {pluralize(totalCount, 'is', 'are')} <span style={{ fontWeight: 700 }}>{totalCount} registered {pluralize(totalCount, 'system')}</span> in the resource optimization service.
+              </Text>
+
+              <Text className='pf-u-font-size-xs' component={TextVariants.p} style={{lineHeight: '50%'}}>
+                <span style={{ fontWeight: 700 }}>{optimizedCount}</span> of {totalCount} {pluralize(totalCount, 'system')} {pluralize(optimizedCount, 'is', 'are')} identified as <span style={{ fontWeight: 700 }}>optimized</span>,<span style={{ fontWeight: 700 }}> {nonOptimizedCount}</span> of {totalCount} {pluralize(totalCount, 'system')} as having a <span style={{ fontWeight: 700 }}>non-optimal</span> state.
+              </Text>
+
+              <Text className='pf-u-font-size-xs' component={TextVariants.p} style={{lineHeight: '50%'}}>
+                <span style={{ fontWeight: 700 }}>{staleCount}</span> of {totalCount} {pluralize(totalCount, 'system')} {pluralize(staleCount, 'is', 'are')} <span style={{ fontWeight: 700 }}>stale*</span>
               </Text>
             </TextContent>
             
             <TextContent>
-              <Text style={{ textAlign: 'right' }} component="small">
+              <Text className='pf-u-font-size-xs' style={{ textAlign: 'right', marginTop: '0 px' }} component="small">
               Suggestions for stale systems might no longer apply due to systems not being refreshed in 7 days.*
               </Text>
             </TextContent>
           </StackItem>
           <StackItem>
             <Title
-              headingLevel="h2"
-              size="xl"
-              className="pf-u-danger-color-100"
+              headingLevel="h4"
+              size="md"
+              style={{marginTop: '8px', color: 'var(--pf-global--danger-color--100)'}}
             >
               Breakdown of registered systems
             </Title>
+
+            {
+            nonPSICount > 0
+                && <Text className='pf-u-font-size-xs'>
+                    {psiEnabledCount} {pluralize(psiEnabledCount, 'system')} out of a total of {totalCount} {pluralize(totalCount, 'system')} have Kernel Pressure Stall Information enabled. You could get better suggestions for {nonPSICount} {pluralize(nonPSICount, 'system')} if you enabled Pressure Stall Information. Check the documentation on how to enable PSI on versions RHEL 8 and newer.
+                </Text>
+
+            }
             <div style={{ display: 'flex', alignItems: 'center' }}>
               <div
                 className="pf-u-ml-lg pf-u-mr-lg"
@@ -203,6 +217,7 @@ const RosExecutiveTemplate = ({ data }: { data: typeof rosData }) => {
                 <ChartPie
                   ariaDesc="Systems breakdown"
                   animate={false}
+                  height={200}
                   themeColor={ChartThemeColor.multiOrdered}
                   labels={({ datum }) => `${datum.x}: ${datum.y}`}
                   data={breakdownData.map(({ x, y }) => ({ x, y }))}
@@ -228,30 +243,31 @@ const RosExecutiveTemplate = ({ data }: { data: typeof rosData }) => {
               />
             </div>
             <TextContent>
-              <Text style={{ textAlign: 'right' }} component="small">
+              <Text className='pf-u-font-size-xs' style={{ textAlign: 'right', fontSize: 10, margin: '6px 0px' }} component="small">
                 Description of states are on the second page of the report*
               </Text>
             </TextContent>
           </StackItem>
           <StackItem>
             <Title
-              headingLevel="h2"
-              size="xl"
+              headingLevel="h4"
+              size="md"
               className="pf-u-danger-color-100"
             >
               System performance issues{' '}
             </Title>
             <TextContent>
-              <Text>
+              <Text className='pf-u-font-size-xs'>
                 There are {conditionsCount} system performance issues
               </Text>
             </TextContent>
             <div style={{ display: 'flex' }}>
-              <div className="pf-u-m-lg" style={{ width: 150, height: 150 }}>
+              <div className="pf-u-m-sm" style={{ width: 150, height: 150 }}>
                 <ChartDonut
                   subTitle="Conditions"
                   title={conditionsCount.toString()}
                   data={performanceData}
+                  constrainToVisibleArea
                 />
               </div>
               <TableLegend
@@ -270,8 +286,8 @@ const RosExecutiveTemplate = ({ data }: { data: typeof rosData }) => {
           </StackItem>
           <StackItem>
             <Title
-              headingLevel="h2"
-              size="xl"
+              headingLevel="h4"
+              size="md"
               className="pf-u-danger-color-100"
             >
               Breakdown of occurences
@@ -296,20 +312,20 @@ const RosExecutiveTemplate = ({ data }: { data: typeof rosData }) => {
                     <Tbody>
                       {under_pressure > 0 ? (
                         <Tr>
-                          <Td>Under pressure</Td>
-                          <Td>{under_pressure}</Td>
+                          <Td className='pf-u-font-size-xs pf-u-pt-0 pf-u-pb-0'>Under pressure</Td>
+                          <Td className='pf-u-font-size-xs pf-u-pt-0 pf-u-pb-0'>{under_pressure}</Td>
                         </Tr>
                       ) : null}
                       {undersized > 0 ? (
                         <Tr>
-                          <Td>Undersized</Td>
-                          <Td>{undersized}</Td>
+                          <Td className='pf-u-font-size-xs pf-u-pt-0 pf-u-pb-0'>Undersized</Td>
+                          <Td className='pf-u-font-size-xs pf-u-pt-0 pf-u-pb-0'>{undersized}</Td>
                         </Tr>
                       ) : null}
                       {oversized > 0 ? (
                         <Tr>
-                          <Td>Oversized</Td>
-                          <Td>{oversized}</Td>
+                          <Td className='pf-u-font-size-xs pf-u-pt-0 pf-u-pb-0'>Oversized</Td>
+                          <Td className='pf-u-font-size-xs pf-u-pt-0 pf-u-pb-0'>{oversized}</Td>
                         </Tr>
                       ) : null}
                     </Tbody>
@@ -319,8 +335,7 @@ const RosExecutiveTemplate = ({ data }: { data: typeof rosData }) => {
             </Grid>
             <TextContent>
               <Text
-                className="pf-u-mt-lg"
-                style={{ textAlign: 'right' }}
+                style={{ textAlign: 'right', fontSize: 10, margin: '6px 0px' }}
                 component="small"
               >
                 Under pressure conditions are only reported for systems where
@@ -328,13 +343,14 @@ const RosExecutiveTemplate = ({ data }: { data: typeof rosData }) => {
                 documentation for details.*
               </Text>
               <Text
-                style={{ textAlign: 'right' }}
+                style={{ textAlign: 'right',  fontSize: 10, lineHeight: '50%'}}
                 component="small"
               >
                 Description of conditions are on the second page of the report*
               </Text>
             </TextContent>
           </StackItem>
+          
           <StackItem>
             <Title
               headingLevel="h2"

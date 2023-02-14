@@ -26,7 +26,7 @@ const TableLegend: React.FC<TableLegendProps> = ({ rows, columns }) => (
       {rows.map((row, i) => (
         <Tr key={i}>
           {row.map((item, index) => (
-            <Td className="pf-u-pt-xs pf-u-pb-xs" key={index}>
+            <Td className="pf-u-pt-0 pf-u-pb-0" key={index}>
               {item}
             </Td>
           ))}
