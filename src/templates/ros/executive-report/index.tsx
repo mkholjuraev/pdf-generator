@@ -43,6 +43,7 @@ import {
 } from '@patternfly/react-table';
 import TableLegend from '../../common/components/table-legend';
 import TextWithColorDot from '../../common/components/text-with-color-dot';
+import { InstancesTable } from '../Components/instances-table';
 
 const DescriptionList = ({
   data,
@@ -53,10 +54,10 @@ const DescriptionList = ({
     {data.map(({ title, description, icon }, index) => (
       <Fragment key={index}>
         <GridItem span={3}>
-          {icon && <span className="pf-u-mr-sm">{icon}</span>}
-          <span>{title}</span>
+          {icon && <span className="pf-u-mr-sm pf-u-font-size-sm">{icon}</span>}
+          <span className="pf-u-font-size-sm">{title}</span>
         </GridItem>
-        <GridItem span={9}>{description}</GridItem>
+        <GridItem span={9} className="pf-u-font-size-sm">{description}</GridItem>
       </Fragment>
     ))}
   </Grid>
@@ -90,6 +91,11 @@ const RosExecutiveTemplate = ({ data }: { data: typeof rosData }) => {
         count: waitingForDataCount,
         percentage: waitingForDataPercentage,
       },
+    },
+    instance_types_highlights: {
+      current: currentData, 
+      suggested: suggestedData,
+      historical: historicalData 
     },
     meta: { conditions_count: conditionsCount, non_optimized_count: nonOptimizedCount, non_psi_count: nonPSICount,
       psi_enabled_count: psiEnabledCount, total_count: totalCount, stale_count: staleCount },
@@ -141,6 +147,28 @@ const RosExecutiveTemplate = ({ data }: { data: typeof rosData }) => {
       x: 'CPU',
       y: cpuCount,
     },
+  ];
+
+  const instanceTableDetails = [
+      {
+          id: 'current_instance_types',
+          heading: 'Most used current instance types',
+          description: 'We have identified these instance types based on the data from the fresh systems.',
+          data: currentData
+      },
+      {
+          id: 'suggested_instance_types',
+          heading: 'Most suggested instance types',
+          description: 'We are suggesting these instance types based on the data from the fresh systems.',
+          data: suggestedData
+      },
+      {
+          id: 'historical_instance_types',
+          heading: 'Most suggested instance types (45 days)',
+          description: 'In the last 45 days we suggested you these instances # of times. ',
+          staleDescription: 'Some of the instances are now identified as stale (more than 7 days not reporting data).',
+          data: historicalData
+      }
   ];
 
   const blueColorScale = getThemeColors(ChartThemeColor.blue).pie.colorScale;
@@ -350,12 +378,29 @@ const RosExecutiveTemplate = ({ data }: { data: typeof rosData }) => {
               </Text>
             </TextContent>
           </StackItem>
+
+          <StackItem style={{ marginTop: '120px'}}>
+            {
+              instanceTableDetails.map(
+                (instanceTable, index) => <InstancesTable
+                  key={`${index}-${instanceTable.id}`}
+                  id={instanceTable.id}
+                  instanceDetails={instanceTable.data}
+                  heading={instanceTable.heading}
+                  description={staleCount > 0 && instanceTable.id.includes('historical')
+                      ? `${instanceTable.description}${instanceTable.staleDescription}`
+                      : `${instanceTable.description}` }
+                />
+              )
+            }
+            
+          </StackItem>
           
           <StackItem>
             <Title
-              headingLevel="h2"
-              size="xl"
-              className="pf-u-danger-color-100 pf-u-mb-md"
+             headingLevel="h4"
+             size="md"
+             className="pf-u-danger-color-100 pf-u-mb-md"
             >
               Description of states
             </Title>
@@ -405,9 +450,9 @@ const RosExecutiveTemplate = ({ data }: { data: typeof rosData }) => {
           </StackItem>
           <StackItem>
             <Title
-              headingLevel="h2"
-              size="xl"
-              className="pf-u-danger-color-100 pf-u-mb-md"
+             headingLevel="h4"
+             size="md"
+             className="pf-u-danger-color-100 pf-u-mb-md"
             >
               Description of conditions
             </Title>
