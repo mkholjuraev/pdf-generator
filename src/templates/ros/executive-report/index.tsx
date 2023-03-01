@@ -377,105 +377,113 @@ const RosExecutiveTemplate = ({ data }: { data: typeof rosData }) => {
                 Description of conditions are on the second page of the report*
               </Text>
             </TextContent>
-          </StackItem>
+          </StackItem>    
+        </Stack>
+      </Page>
 
-          <StackItem style={{ marginTop: '120px'}}>
-            {
-              instanceTableDetails.map(
-                (instanceTable, index) => <InstancesTable
-                  key={`${index}-${instanceTable.id}`}
-                  id={instanceTable.id}
-                  instanceDetails={instanceTable.data}
-                  heading={instanceTable.heading}
-                  description={staleCount > 0 && instanceTable.id.includes('historical')
-                      ? `${instanceTable.description}${instanceTable.staleDescription}`
-                      : `${instanceTable.description}` }
+      <Page>
+        <Stack>
+          <StackItem>
+              {
+                instanceTableDetails.map(
+                  (instanceTable, index) => <InstancesTable
+                    key={`${index}-${instanceTable.id}`}
+                    id={instanceTable.id}
+                    instanceDetails={instanceTable.data}
+                    heading={instanceTable.heading}
+                    description={staleCount > 0 && instanceTable.id.includes('historical')
+                        ? `${instanceTable.description}${instanceTable.staleDescription}`
+                        : `${instanceTable.description}` }
+                  />
+                )
+              }
+              
+            </StackItem>
+        </Stack>    
+      </Page>
+        
+      <Page>
+        <Stack>
+          <StackItem>
+              <Title
+              headingLevel="h4"
+              size="md"
+              className="pf-u-danger-color-100 pf-u-mb-md"
+              >
+                Description of states
+              </Title>
+              <DescriptionList
+                data={[
+                  {
+                    title: 'Optimized',
+                    description: 'Performing at an optimal level',
+                    icon: (
+                      <CheckCircleIcon color={global_success_color_100.value} />
+                    ),
+                  },
+                  {
+                    title: 'Under pressure',
+                    description: 'Peaking occasionally',
+                    icon: <TachometerAltIcon />,
+                  },
+                  {
+                    title: 'Undersized',
+                    description: 'Using more than 80% of system resources',
+                    icon: (
+                      <AngleDoubleDownIcon
+                        color={global_danger_color_100.value}
+                      />
+                    ),
+                  },
+                  {
+                    title: 'Oversized',
+                    description: 'Using less than 20% of system resources',
+                    icon: (
+                      <AngleDoubleUpIcon color={global_warning_color_100.value} />
+                    ),
+                  },
+                  {
+                    title: 'Idling',
+                    description: 'Consuming less than 5% of resources',
+                    icon: <AutomationIcon />,
+                  },
+                  {
+                    title: 'Waiting for data',
+                    description:
+                      'Data has not been received or is being processed. Initial dataprocessing takes up to 24 hours.',
+                    icon: <InProgressIcon color={global_info_color_100.value} />,
+                  },
+                ]}
+              />
+            </StackItem>
+            <StackItem>
+                <Title
+                headingLevel="h4"
+                size="md"
+                className="pf-u-danger-color-100 pf-u-mb-md"
+                >
+                  Description of conditions
+                </Title>
+                <DescriptionList
+                  data={[
+                    {
+                      title: 'CPU pressure',
+                      description:
+                        'CPU registered peaks higher than 20% over several one-minute time periods',
+                    },
+                    {
+                      title: 'Disk I/O pressure',
+                      description:
+                        'Disk I/O registered peaks higher than 20% over several one-minute time periods',
+                    },
+                    {
+                      title: 'RAM pressure',
+                      description:
+                        'RAM registered peaks higher than 20% over several one-minute time periods',
+                    },
+                  ]}
                 />
-              )
-            }
-            
-          </StackItem>
-          
-          <StackItem>
-            <Title
-             headingLevel="h4"
-             size="md"
-             className="pf-u-danger-color-100 pf-u-mb-md"
-            >
-              Description of states
-            </Title>
-            <DescriptionList
-              data={[
-                {
-                  title: 'Optimized',
-                  description: 'Performing at an optimal level',
-                  icon: (
-                    <CheckCircleIcon color={global_success_color_100.value} />
-                  ),
-                },
-                {
-                  title: 'Under pressure',
-                  description: 'Peaking occasionally',
-                  icon: <TachometerAltIcon />,
-                },
-                {
-                  title: 'Undersized',
-                  description: 'Using more than 80% of system resources',
-                  icon: (
-                    <AngleDoubleDownIcon
-                      color={global_danger_color_100.value}
-                    />
-                  ),
-                },
-                {
-                  title: 'Oversized',
-                  description: 'Using less than 20% of system resources',
-                  icon: (
-                    <AngleDoubleUpIcon color={global_warning_color_100.value} />
-                  ),
-                },
-                {
-                  title: 'Idling',
-                  description: 'Consuming less than 5% of resources',
-                  icon: <AutomationIcon />,
-                },
-                {
-                  title: 'Waiting for data',
-                  description:
-                    'Data has not been received or is being processed. Initial dataprocessing takes up to 24 hours.',
-                  icon: <InProgressIcon color={global_info_color_100.value} />,
-                },
-              ]}
-            />
-          </StackItem>
-          <StackItem>
-            <Title
-             headingLevel="h4"
-             size="md"
-             className="pf-u-danger-color-100 pf-u-mb-md"
-            >
-              Description of conditions
-            </Title>
-            <DescriptionList
-              data={[
-                {
-                  title: 'CPU pressure',
-                  description:
-                    'CPU registered peaks higher than 20% over several one-minute time periods',
-                },
-                {
-                  title: 'Disk I/O pressure',
-                  description:
-                    'Disk I/O registered peaks higher than 20% over several one-minute time periods',
-                },
-                {
-                  title: 'RAM pressure',
-                  description:
-                    'RAM registered peaks higher than 20% over several one-minute time periods',
-                },
-              ]}
-            />
-          </StackItem>
+              </StackItem> 
         </Stack>
       </Page>
     </Fragment>
