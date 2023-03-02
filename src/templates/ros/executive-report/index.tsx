@@ -272,7 +272,7 @@ const RosExecutiveTemplate = ({ data }: { data: typeof rosData }) => {
             </div>
             <TextContent>
               <Text className='pf-u-font-size-xs' style={{ textAlign: 'right', fontSize: 10, margin: '6px 0px' }} component="small">
-                Description of states are on the second page of the report*
+                Description of states are on the third page of the report*
               </Text>
             </TextContent>
           </StackItem>
@@ -374,7 +374,7 @@ const RosExecutiveTemplate = ({ data }: { data: typeof rosData }) => {
                 style={{ textAlign: 'right',  fontSize: 10, lineHeight: '50%'}}
                 component="small"
               >
-                Description of conditions are on the second page of the report*
+                Description of conditions are on the third page of the report*
               </Text>
             </TextContent>
           </StackItem>    

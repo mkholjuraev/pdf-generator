@@ -39,13 +39,13 @@ export const InstancesTable: React.FC<InstancesTableProps> = ({ id, instanceDeta
                 instanceDetails.length > 0 ?
                     instanceDetails.map(
                         (instanceDetail, index) => <div key={`${id}-${index}`} style={{
-                            display: 'flex', flexDirection: 'row', alignItems: 'center', marginBottom: 24,
+                            display: 'flex', flexDirection: 'row', alignItems: 'center', marginBottom: 4,
                             ...(index % 2 && {  backgroundColor: global_BorderColor_300.value }) }}>
                             <Text style={{ width: 140, fontSize: 14 }}>{instanceDetail.type}</Text>
                             <Text style={{ width: 120, fontSize: 14 }}>{instanceDetail.count}</Text>
                             <Text style={{ flex: 1, fontSize: 14 }}>{instanceDetail.desc}</Text>
                         </div>)
-                    : <Text style={{  fontSize: 14, color: '#6A6E73', paddingBottom: 4, fontWeight: 'bold' }}>No data available.</Text>
+                    : <Text style={{  fontSize: 14, color: '#6A6E73', paddingBottom: 16, fontWeight: 'bold' }}>No data available.</Text>
             }
         </div>
     );
