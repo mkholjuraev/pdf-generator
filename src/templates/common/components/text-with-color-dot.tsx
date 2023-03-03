@@ -14,13 +14,13 @@ const TextWithColorDot: React.FC<TextWithColorDotProps> = ({
         className="pf-u-mr-sm"
         style={{
           display: 'block',
-          width: 8,
-          height: 8,
-          borderRadius: 4,
+          width: 12,
+          height: 12,
+          borderRadius: 6,
           backgroundColor: color,
         }}
       ></span>
-      <span>{children}</span>
+      <span className='pf-u-font-size-xs'>{children}</span>
     </div>
   );
 };
