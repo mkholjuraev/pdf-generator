@@ -196,7 +196,7 @@ const RosExecutiveTemplate = ({ data }: { data: typeof rosData }) => {
             <Title
               headingLevel="h5"
               size="md"
-              style={{marginTop: '8px', color: 'var(--pf-global--danger-color--100)'}}
+              style={{marginTop: '6px', color: 'var(--pf-global--danger-color--100)'}}
             >
               Registered systems
             </Title>
@@ -223,9 +223,9 @@ const RosExecutiveTemplate = ({ data }: { data: typeof rosData }) => {
           </StackItem>
           <StackItem>
             <Title
-              headingLevel="h4"
+              headingLevel="h5"
               size="md"
-              style={{marginTop: '8px', color: 'var(--pf-global--danger-color--100)'}}
+              style={{marginTop: '6px', color: 'var(--pf-global--danger-color--100)'}}
             >
               Breakdown of registered systems
             </Title>
@@ -278,7 +278,7 @@ const RosExecutiveTemplate = ({ data }: { data: typeof rosData }) => {
           </StackItem>
           <StackItem>
             <Title
-              headingLevel="h4"
+              headingLevel="h5"
               size="md"
               className="pf-u-danger-color-100"
             >
@@ -290,12 +290,14 @@ const RosExecutiveTemplate = ({ data }: { data: typeof rosData }) => {
               </Text>
             </TextContent>
             <div style={{ display: 'flex' }}>
-              <div className="pf-u-m-sm" style={{ width: 150, height: 150 }}>
+              <div 
+                className="pf-u-m-lg" 
+                style={{ width: 150, height: 150 }}>
                 <ChartDonut
                   subTitle="Conditions"
                   title={conditionsCount.toString()}
                   data={performanceData}
-                  constrainToVisibleArea
+                  
                 />
               </div>
               <TableLegend
@@ -314,7 +316,7 @@ const RosExecutiveTemplate = ({ data }: { data: typeof rosData }) => {
           </StackItem>
           <StackItem>
             <Title
-              headingLevel="h4"
+              headingLevel="h5"
               size="md"
               className="pf-u-danger-color-100"
             >
@@ -340,20 +342,20 @@ const RosExecutiveTemplate = ({ data }: { data: typeof rosData }) => {
                     <Tbody>
                       {under_pressure > 0 ? (
                         <Tr>
-                          <Td className='pf-u-font-size-xs pf-u-pt-0 pf-u-pb-0'>Under pressure</Td>
-                          <Td className='pf-u-font-size-xs pf-u-pt-0 pf-u-pb-0'>{under_pressure}</Td>
+                          <Td className='pf-u-font-size-xs pf-u-pt-xs pf-u-pb-xs'>Under pressure</Td>
+                          <Td className='pf-u-font-size-xs pf-u-pt-xs pf-u-pb-xs'>{under_pressure}</Td>
                         </Tr>
                       ) : null}
                       {undersized > 0 ? (
                         <Tr>
-                          <Td className='pf-u-font-size-xs pf-u-pt-0 pf-u-pb-0'>Undersized</Td>
-                          <Td className='pf-u-font-size-xs pf-u-pt-0 pf-u-pb-0'>{undersized}</Td>
+                          <Td className='pf-u-font-size-xs pf-u-pt-xs pf-u-pb-xs'>Undersized</Td>
+                          <Td className='pf-u-font-size-xs pf-u-pt-xs pf-u-pb-xs'>{undersized}</Td>
                         </Tr>
                       ) : null}
                       {oversized > 0 ? (
                         <Tr>
-                          <Td className='pf-u-font-size-xs pf-u-pt-0 pf-u-pb-0'>Oversized</Td>
-                          <Td className='pf-u-font-size-xs pf-u-pt-0 pf-u-pb-0'>{oversized}</Td>
+                          <Td className='pf-u-font-size-xs pf-u-pt-xs pf-u-pb-xs'>Oversized</Td>
+                          <Td className='pf-u-font-size-xs pf-u-pt-xs pf-u-pb-xs'>{oversized}</Td>
                         </Tr>
                       ) : null}
                     </Tbody>
@@ -406,7 +408,7 @@ const RosExecutiveTemplate = ({ data }: { data: typeof rosData }) => {
         <Stack>
           <StackItem>
               <Title
-              headingLevel="h4"
+              headingLevel="h5"
               size="md"
               className="pf-u-danger-color-100 pf-u-mb-md"
               >
@@ -458,7 +460,7 @@ const RosExecutiveTemplate = ({ data }: { data: typeof rosData }) => {
             </StackItem>
             <StackItem>
                 <Title
-                headingLevel="h4"
+                headingLevel="h5"
                 size="md"
                 className="pf-u-danger-color-100 pf-u-mb-md"
                 >
