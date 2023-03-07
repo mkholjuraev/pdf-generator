@@ -55,3 +55,39 @@ production as well.
  `?orientation= landscape // optional`
 ```
 
+## Downloading a report in the browser
+
+To download the report, you will need a small piece of JS code. Here is an example of downloading ROS executive report:
+
+```js
+// use fetch or XHR. 
+fetch('/api/crc-pdf-generator/v1/generate', {
+  method: 'POST',
+  headers: {
+    // do not forget the content type header!
+    'Content-Type': 'application/json',
+  },
+
+  body: JSON.stringify({
+    // service and template params are mandatory
+    service: 'ros',
+    template: 'executiveReport',
+    // ... any other config options accepted by your template
+  }),
+})
+  // If you are using fetch, don't forget to handle the response.ok === false branch before calling response.blob()!
+  .then((response) => response.blob())
+  .then((blob) => {
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    // give name to the PDF file
+    a.download = 'filename.pdf';
+    document.body.appendChild(a); // we need to append the element to the dom -> otherwise it will not work in firefox
+    a.click();
+    a.remove(); //remove the element
+  });
+
+```
+
+The PDF file will be downloaded b the browser.
