@@ -2,8 +2,6 @@ import React, { Fragment, ReactNode } from 'react';
 import {
   Grid,
   GridItem,
-  List,
-  ListItem,
   Stack,
   StackItem,
   Text,
@@ -57,7 +55,9 @@ const DescriptionList = ({
           {icon && <span className="pf-u-mr-sm pf-u-font-size-sm">{icon}</span>}
           <span className="pf-u-font-size-sm">{title}</span>
         </GridItem>
-        <GridItem span={9} className="pf-u-font-size-sm">{description}</GridItem>
+        <GridItem span={9} className="pf-u-font-size-sm">
+          {description}
+        </GridItem>
       </Fragment>
     ))}
   </Grid>
@@ -65,7 +65,7 @@ const DescriptionList = ({
 
 export const pluralize = (count: number, singular: string, plural?: string) => {
   if (!plural) {
-      plural = `${singular}s`;
+    plural = `${singular}s`;
   }
 
   return `${count === 1 ? singular : plural}`;
@@ -93,12 +93,18 @@ const RosExecutiveTemplate = ({ data }: { data: typeof rosData }) => {
       },
     },
     instance_types_highlights: {
-      current: currentData, 
+      current: currentData,
       suggested: suggestedData,
-      historical: historicalData 
+      historical: historicalData,
     },
-    meta: { conditions_count: conditionsCount, non_optimized_count: nonOptimizedCount, non_psi_count: nonPSICount,
-      psi_enabled_count: psiEnabledCount, total_count: totalCount, stale_count: staleCount },
+    meta: {
+      conditions_count: conditionsCount,
+      non_optimized_count: nonOptimizedCount,
+      non_psi_count: nonPSICount,
+      psi_enabled_count: psiEnabledCount,
+      total_count: totalCount,
+      stale_count: staleCount,
+    },
   } = data;
 
   const breakdownData = [
@@ -150,25 +156,29 @@ const RosExecutiveTemplate = ({ data }: { data: typeof rosData }) => {
   ];
 
   const instanceTableDetails = [
-      {
-          id: 'current_instance_types',
-          heading: 'Most used current instance types',
-          description: 'We have identified these instance types based on the data from the fresh systems.',
-          data: currentData
-      },
-      {
-          id: 'suggested_instance_types',
-          heading: 'Most suggested instance types',
-          description: 'We are suggesting these instance types based on the data from the fresh systems.',
-          data: suggestedData
-      },
-      {
-          id: 'historical_instance_types',
-          heading: 'Most suggested instance types (45 days)',
-          description: 'In the last 45 days we suggested you these instances # of times. ',
-          staleDescription: 'Some of the instances are now identified as stale (more than 7 days not reporting data).',
-          data: historicalData
-      }
+    {
+      id: 'current_instance_types',
+      heading: 'Most used current instance types',
+      description:
+        'We have identified these instance types based on the data from the fresh systems.',
+      data: currentData,
+    },
+    {
+      id: 'suggested_instance_types',
+      heading: 'Most suggested instance types',
+      description:
+        'We are suggesting these instance types based on the data from the fresh systems.',
+      data: suggestedData,
+    },
+    {
+      id: 'historical_instance_types',
+      heading: 'Most suggested instance types (45 days)',
+      description:
+        'In the last 45 days we suggested you these instances # of times. ',
+      staleDescription:
+        'Some of the instances are now identified as stale (more than 7 days not reporting data).',
+      data: historicalData,
+    },
   ];
 
   const blueColorScale = getThemeColors(ChartThemeColor.blue).pie.colorScale;
@@ -187,8 +197,10 @@ const RosExecutiveTemplate = ({ data }: { data: typeof rosData }) => {
         <Stack>
           <StackItem>
             <TextContent>
-              <Text className='pf-u-font-size-xs'>
-              This executive summary highlights the performance for your registered systems included in the resource optimization service.
+              <Text className="pf-u-font-size-xs">
+                This executive summary highlights the performance for your
+                registered systems included in the resource optimization
+                service.
               </Text>
             </TextContent>
           </StackItem>
@@ -196,28 +208,61 @@ const RosExecutiveTemplate = ({ data }: { data: typeof rosData }) => {
             <Title
               headingLevel="h5"
               size="md"
-              style={{marginTop: '6px', color: 'var(--pf-global--danger-color--100)'}}
+              style={{
+                marginTop: '6px',
+                color: 'var(--pf-global--danger-color--100)',
+              }}
             >
               Registered systems
             </Title>
 
-            <TextContent style={{margin: '8px 0'}}>
-              <Text className='pf-u-font-size-xs' component={TextVariants.p} style={{lineHeight: '50%'}}>
-                There {pluralize(totalCount, 'is', 'are')} <span style={{ fontWeight: 700 }}>{totalCount} registered {pluralize(totalCount, 'system')}</span> in the resource optimization service.
+            <TextContent style={{ margin: '8px 0' }}>
+              <Text
+                className="pf-u-font-size-xs"
+                component={TextVariants.p}
+                style={{ lineHeight: '50%' }}
+              >
+                There {pluralize(totalCount, 'is', 'are')}{' '}
+                <span style={{ fontWeight: 700 }}>
+                  {totalCount} registered {pluralize(totalCount, 'system')}
+                </span>{' '}
+                in the resource optimization service.
               </Text>
 
-              <Text className='pf-u-font-size-xs' component={TextVariants.p} style={{lineHeight: '50%'}}>
-                <span style={{ fontWeight: 700 }}>{optimizedCount}</span> of {totalCount} {pluralize(totalCount, 'system')} {pluralize(optimizedCount, 'is', 'are')} identified as <span style={{ fontWeight: 700 }}>optimized</span>,<span style={{ fontWeight: 700 }}> {nonOptimizedCount}</span> of {totalCount} {pluralize(totalCount, 'system')} as having a <span style={{ fontWeight: 700 }}>non-optimal</span> state.
+              <Text
+                className="pf-u-font-size-xs"
+                component={TextVariants.p}
+                style={{ lineHeight: '50%' }}
+              >
+                <span style={{ fontWeight: 700 }}>{optimizedCount}</span> of{' '}
+                {totalCount} {pluralize(totalCount, 'system')}{' '}
+                {pluralize(optimizedCount, 'is', 'are')} identified as{' '}
+                <span style={{ fontWeight: 700 }}>optimized</span>,
+                <span style={{ fontWeight: 700 }}> {nonOptimizedCount}</span> of{' '}
+                {totalCount} {pluralize(totalCount, 'system')} as having a{' '}
+                <span style={{ fontWeight: 700 }}>non-optimal</span> state.
               </Text>
 
-              <Text className='pf-u-font-size-xs' component={TextVariants.p} style={{lineHeight: '50%'}}>
-                <span style={{ fontWeight: 700 }}>{staleCount}</span> of {totalCount} {pluralize(totalCount, 'system')} {pluralize(staleCount, 'is', 'are')} <span style={{ fontWeight: 700 }}>stale*</span>
+              <Text
+                className="pf-u-font-size-xs"
+                component={TextVariants.p}
+                style={{ lineHeight: '50%' }}
+              >
+                <span style={{ fontWeight: 700 }}>{staleCount}</span> of{' '}
+                {totalCount} {pluralize(totalCount, 'system')}{' '}
+                {pluralize(staleCount, 'is', 'are')}{' '}
+                <span style={{ fontWeight: 700 }}>stale*</span>
               </Text>
             </TextContent>
-            
+
             <TextContent>
-              <Text className='pf-u-font-size-xs' style={{ textAlign: 'right', marginTop: '0 px' }} component="small">
-              Suggestions for stale systems might no longer apply due to systems not being refreshed in 7 days.*
+              <Text
+                className="pf-u-font-size-xs"
+                style={{ textAlign: 'right', marginTop: '0 px' }}
+                component="small"
+              >
+                Suggestions for stale systems might no longer apply due to
+                systems not being refreshed in 7 days.*
               </Text>
             </TextContent>
           </StackItem>
@@ -225,18 +270,24 @@ const RosExecutiveTemplate = ({ data }: { data: typeof rosData }) => {
             <Title
               headingLevel="h5"
               size="md"
-              style={{marginTop: '6px', color: 'var(--pf-global--danger-color--100)'}}
+              style={{
+                marginTop: '6px',
+                color: 'var(--pf-global--danger-color--100)',
+              }}
             >
               Breakdown of registered systems
             </Title>
 
-            {
-            nonPSICount > 0
-                && <Text className='pf-u-font-size-xs'>
-                    {psiEnabledCount} {pluralize(psiEnabledCount, 'system')} out of a total of {totalCount} {pluralize(totalCount, 'system')} have Kernel Pressure Stall Information enabled. You could get better suggestions for {nonPSICount} {pluralize(nonPSICount, 'system')} if you enabled Pressure Stall Information. Check the documentation on how to enable PSI on versions RHEL 8 and newer.
-                </Text>
-
-            }
+            {nonPSICount > 0 && (
+              <Text className="pf-u-font-size-xs">
+                {psiEnabledCount} {pluralize(psiEnabledCount, 'system')} out of
+                a total of {totalCount} {pluralize(totalCount, 'system')} have
+                Kernel Pressure Stall Information enabled. You could get better
+                suggestions for {nonPSICount} {pluralize(nonPSICount, 'system')}{' '}
+                if you enabled Pressure Stall Information. Check the
+                documentation on how to enable PSI on versions RHEL 8 and newer.
+              </Text>
+            )}
             <div style={{ display: 'flex', alignItems: 'center' }}>
               <div
                 className="pf-u-ml-lg pf-u-mr-lg"
@@ -271,7 +322,11 @@ const RosExecutiveTemplate = ({ data }: { data: typeof rosData }) => {
               />
             </div>
             <TextContent>
-              <Text className='pf-u-font-size-xs' style={{ textAlign: 'right', fontSize: 10, margin: '6px 0px' }} component="small">
+              <Text
+                className="pf-u-font-size-xs"
+                style={{ textAlign: 'right', fontSize: 10, margin: '6px 0px' }}
+                component="small"
+              >
                 Description of states are on the third page of the report*
               </Text>
             </TextContent>
@@ -285,19 +340,16 @@ const RosExecutiveTemplate = ({ data }: { data: typeof rosData }) => {
               System performance issues{' '}
             </Title>
             <TextContent>
-              <Text className='pf-u-font-size-xs'>
+              <Text className="pf-u-font-size-xs">
                 There are {conditionsCount} system performance issues
               </Text>
             </TextContent>
             <div style={{ display: 'flex' }}>
-              <div 
-                className="pf-u-m-lg" 
-                style={{ width: 150, height: 150 }}>
+              <div className="pf-u-m-lg" style={{ width: 150, height: 150 }}>
                 <ChartDonut
                   subTitle="Conditions"
                   title={conditionsCount.toString()}
                   data={performanceData}
-                  
                 />
               </div>
               <TableLegend
@@ -342,20 +394,32 @@ const RosExecutiveTemplate = ({ data }: { data: typeof rosData }) => {
                     <Tbody>
                       {under_pressure > 0 ? (
                         <Tr>
-                          <Td className='pf-u-font-size-xs pf-u-pt-xs pf-u-pb-xs'>Under pressure</Td>
-                          <Td className='pf-u-font-size-xs pf-u-pt-xs pf-u-pb-xs'>{under_pressure}</Td>
+                          <Td className="pf-u-font-size-xs pf-u-pt-xs pf-u-pb-xs">
+                            Under pressure
+                          </Td>
+                          <Td className="pf-u-font-size-xs pf-u-pt-xs pf-u-pb-xs">
+                            {under_pressure}
+                          </Td>
                         </Tr>
                       ) : null}
                       {undersized > 0 ? (
                         <Tr>
-                          <Td className='pf-u-font-size-xs pf-u-pt-xs pf-u-pb-xs'>Undersized</Td>
-                          <Td className='pf-u-font-size-xs pf-u-pt-xs pf-u-pb-xs'>{undersized}</Td>
+                          <Td className="pf-u-font-size-xs pf-u-pt-xs pf-u-pb-xs">
+                            Undersized
+                          </Td>
+                          <Td className="pf-u-font-size-xs pf-u-pt-xs pf-u-pb-xs">
+                            {undersized}
+                          </Td>
                         </Tr>
                       ) : null}
                       {oversized > 0 ? (
                         <Tr>
-                          <Td className='pf-u-font-size-xs pf-u-pt-xs pf-u-pb-xs'>Oversized</Td>
-                          <Td className='pf-u-font-size-xs pf-u-pt-xs pf-u-pb-xs'>{oversized}</Td>
+                          <Td className="pf-u-font-size-xs pf-u-pt-xs pf-u-pb-xs">
+                            Oversized
+                          </Td>
+                          <Td className="pf-u-font-size-xs pf-u-pt-xs pf-u-pb-xs">
+                            {oversized}
+                          </Td>
                         </Tr>
                       ) : null}
                     </Tbody>
@@ -373,119 +437,118 @@ const RosExecutiveTemplate = ({ data }: { data: typeof rosData }) => {
                 documentation for details.*
               </Text>
               <Text
-                style={{ textAlign: 'right',  fontSize: 10, lineHeight: '50%'}}
+                style={{ textAlign: 'right', fontSize: 10, lineHeight: '50%' }}
                 component="small"
               >
                 Description of conditions are on the third page of the report*
               </Text>
             </TextContent>
-          </StackItem>    
+          </StackItem>
         </Stack>
       </Page>
 
       <Page>
         <Stack>
           <StackItem>
-              {
-                instanceTableDetails.map(
-                  (instanceTable, index) => <InstancesTable
-                    key={`${index}-${instanceTable.id}`}
-                    id={instanceTable.id}
-                    instanceDetails={instanceTable.data}
-                    heading={instanceTable.heading}
-                    description={staleCount > 0 && instanceTable.id.includes('historical')
-                        ? `${instanceTable.description}${instanceTable.staleDescription}`
-                        : `${instanceTable.description}` }
-                  />
-                )
-              }
-              
-            </StackItem>
-        </Stack>    
+            {instanceTableDetails.map((instanceTable, index) => (
+              <InstancesTable
+                key={`${index}-${instanceTable.id}`}
+                id={instanceTable.id}
+                instanceDetails={instanceTable.data}
+                heading={instanceTable.heading}
+                description={
+                  staleCount > 0 && instanceTable.id.includes('historical')
+                    ? `${instanceTable.description}${instanceTable.staleDescription}`
+                    : `${instanceTable.description}`
+                }
+              />
+            ))}
+          </StackItem>
+        </Stack>
       </Page>
-        
+
       <Page>
         <Stack>
           <StackItem>
-              <Title
+            <Title
               headingLevel="h5"
               size="md"
               className="pf-u-danger-color-100 pf-u-mb-md"
-              >
-                Description of states
-              </Title>
-              <DescriptionList
-                data={[
-                  {
-                    title: 'Optimized',
-                    description: 'Performing at an optimal level',
-                    icon: (
-                      <CheckCircleIcon color={global_success_color_100.value} />
-                    ),
-                  },
-                  {
-                    title: 'Under pressure',
-                    description: 'Peaking occasionally',
-                    icon: <TachometerAltIcon />,
-                  },
-                  {
-                    title: 'Undersized',
-                    description: 'Using more than 80% of system resources',
-                    icon: (
-                      <AngleDoubleDownIcon
-                        color={global_danger_color_100.value}
-                      />
-                    ),
-                  },
-                  {
-                    title: 'Oversized',
-                    description: 'Using less than 20% of system resources',
-                    icon: (
-                      <AngleDoubleUpIcon color={global_warning_color_100.value} />
-                    ),
-                  },
-                  {
-                    title: 'Idling',
-                    description: 'Consuming less than 5% of resources',
-                    icon: <AutomationIcon />,
-                  },
-                  {
-                    title: 'Waiting for data',
-                    description:
-                      'Data has not been received or is being processed. Initial dataprocessing takes up to 24 hours.',
-                    icon: <InProgressIcon color={global_info_color_100.value} />,
-                  },
-                ]}
-              />
-            </StackItem>
-            <StackItem>
-                <Title
-                headingLevel="h5"
-                size="md"
-                className="pf-u-danger-color-100 pf-u-mb-md"
-                >
-                  Description of conditions
-                </Title>
-                <DescriptionList
-                  data={[
-                    {
-                      title: 'CPU pressure',
-                      description:
-                        'CPU registered peaks higher than 20% over several one-minute time periods',
-                    },
-                    {
-                      title: 'Disk I/O pressure',
-                      description:
-                        'Disk I/O registered peaks higher than 20% over several one-minute time periods',
-                    },
-                    {
-                      title: 'RAM pressure',
-                      description:
-                        'RAM registered peaks higher than 20% over several one-minute time periods',
-                    },
-                  ]}
-                />
-              </StackItem> 
+            >
+              Description of states
+            </Title>
+            <DescriptionList
+              data={[
+                {
+                  title: 'Optimized',
+                  description: 'Performing at an optimal level',
+                  icon: (
+                    <CheckCircleIcon color={global_success_color_100.value} />
+                  ),
+                },
+                {
+                  title: 'Under pressure',
+                  description: 'Peaking occasionally',
+                  icon: <TachometerAltIcon />,
+                },
+                {
+                  title: 'Undersized',
+                  description: 'Using more than 80% of system resources',
+                  icon: (
+                    <AngleDoubleDownIcon
+                      color={global_danger_color_100.value}
+                    />
+                  ),
+                },
+                {
+                  title: 'Oversized',
+                  description: 'Using less than 20% of system resources',
+                  icon: (
+                    <AngleDoubleUpIcon color={global_warning_color_100.value} />
+                  ),
+                },
+                {
+                  title: 'Idling',
+                  description: 'Consuming less than 5% of resources',
+                  icon: <AutomationIcon />,
+                },
+                {
+                  title: 'Waiting for data',
+                  description:
+                    'Data has not been received or is being processed. Initial dataprocessing takes up to 24 hours.',
+                  icon: <InProgressIcon color={global_info_color_100.value} />,
+                },
+              ]}
+            />
+          </StackItem>
+          <StackItem>
+            <Title
+              headingLevel="h5"
+              size="md"
+              className="pf-u-danger-color-100 pf-u-mb-md"
+            >
+              Description of conditions
+            </Title>
+            <DescriptionList
+              data={[
+                {
+                  title: 'CPU pressure',
+                  description:
+                    'CPU registered peaks higher than 20% over several one-minute time periods',
+                },
+                {
+                  title: 'Disk I/O pressure',
+                  description:
+                    'Disk I/O registered peaks higher than 20% over several one-minute time periods',
+                },
+                {
+                  title: 'RAM pressure',
+                  description:
+                    'RAM registered peaks higher than 20% over several one-minute time periods',
+                },
+              ]}
+            />
+          </StackItem>
         </Stack>
       </Page>
     </Fragment>

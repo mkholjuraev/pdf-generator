@@ -59,8 +59,8 @@ const templates: TemplateMapper = {
       footer: CommonFooter,
       landscape: true,
       browserMargins: {
-        bottom: '2.5cm'
-      }
+        bottom: '2.5cm',
+      },
     },
     cve: {
       template: CveReport,
@@ -76,7 +76,7 @@ const templates: TemplateMapper = {
       header: CommonHeader,
       footer: CommonFooter,
       landscape: true,
-    }
+    },
   },
   [ServiceNames.advisor]: {
     advisor: {
