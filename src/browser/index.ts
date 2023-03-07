@@ -181,6 +181,27 @@ const generatePdf = async (
     'x-rh-identity': rhIdentity,
   });
   const pageStatus = await page.goto(url, { waitUntil: 'networkidle2' });
+  // get the error from DOM if it exists
+  const error = await page.evaluate(() => {
+    const elem = document.getElementById('error');
+    if (elem) {
+      return elem.innerText;
+    }
+  });
+
+  // error happened during page rendering
+  if (error && error.length > 0) {
+    let response: any;
+    try {
+      // error should be JSON
+      response = JSON.parse(error);
+    } catch {
+      // fallback to initial error value
+      response = error;
+    }
+
+    throw response;
+  }
   if (!pageStatus?.ok()) {
     throw new Error(
       `Pupeteer error while loading the react app: ${pageStatus?.statusText()}`
@@ -206,12 +227,3 @@ const generatePdf = async (
 };
 
 export default generatePdf;
-
-// Usage params:
-// const pathToPdf = generatePdfFromHtml(url, {
-//   slug: 'hosts_changed_by_job_template',
-//   data: {/*api data*/},
-//   label: 'Total unique hosts',
-//   y: 'total_unique_host_count',
-//   xTickFormat: 'formatDateAsDayMonth',
-// });
