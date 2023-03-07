@@ -18,6 +18,11 @@ export APP_ROOT=$(pwd)
 CICD_URL=https://raw.githubusercontent.com/RedHatInsights/bonfire/master/cicd
 curl -s $CICD_URL/bootstrap.sh > .cicd_bootstrap.sh && source .cicd_bootstrap.sh
 
+#run tests
+npm ci
+npm run lint
+npm run test:visual
+
 
 # Need to make a dummy results file to make tests pass
 mkdir -p $WORKSPACE

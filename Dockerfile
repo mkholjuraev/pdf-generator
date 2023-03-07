@@ -17,10 +17,6 @@ RUN node circular.js
 # install puppeteer/chromium dependencies
 RUN dnf install -y bzip2 fontconfig nss.x86_64 pango.x86_64 libXcomposite.x86_64 libXcursor.x86_64 libXdamage.x86_64 libXext.x86_64 libXi.x86_64 libXtst.x86_64 cups-libs.x86_64 libXScrnSaver.x86_64 libXrandr.x86_64 GConf2.x86_64 alsa-lib.x86_64 atk.x86_64 gtk3.x86_64 libdrm libgbm libxshmfence GConf2 nss libXScrnSaver alsa-lib wget
 
-# Run tests
-RUN npm run lint
-RUN npm run test:visual
-
 # Set node env variable
 ENV NODE_ENV=production
 
