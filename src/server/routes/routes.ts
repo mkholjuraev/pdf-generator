@@ -71,14 +71,19 @@ router.use('^/$', async (req: PupetterBrowserRequest, res, _next) => {
       templateConfig,
       configHeaders ? JSON.parse(configHeaders as string) : undefined
     );
+
     const HTMLTemplate: string = renderTemplate(
       templateConfig,
       templateData as Record<string, unknown>
     );
     res.send(HTMLTemplate);
   } catch (error) {
-    console.log(error);
-    res.send(`<div>Unable to render ${template}!</div>`);
+    // render error to DOM to retrieve the error content from puppeteer
+    res.send(
+      `<div id="error" data-error="${JSON.stringify(error)}">${JSON.stringify(
+        error
+      )}</div>`
+    );
   }
 });
 
@@ -131,8 +136,15 @@ router.post(
         });
       });
     } catch (error: unknown) {
-      if (error instanceof Error) res.status(500).send(error.message); // same as below, 500 is only preliminary for now.
-      // res.status((error.code as number) || 500).send(error.message);
+      res.status(500).send({
+        errors: [
+          {
+            status: 500,
+            statusText: 'Internal server error',
+            description: error,
+          },
+        ],
+      });
     }
   }
 );
@@ -140,10 +152,23 @@ router.post(
 router.get(`/preview`, async (req: PreviewHandlerRequest, res) => {
   const service: ServiceNames = req.query.service;
   const template: string = req.query.template;
-  const templateData = await getTemplateData(req.headers, {
-    service,
-    template,
-  });
+  let templateData: unknown;
+  try {
+    templateData = await getTemplateData(req.headers, {
+      service,
+      template,
+    });
+  } catch (error) {
+    return res.status(500).send({
+      errors: [
+        {
+          status: 500,
+          statusText: 'Internal server error',
+          detail: error,
+        },
+      ],
+    });
+  }
   const orientationOption = processOrientationOption(req);
 
   const url = `http://localhost:${config?.webPort}?service=${service}&template=${template}`;

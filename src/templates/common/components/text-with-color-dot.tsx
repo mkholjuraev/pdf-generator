@@ -20,7 +20,7 @@ const TextWithColorDot: React.FC<TextWithColorDotProps> = ({
           backgroundColor: color,
         }}
       ></span>
-      <span className='pf-u-font-size-xs'>{children}</span>
+      <span className="pf-u-font-size-xs">{children}</span>
     </div>
   );
 };

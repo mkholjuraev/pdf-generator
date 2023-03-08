@@ -27,7 +27,7 @@ export type ServiceCallFunction = (
 const getServiceEndpointMap = (
   service: ServiceNames
 ): keyof ServicesEndpoints => {
-  const stuff = {
+  const services = {
     [ServiceNames.compliance]: ServiceNames.compliance,
     // // advisor does not have matching names
     [ServiceNames.advisor]: 'advisor-backend',
@@ -36,13 +36,12 @@ const getServiceEndpointMap = (
     [ServiceNames.ros]: 'ros-backend',
     [ServiceNames.vulnerability]: 'vulnerability-engine-manager-service',
   };
-  return stuff[service] as unknown as keyof ServicesEndpoints;
+  return services[service] as unknown as keyof ServicesEndpoints;
 };
 function prepareServiceCall<T = Record<string, unknown>>(
   descriptor: APIDescriptor<T>
 ): ServiceCallFunction {
-  // skip all and return mocked data
-  if (config?.IS_DEVELOPMENT && descriptor.mock) {
+  if (config?.IS_DEVELOPMENT && descriptor?.mock) {
     return () => Promise.resolve(descriptor.mock());
   }
   const { service, path, responseProcessor, request } = descriptor || {};

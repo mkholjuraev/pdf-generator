@@ -32,61 +32,60 @@ const rosData = {
   },
   instance_types_highlights: {
     current: [
-        {
-            type: "t2.micro",
-            count: 13,
-            desc: "Intel Xeon Family instance with 1 vCPUs and 1 GiB of RAM, running on AWS eu-west-2 regions"
-        },
-        {
-            type: "t2.medium",
-            count: 1,
-            desc: "Intel Xeon Family instance with 2 vCPUs and 4 GiB of RAM, running on AWS us-west-1 regions"
-        },
-        {
-            type: "t2.micro",
-            count: 13,
-            desc: "Intel Xeon Family instance with 1 vCPUs and 1 GiB of RAM, running on AWS eu-west-2 regions"
-        },
-        {
-            type: "t2.medium",
-            count: 1,
-            desc: "Intel Xeon Family instance with 2 vCPUs and 4 GiB of RAM, running on AWS us-west-1 regions"
-        },
-        {
-          type: "t2.medium",
-          count: 1,
-          desc: "Intel Xeon Family instance with 2 vCPUs and 4 GiB of RAM, running on AWS us-west-1 regions"
-        },
-
+      {
+        type: 't2.micro',
+        count: 13,
+        desc: 'Intel Xeon Family instance with 1 vCPUs and 1 GiB of RAM, running on AWS eu-west-2 regions',
+      },
+      {
+        type: 't2.medium',
+        count: 1,
+        desc: 'Intel Xeon Family instance with 2 vCPUs and 4 GiB of RAM, running on AWS us-west-1 regions',
+      },
+      {
+        type: 't2.micro',
+        count: 13,
+        desc: 'Intel Xeon Family instance with 1 vCPUs and 1 GiB of RAM, running on AWS eu-west-2 regions',
+      },
+      {
+        type: 't2.medium',
+        count: 1,
+        desc: 'Intel Xeon Family instance with 2 vCPUs and 4 GiB of RAM, running on AWS us-west-1 regions',
+      },
+      {
+        type: 't2.medium',
+        count: 1,
+        desc: 'Intel Xeon Family instance with 2 vCPUs and 4 GiB of RAM, running on AWS us-west-1 regions',
+      },
     ],
     suggested: [],
     historical: [
-        {
-            type: "t2.nano",
-            count: 89,
-            desc: "Intel Xeon Family instance with 1 vCPUs and 0.5 GiB of RAM, running on AWS sa-east-1 regions"
-        },
-        {
-            type: "t2.medium",
-            count: 1,
-            desc: "Intel Xeon Family instance with 2 vCPUs and 4 GiB of RAM, running on AWS us-west-1 regions"
-        },
-        {
-            type: "t2.nano",
-            count: 89,
-            desc: "Intel Xeon Family instance with 1 vCPUs and 0.5 GiB of RAM, running on AWS sa-east-1 regions"
-        },
-        {
-            type: "t2.medium",
-            count: 1,
-            desc: "Intel Xeon Family instance with 2 vCPUs and 4 GiB of RAM, running on AWS us-west-1 regions"
-        },
-        {
-          type: "t2.medium",
-          count: 1,
-          desc: "Intel Xeon Family instance with 2 vCPUs and 4 GiB of RAM, running on AWS us-west-1 regions"
-        },
-    ]
+      {
+        type: 't2.nano',
+        count: 89,
+        desc: 'Intel Xeon Family instance with 1 vCPUs and 0.5 GiB of RAM, running on AWS sa-east-1 regions',
+      },
+      {
+        type: 't2.medium',
+        count: 1,
+        desc: 'Intel Xeon Family instance with 2 vCPUs and 4 GiB of RAM, running on AWS us-west-1 regions',
+      },
+      {
+        type: 't2.nano',
+        count: 89,
+        desc: 'Intel Xeon Family instance with 1 vCPUs and 0.5 GiB of RAM, running on AWS sa-east-1 regions',
+      },
+      {
+        type: 't2.medium',
+        count: 1,
+        desc: 'Intel Xeon Family instance with 2 vCPUs and 4 GiB of RAM, running on AWS us-west-1 regions',
+      },
+      {
+        type: 't2.medium',
+        count: 1,
+        desc: 'Intel Xeon Family instance with 2 vCPUs and 4 GiB of RAM, running on AWS us-west-1 regions',
+      },
+    ],
   },
   meta: {
     total_count: 31,
@@ -94,7 +93,7 @@ const rosData = {
     conditions_count: 32,
     non_psi_count: 1,
     psi_enabled_count: 7,
-    stale_count: 10
+    stale_count: 10,
   },
 };
 

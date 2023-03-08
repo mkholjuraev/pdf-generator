@@ -8,6 +8,7 @@ describe('demo template visual regression testing', () => {
     browser = await puppeteer.launch({
       headless: true,
       slowMo: 100,
+      args: ['--no-sandbox'],
     });
     page = await browser.newPage();
   });
