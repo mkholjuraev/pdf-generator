@@ -96,7 +96,7 @@ const templates: TemplateMapper = {
       template: RosSystemsTemplate,
       header: CommonHeader,
       footer: CommonFooter,
-      landscape: true
+      landscape: true,
     },
   },
 };
