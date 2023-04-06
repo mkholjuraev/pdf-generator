@@ -96,10 +96,7 @@ const templates: TemplateMapper = {
       template: RosSystemsTemplate,
       header: CommonHeader,
       footer: CommonFooter,
-      landscape: true,
-      browserMargins: {
-        bottom: '2.5cm',
-      },
+      landscape: true
     },
   },
 };
