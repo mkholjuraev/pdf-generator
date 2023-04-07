@@ -39,7 +39,7 @@ const RosSystemsTemplate = ({ data }: { data: typeof rosSystemsData }) => {
       >
         Insights Resource Optimization Systems Report
       </Title>
-      <Text className="pf-u-py-sm">
+      <Text className="pf-u-font-size-xs pf-u-py-sm">
         This report identified {totalSystems}{' '}
         {pluralize(totalSystems, 'RHEL system')}.
       </Text>
@@ -47,28 +47,28 @@ const RosSystemsTemplate = ({ data }: { data: typeof rosSystemsData }) => {
         <TableComposable isStriped variant="compact">
           <Thead>
             <Tr>
-              <Th modifier="wrap" style={{ fontSize: 12 }}>
+              <Th modifier="wrap" style={{ fontSize: 10 }}>
                 Name
               </Th>
-              <Th modifier="wrap" style={{ fontSize: 12 }}>
+              <Th modifier="wrap" style={{ fontSize: 10 }}>
                 OS
               </Th>
-              <Th modifier="wrap" style={{ fontSize: 12 }}>
+              <Th modifier="wrap" style={{ fontSize: 10 }}>
                 CPU utilization
               </Th>
-              <Th modifier="wrap" style={{ fontSize: 12 }}>
+              <Th modifier="wrap" style={{ fontSize: 10 }}>
                 Memory utilization
               </Th>
-              <Th modifier="wrap" style={{ fontSize: 12 }}>
+              <Th modifier="wrap" style={{ fontSize: 10 }}>
                 I/O utilization
               </Th>
-              <Th modifier="wrap" style={{ fontSize: 12 }}>
+              <Th modifier="wrap" style={{ fontSize: 10 }}>
                 Suggestions
               </Th>
-              <Th modifier="wrap" style={{ fontSize: 12 }}>
+              <Th modifier="wrap" style={{ fontSize: 10 }}>
                 State
               </Th>
-              <Th modifier="wrap" style={{ fontSize: 12 }}>
+              <Th modifier="wrap" style={{ fontSize: 10 }}>
                 Last reported
               </Th>
             </Tr>
@@ -76,34 +76,42 @@ const RosSystemsTemplate = ({ data }: { data: typeof rosSystemsData }) => {
           <Tbody>
             {data.data?.map((system) => (
               <Tr key={system.inventory_id}>
-                <Td>{formatRowData(system.display_name, 'display_name')}</Td>
-                <Td>{formatRowData(system.os, 'os')}</Td>
-                <Td>
+                <Td modifier="wrap" style={{ fontSize: 10 }}>
+                  {formatRowData(system.display_name, 'display_name')}
+                </Td>
+                <Td modifier="wrap" style={{ fontSize: 10 }}>
+                  {formatRowData(system.os, 'os')}
+                </Td>
+                <Td modifier="wrap" style={{ fontSize: 10 }}>
                   {formatRowData(
                     system.performance_utilization.cpu,
                     'performance_utilization.cpu'
                   )}
                 </Td>
-                <Td>
+                <Td modifier="wrap" style={{ fontSize: 10 }}>
                   {formatRowData(
                     system.performance_utilization.memory,
                     'performance_utilization.memory'
                   )}
                 </Td>
-                <Td>
+                <Td modifier="wrap" style={{ fontSize: 10 }}>
                   {formatRowData(
                     system.performance_utilization.max_io,
                     'performance_utilization.max_io'
                   )}
                 </Td>
-                <Td>
+                <Td modifier="wrap" style={{ fontSize: 10 }}>
                   {formatRowData(
                     system.number_of_suggestions,
                     'number_of_suggestions'
                   )}
                 </Td>
-                <Td>{formatRowData(system.state, 'state')}</Td>
-                <Td>{formatRowData(system.report_date, 'report_date')}</Td>
+                <Td modifier="wrap" style={{ fontSize: 10 }}>
+                  {formatRowData(system.state, 'state')}
+                </Td>
+                <Td modifier="wrap" style={{ fontSize: 10 }}>
+                  {formatRowData(system.report_date, 'report_date')}
+                </Td>
               </Tr>
             ))}
           </Tbody>
