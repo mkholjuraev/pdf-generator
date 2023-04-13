@@ -9,22 +9,7 @@ import {
   Td,
 } from '@patternfly/react-table';
 import { rosSystemsData } from '../../../server/data-access/rosDescriptor/rosData';
-import { pluralize } from '../executive-report';
-
-const formatRowData = (rowValue: string | number | null, rowKey: string) => {
-  const percentageKeys = [
-    'performance_utilization.cpu',
-    'performance_utilization.memory',
-  ];
-
-  rowValue = rowValue == null || rowValue === -1 ? 'N/A' : rowValue.toString();
-  rowValue =
-    rowValue !== 'N/A' && percentageKeys.includes(rowKey)
-      ? `${rowValue}%`
-      : rowValue;
-
-  return rowValue;
-};
+import { formatRowData, pluralize } from '../utils';
 
 const RosSystemsTemplate = ({ data }: { data: typeof rosSystemsData }) => {
   const {

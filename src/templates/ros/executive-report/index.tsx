@@ -42,6 +42,7 @@ import {
 import TableLegend from '../../common/components/table-legend';
 import TextWithColorDot from '../../common/components/text-with-color-dot';
 import { InstancesTable } from '../Components/instances-table';
+import { pluralize } from '../utils';
 
 const DescriptionList = ({
   data,
@@ -62,14 +63,6 @@ const DescriptionList = ({
     ))}
   </Grid>
 );
-
-export const pluralize = (count: number, singular: string, plural?: string) => {
-  if (!plural) {
-    plural = `${singular}s`;
-  }
-
-  return `${count === 1 ? singular : plural}`;
-};
 
 const RosExecutiveTemplate = ({ data }: { data: typeof rosExecutiveData }) => {
   const {
