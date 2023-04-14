@@ -21,6 +21,7 @@ objects:
             apiPath: /crc-pdf-generator/
             public:
               enabled: true
+              apiPaths: crc-pdf-generator
           podSpec:
             image: ${IMAGE}:${IMAGE_TAG}
             livenessProbe:
