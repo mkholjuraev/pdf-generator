@@ -1,8 +1,9 @@
 import { ServiceCallFunction, ServiceDescriptor } from '../call-service';
 import ServiceNames from '../../../common/service-names';
 import config from '../../../common/config';
-import { rosExecutiveData, rosSystemsData } from './rosData';
+import { rosExecutiveData, rosSystemFilters, rosSystemsData } from './rosData';
 import axios, { AxiosRequestHeaders } from 'axios';
+import QueryString from 'qs';
 
 const BASE_URL = `http://${config?.endpoints['ros-backend']?.hostname}:${config?.endpoints['ros-backend']?.port}/api/ros/v1`;
 const EXECUTIVE_REPORT_URL = `${BASE_URL}/executive_report`;
@@ -32,9 +33,11 @@ const getSystemsReport = async (
   const data = await axios.get(SYSTEMS_URL, {
     headers,
     params: defaultParams,
+    paramsSerializer: (params) =>
+      QueryString.stringify(params, { arrayFormat: 'repeat' }),
   });
 
-  return { data };
+  return { data, filters: params };
 };
 
 const executiveGetMock: ServiceCallFunction = () =>
@@ -42,7 +45,8 @@ const executiveGetMock: ServiceCallFunction = () =>
 const executiveResponseProcessor = (data: typeof rosExecutiveData) => data;
 
 const systemsGetMock: ServiceCallFunction = () =>
-  Promise.resolve({ data: rosSystemsData });
+  Promise.resolve({ data: rosSystemsData, filters: rosSystemFilters });
+
 const systemsResponseProcessor = (data: typeof rosSystemsData) => data;
 
 const rosDescriptor: ServiceDescriptor = {

@@ -337,3 +337,9 @@ export const rosSystemsData = {
     },
   ],
 };
+
+export const rosSystemFilters = {
+  display_name: 'iqe',
+  state: ['Waiting for data', 'Optimized'],
+  os: ['9.0', '7.7'],
+};

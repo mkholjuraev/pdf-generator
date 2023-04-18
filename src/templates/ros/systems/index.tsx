@@ -1,5 +1,5 @@
 import React from 'react';
-import { Title, Text } from '@patternfly/react-core';
+import { Title, Text, TextContent } from '@patternfly/react-core';
 import {
   TableComposable,
   Thead,
@@ -8,10 +8,19 @@ import {
   Tr,
   Td,
 } from '@patternfly/react-table';
-import { rosSystemsData } from '../../../server/data-access/rosDescriptor/rosData';
-import { formatRowData, pluralize } from '../utils';
+import {
+  rosSystemFilters,
+  rosSystemsData,
+} from '../../../server/data-access/rosDescriptor/rosData';
+import { formatRowData, generateFilterText, pluralize } from '../utils';
 
-const RosSystemsTemplate = ({ data }: { data: typeof rosSystemsData }) => {
+const RosSystemsTemplate = ({
+  data,
+  filters,
+}: {
+  data: typeof rosSystemsData;
+  filters: typeof rosSystemFilters;
+}) => {
   const {
     meta: { count: totalSystems },
   } = data;
@@ -24,10 +33,18 @@ const RosSystemsTemplate = ({ data }: { data: typeof rosSystemsData }) => {
       >
         Insights Resource Optimization Systems Report
       </Title>
-      <Text className="pf-u-font-size-xs pf-u-py-sm">
-        This report identified {totalSystems}{' '}
-        {pluralize(totalSystems, 'RHEL system')}.
-      </Text>
+      <TextContent>
+        <Text className="pf-u-font-size-xs">
+          This report identified {totalSystems}{' '}
+          {pluralize(totalSystems, 'RHEL system')}.
+        </Text>
+        <Text
+          style={{ fontFamily: 'RedHatText', fontSize: '12px' }}
+          component="pre"
+        >
+          {generateFilterText(filters)}
+        </Text>
+      </TextContent>
       <div className="pf-u-mt-lg">
         <TableComposable isStriped variant="compact">
           <Thead>
