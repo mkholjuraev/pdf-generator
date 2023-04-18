@@ -8,6 +8,7 @@ import VulnerabilityExecutiveReportTemplate from './vulnerability/executive-repo
 import AdvisorTemplate from './advisor/Template';
 import ComplianceTemplate from './compliance/template';
 import RosExecutiveTemplate from './ros/executive-report';
+import RosSystemsTemplate from './ros/systems';
 import CveReport from './vulnerability/cve-report/Template';
 import CveFooter from './vulnerability/cve-report/CveFooter';
 
@@ -90,6 +91,12 @@ const templates: TemplateMapper = {
       template: RosExecutiveTemplate,
       header: CommonHeader,
       footer: CommonFooter,
+    },
+    systemsReport: {
+      template: RosSystemsTemplate,
+      header: CommonHeader,
+      footer: CommonFooter,
+      landscape: true,
     },
   },
 };
