@@ -39,6 +39,7 @@ const templateMapper: TemplateAccessMapper<typeof templates> = {
     executiveReport: prepareServiceCall(
       rosDescriptor.templates.executiveReport
     ),
+    systemsReport: prepareServiceCall(rosDescriptor.templates.systemsReport),
   },
 };
 
