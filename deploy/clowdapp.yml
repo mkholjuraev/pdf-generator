@@ -18,10 +18,9 @@ objects:
         - name: api
           minReplicas: ${{MIN_REPLICAS}}
           webServices:
-            apiPath: /crc-pdf-generator/
             public:
               enabled: true
-              apiPaths: crc-pdf-generator
+              apiPath: crc-pdf-generator
           podSpec:
             image: ${IMAGE}:${IMAGE_TAG}
             livenessProbe:
