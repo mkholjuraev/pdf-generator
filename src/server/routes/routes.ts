@@ -6,10 +6,11 @@ import getTemplateData from '../data-access';
 import ServiceNames from '../../common/service-names';
 import renderTemplate from '../render-template';
 import { processOrientationOption } from '../../browser/helpers';
-import generatePdf, { previewPdf } from '../../browser';
 import { SendingFailedError, PDFNotFoundError } from '../errors';
 import config from '../../common/config';
 import { PreviewReqBody, PreviewReqQuery } from '../../common/types';
+import previewPdf from '../../browser/previewPDF';
+import pool from '../workers';
 
 export type PreviewHandlerRequest = Request<
   unknown,
@@ -103,30 +104,44 @@ router.post(
 
     try {
       // Generate the pdf
-      const pathToPdf = await generatePdf(
-        url,
-        rhIdentity,
-        {
-          service,
-          template,
-        },
-        orientationOption,
-        dataOptions
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+      const pathToPdf = await pool.exec<(...args: any[]) => string>(
+        'generatePdf',
+        [
+          {
+            url,
+            rhIdentity,
+            templateConfig: {
+              service,
+              template,
+            },
+            orientationOption,
+            dataOptions,
+          },
+        ]
       );
 
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
       const pdfFileName = pathToPdf.split('/').pop();
 
       if (!fs.existsSync(pathToPdf)) {
         throw new PDFNotFoundError(pdfFileName as string);
       }
-
-      res.status(200).sendFile(pathToPdf, (err) => {
+      return res.status(200).sendFile(pathToPdf, (err) => {
         if (err) {
           const errorMessage = new SendingFailedError(
             pdfFileName as string,
             err
           );
-          throw errorMessage;
+          res.status(500).send({
+            errors: [
+              {
+                status: 500,
+                statusText: 'Internal server error',
+                description: errorMessage,
+              },
+            ],
+          });
         }
 
         fs.unlink(pathToPdf, (err) => {
@@ -136,7 +151,7 @@ router.post(
         });
       });
     } catch (error: unknown) {
-      res.status(500).send({
+      return res.status(500).send({
         errors: [
           {
             status: 500,
