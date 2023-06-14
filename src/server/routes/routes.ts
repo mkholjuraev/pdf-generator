@@ -150,8 +150,8 @@ router.post(
           }
         });
       });
-    } catch (error: unknown) {
-      return res.status(500).send({
+    } catch (error: any) {
+      res.status(500).send({
         errors: [
           {
             status: 500,
