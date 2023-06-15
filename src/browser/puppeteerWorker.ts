@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 import os from 'os';
 import {
   CHROMIUM_PATH,
-  margins,
+  getViewportConfig,
   pageHeight,
   pageWidth,
   setWindowProperty,
@@ -12,7 +12,6 @@ import {
 import { getHeaderAndFooterTemplates } from '../server/render-template';
 import ServiceNames from '../common/service-names';
 import config from '../common/config';
-import templates from '../templates';
 
 const getNewPdfName = () => {
   const pdfFilename = `report_${uuidv4()}.pdf`;
@@ -33,16 +32,10 @@ const generatePdf = async ({
   rhIdentity: string;
   dataOptions: Record<string, any>;
 }) => {
-  const browserMargins = {
-    ...margins,
-    ...templates?.[templateConfig.service]?.[templateConfig.template]
-      ?.browserMargins,
-  };
-  const landscape =
-    typeof orientationOption !== 'undefined'
-      ? orientationOption
-      : templates?.[templateConfig.service]?.[templateConfig.template]
-          ?.landscape;
+  const { browserMargins, landscape } = getViewportConfig(
+    templateConfig,
+    orientationOption
+  );
   const pdfPath = getNewPdfName();
   const browser = await puppeteer.launch({
     headless: true,

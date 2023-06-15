@@ -4,6 +4,8 @@ import { glob } from 'glob';
 import { resolve } from 'path';
 import { PreviewReqBody, PreviewReqQuery } from '../common/types';
 import config from '../common/config';
+import ServiceNames from '../common/service-names';
+import templates from '../templates';
 
 export const replaceString = (string: string) => {
   return string.replace(/[-[\]{}()'`*+?.,\\^$|#]/g, '\\$&');
@@ -70,3 +72,37 @@ export const setWindowProperty = (
       }
     })
   `);
+
+const getBrowserMargins = (service: ServiceNames, template: string) => {
+  return {
+    ...margins,
+    ...templates?.[service]?.[template]?.browserMargins,
+  };
+};
+
+const isLandscape = (
+  service: ServiceNames,
+  template: string,
+  orientation?: boolean
+) => {
+  return typeof orientation !== 'undefined'
+    ? orientation
+    : templates?.[service]?.[template]?.landscape;
+};
+
+export const getViewportConfig = (
+  templateConfig: { service: ServiceNames; template: string },
+  orientation?: boolean
+) => {
+  return {
+    browserMargins: getBrowserMargins(
+      templateConfig.service,
+      templateConfig.service
+    ),
+    landscape: isLandscape(
+      templateConfig.service,
+      templateConfig.template,
+      orientation
+    ),
+  };
+};

@@ -1,13 +1,12 @@
 import puppeteer from 'puppeteer';
 import {
   CHROMIUM_PATH,
-  margins,
+  getViewportConfig,
   pageHeight,
   pageWidth,
   setWindowProperty,
 } from './helpers';
 import ServiceNames from '../common/service-names';
-import templates from '../templates';
 import config from '../common/config';
 import renderTemplate, {
   getHeaderAndFooterTemplates,
@@ -19,16 +18,10 @@ const previewPdf = async (
   templateData: Record<string, unknown>,
   orientationOption?: boolean
 ) => {
-  const browserMargins = {
-    ...margins,
-    ...templates?.[templateConfig.service]?.[templateConfig.template]
-      ?.browserMargins,
-  };
-  const landscape =
-    typeof orientationOption !== 'undefined'
-      ? orientationOption
-      : templates?.[templateConfig.service]?.[templateConfig.template]
-          ?.landscape;
+  const { browserMargins, landscape } = getViewportConfig(
+    templateConfig,
+    orientationOption
+  );
   const browser = await puppeteer.launch({
     headless: true,
     ...(config?.IS_PRODUCTION
