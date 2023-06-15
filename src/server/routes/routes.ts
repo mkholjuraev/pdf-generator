@@ -94,7 +94,7 @@ router.get(`${config?.APIPrefix}/hello`, (_req, res) => {
 
 router.post(
   `${config?.APIPrefix}/generate`,
-  async (req: GenerateHandlerRequest, res) => {
+  async (req: GenerateHandlerRequest, res, next) => {
     const rhIdentity = httpContext.get(config?.IDENTITY_HEADER_KEY as string);
     const orientationOption = processOrientationOption(req);
     const service = req.body.service;
@@ -160,6 +160,7 @@ router.post(
           },
         ],
       });
+      next(`There was an error while generating a report: ${error}`);
     }
   }
 );
