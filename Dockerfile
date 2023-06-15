@@ -23,4 +23,4 @@ ENV NODE_ENV=production
 RUN npm run build
 
 EXPOSE 8000
-CMD ["node", "./dist/index.js"]
+CMD ["node", "./dist/server.js"]

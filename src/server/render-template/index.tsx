@@ -6,7 +6,7 @@ import templateMapper from '../../templates';
 import ServiceNames from '../../common/service-names';
 import { renderToString, renderToStaticMarkup } from 'react-dom/server';
 
-export function getHeaderandFooterTemplates({
+export function getHeaderAndFooterTemplates({
   service,
   template,
 }: {

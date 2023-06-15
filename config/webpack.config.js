@@ -105,10 +105,16 @@ const serverConfig = {
         /Critical\sdependency:\sthe\srequest\sof\sa\sdependency\sis\san\sexpression/,
     },
   ],
-  entry: path.resolve(__dirname, '../src/server/index.ts'),
+  entry: {
+    server: path.resolve(__dirname, '../src/server/index.ts'),
+    puppeteerWorker: {
+      import: path.resolve(__dirname, '../src/browser/puppeteerWorker.ts'),
+      chunkLoading: false,
+    },
+  },
   output: {
     path: path.resolve(__dirname, '../dist'),
-    filename: 'index.js',
+    filename: '[name].js',
     publicPath: './', // file-loader prepends publicPath to the emited url. without this, react will complain about server and client mismatch
   },
   externals: {
