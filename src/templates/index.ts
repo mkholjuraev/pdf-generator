@@ -53,7 +53,7 @@ const templates: TemplateMapper = {
       template: VulnerabilityTemplate,
       landscape: true,
       header: CommonHeader,
-      footer: CommonFooter,
+      footer: CveFooter,
     },
     systems: {
       template: VulnerabilitiesSystemTemplate,
@@ -61,7 +61,7 @@ const templates: TemplateMapper = {
       footer: CommonFooter,
       landscape: true,
       browserMargins: {
-        bottom: '2.5cm',
+        bottom: '2.7cm',
       },
     },
     cve: {
@@ -77,7 +77,6 @@ const templates: TemplateMapper = {
       template: VulnerabilityExecutiveReportTemplate,
       header: CommonHeader,
       footer: CommonFooter,
-      landscape: true,
     },
   },
   [ServiceNames.advisor]: {
