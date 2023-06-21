@@ -143,12 +143,6 @@ router.post(
             ],
           });
         }
-
-        fs.unlink(pathToPdf, (err) => {
-          if (err) {
-            console.info('warn', `Failed to unlink ${pdfFileName}: ${err}`);
-          }
-        });
       });
     } catch (error: any) {
       res.status(500).send({
@@ -188,6 +182,7 @@ router.get(`/preview`, async (req: PreviewHandlerRequest, res) => {
   const orientationOption = processOrientationOption(req);
 
   const url = `http://localhost:${config?.webPort}?service=${service}&template=${template}`;
+
   try {
     const pdfBuffer = await previewPdf(
       url,

@@ -106,3 +106,14 @@ export const getViewportConfig = (
     ),
   };
 };
+
+export type TemplateConfig = { service: ServiceNames; template: string };
+export function createCacheKey(cacheKeyObject: Record<string, any>) {
+  try {
+    return JSON.stringify(cacheKeyObject);
+  } catch (error) {
+    throw new Error(
+      `Unable to create cache key for ${cacheKeyObject}! ${error}`
+    );
+  }
+}

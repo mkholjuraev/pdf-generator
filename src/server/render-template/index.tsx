@@ -5,6 +5,7 @@ import path from 'path';
 import templateMapper from '../../templates';
 import ServiceNames from '../../common/service-names';
 import { renderToString, renderToStaticMarkup } from 'react-dom/server';
+import CSSRoot from './CSSRoot';
 
 export function getHeaderAndFooterTemplates({
   service,
@@ -64,7 +65,12 @@ function renderTemplate(
 
   const template = baseTemplate.replace(
     '<div id="root"></div>',
-    `<div id="root">${renderToString(<Node {...templateData} />)}</div>`
+    `<div id="root">${renderToString(
+      <>
+        <CSSRoot />
+        <Node {...templateData} />
+      </>
+    )}</div>`
   );
   return template;
 }
