@@ -73,7 +73,9 @@ const generatePdf = async ({
         }
       : {}),
 
-    'x-rh-identity': rhIdentity,
+    ...(config?.IS_DEVELOPMENT && !rhIdentity
+      ? {}
+      : { 'x-rh-identity': rhIdentity }),
   });
   const pageStatus = await page.goto(url, { waitUntil: 'networkidle2' });
   // get the error from DOM if it exists
