@@ -1,6 +1,9 @@
 import React from 'react';
 
-const FooterContainer: React.FunctionComponent = ({ children }) => (
+const FooterContainer: React.FC<{ fontSize: string }> = ({
+  fontSize,
+  children,
+}) => (
   <div
     style={{
       width: '100%',
@@ -9,6 +12,7 @@ const FooterContainer: React.FunctionComponent = ({ children }) => (
       paddingBottom: 16,
       display: 'flex',
       justifyContent: 'center',
+      fontSize,
     }}
   >
     {children}

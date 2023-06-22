@@ -11,6 +11,7 @@ import RosExecutiveTemplate from './ros/executive-report';
 import RosSystemsTemplate from './ros/systems';
 import CveReport from './vulnerability/cve-report/Template';
 import CveFooter from './vulnerability/cve-report/CveFooter';
+import AdvancedCveReportFooter from './vulnerability/advanced-cve-report/AdvancedCveReportFooter';
 
 export type TemplateElement = (props: any) => JSX.Element;
 
@@ -53,7 +54,7 @@ const templates: TemplateMapper = {
       template: VulnerabilityTemplate,
       landscape: true,
       header: CommonHeader,
-      footer: CveFooter,
+      footer: AdvancedCveReportFooter,
     },
     systems: {
       template: VulnerabilitiesSystemTemplate,
