@@ -8,6 +8,7 @@ export type ServicesEndpoints = Omit<
     'advisor-backend': ClowderEndpoint;
     'ros-backend': ClowderEndpoint;
     'vulnerability-engine-manager-service': ClowderEndpoint;
+    'compliance-backend': ClowderEndpoint;
   },
   'advisor' | 'ros' | 'vulnerability'
 >;
@@ -81,6 +82,7 @@ function initializeConfig() {
         });
       }
 
+      console.log(endpoints);
       config = {
         ...defaultConfig,
         ...clowderConfig,
@@ -89,6 +91,8 @@ function initializeConfig() {
       return config;
     }
   } catch (error) {
+    console.log(defaultConfig);
+    console.log('defaultConfig');
     return defaultConfig;
   }
 }

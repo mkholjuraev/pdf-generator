@@ -160,6 +160,8 @@ router.post(
           },
         ],
       });
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+      console.log(error);
       next(`There was an error while generating a report: ${error}`);
     }
   }
