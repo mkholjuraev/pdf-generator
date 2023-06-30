@@ -28,13 +28,12 @@ const getServiceEndpointMap = (
   service: ServiceNames
 ): keyof ServicesEndpoints => {
   const services = {
-    [ServiceNames.compliance]: ServiceNames.compliance,
-    // // advisor does not have matching names
+    // some app do not have matching names
+    [ServiceNames.compliance]: 'compliance-backend',
     [ServiceNames.advisor]: 'advisor-backend',
-    [ServiceNames.vulnerability]: ServiceNames.vulnerability,
-    [ServiceNames.demo]: ServiceNames.demo,
     [ServiceNames.ros]: 'ros-backend',
     [ServiceNames.vulnerability]: 'vulnerability-engine-manager-service',
+    [ServiceNames.demo]: ServiceNames.demo,
   };
   return services[service] as unknown as keyof ServicesEndpoints;
 };
@@ -55,7 +54,6 @@ function prepareServiceCall<T = Record<string, unknown>>(
   if (request) {
     return (headers, options) => {
       return request(headers, options).catch((error) => {
-        console.log(error);
         return Promise.reject(error);
       });
     };

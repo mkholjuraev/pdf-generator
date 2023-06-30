@@ -8,6 +8,7 @@ export type ServicesEndpoints = Omit<
     'advisor-backend': ClowderEndpoint;
     'ros-backend': ClowderEndpoint;
     'vulnerability-engine-manager-service': ClowderEndpoint;
+    'compliance-backend': ClowderEndpoint;
   },
   'advisor' | 'ros' | 'vulnerability'
 >;
