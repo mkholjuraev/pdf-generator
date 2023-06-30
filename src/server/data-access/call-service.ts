@@ -54,7 +54,6 @@ function prepareServiceCall<T = Record<string, unknown>>(
   if (request) {
     return (headers, options) => {
       return request(headers, options).catch((error) => {
-        console.log(error);
         return Promise.reject(error);
       });
     };

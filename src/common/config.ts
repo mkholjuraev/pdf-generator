@@ -82,7 +82,6 @@ function initializeConfig() {
         });
       }
 
-      console.log(endpoints);
       config = {
         ...defaultConfig,
         ...clowderConfig,
@@ -91,8 +90,6 @@ function initializeConfig() {
       return config;
     }
   } catch (error) {
-    console.log(defaultConfig);
-    console.log('defaultConfig');
     return defaultConfig;
   }
 }

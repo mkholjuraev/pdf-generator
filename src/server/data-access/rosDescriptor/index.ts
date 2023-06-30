@@ -30,7 +30,6 @@ const getSystemsReport = async (
     ...params,
   };
 
-  console.log(SYSTEMS_URL);
   const { data } = await axios.get(SYSTEMS_URL, {
     headers,
     params: defaultParams,
