@@ -11,7 +11,7 @@ objects:
       envName: ${ENV_NAME}
       optionalDependencies:
       - advisor-backend
-      - compliance-backend
+      - compliance
       - ros-backend
       - vulnerability-engine
       deployments:
