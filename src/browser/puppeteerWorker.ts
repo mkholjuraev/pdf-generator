@@ -3,6 +3,7 @@ import puppeteer from 'puppeteer';
 import { v4 as uuidv4 } from 'uuid';
 import fse from 'fs-extra';
 import os from 'os';
+import fs from 'fs';
 import {
   CHROMIUM_PATH,
   TemplateConfig,
@@ -17,6 +18,27 @@ import config from '../common/config';
 
 // 10 minutes cache
 const CACHE_TIMEOUT = 10 * 60 * 10000;
+
+const redirectFontFiles = async (request: puppeteer.HTTPRequest) => {
+  if (request.url().endsWith('.woff') || request.url().endsWith('.woff2')) {
+    const modifiedUrl = request.url().replace(/^http:\/\/localhost:8000\//, '');
+    const fontFile = `./dist/${modifiedUrl}`;
+    fs.readFile(fontFile, async (err, data) => {
+      if (err) {
+        await request.respond({
+          status: 404,
+          body: `An error occurred while loading font ${modifiedUrl} : ${err}`,
+        });
+      }
+      await request.respond({
+        body: data,
+        status: 200,
+      });
+    });
+  } else {
+    await request.continue();
+  }
+};
 
 const generateCache: {
   [cacheKey: string]: {
@@ -106,6 +128,7 @@ const generatePdf = async ({
   try {
     const fileName = await retrieveFilenameFromCache(cacheKey);
     if (fileName) {
+      console.log(`${fileName} found in cache. No new generation needed`);
       return fileName;
     }
   } catch (error) {
@@ -120,17 +143,43 @@ const generatePdf = async ({
       templateConfig,
       orientationOption
     );
-    const browser = await puppeteer.launch({
-      headless: true,
-      ...(config?.IS_PRODUCTION
-        ? {
-            // we have a different dir structure than puppeteer expects. We have to point it to the correct chromium executable
-            executablePath: CHROMIUM_PATH,
-          }
-        : {}),
-      args: ['--no-sandbox', '--disable-gpu'],
-    });
+    const browserUrl = 'http://127.0.0.1:29222';
+    let browser: puppeteer.Browser;
+    try {
+      browser = await puppeteer.connect({
+        browserURL: browserUrl,
+      });
+      console.log(`reusing browser connection`);
+    } catch (error) {
+      console.error(`could not fetch browser status; starting a new browser`);
+      browser = await puppeteer.launch({
+        headless: true,
+        ...(config?.IS_PRODUCTION
+          ? {
+              // we have a different dir structure than puppeteer expects. We have to point it to the correct chromium executable
+              executablePath: CHROMIUM_PATH,
+            }
+          : {}),
+        args: [
+          '--no-sandbox',
+          '--disable-gpu',
+          '--remote-debugging-port=29222',
+          '--no-zygote',
+          '--no-first-run',
+          '--disable-dev-shm-usage',
+          '--single-process',
+          '--mute-audio',
+          "--proxy-server='direct://'",
+          '--proxy-bypass-list=*',
+          '--user-data-dir=/tmp/',
+        ],
+      });
+    }
+
     const page = await browser.newPage();
+    await page.setUserAgent(
+      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36'
+    );
 
     await page.setViewport({ width: pageWidth, height: pageHeight });
 
@@ -146,7 +195,7 @@ const generatePdf = async ({
           pageHeight,
         },
       })
-      // }) as undefined // probably a typings issue in pupetter
+      // }) as undefined // probably a typings issue in puppeteer
     );
 
     await page.setExtraHTTPHeaders({
@@ -161,6 +210,13 @@ const generatePdf = async ({
         ? {}
         : { 'x-rh-identity': rhIdentity }),
     });
+
+    // Intercept font requests from chrome and send them from dist
+    await page.setRequestInterception(true);
+    page.on('request', async (request) => {
+      await redirectFontFiles(request);
+    });
+
     const pageStatus = await page.goto(url, { waitUntil: 'networkidle2' });
     // get the error from DOM if it exists
     const error = await page.evaluate(() => {
@@ -185,25 +241,32 @@ const generatePdf = async ({
     }
     if (!pageStatus?.ok()) {
       throw new Error(
-        `Pupeteer error while loading the react app: ${pageStatus?.statusText()}`
+        `Puppeteer error while loading the react app: ${pageStatus?.statusText()}`
       );
     }
 
     const { headerTemplate, footerTemplate } =
       getHeaderAndFooterTemplates(templateConfig);
 
-    await page.pdf({
-      path: pdfPath,
-      format: 'a4',
-      printBackground: true,
-      margin: browserMargins,
-      displayHeaderFooter: true,
-      headerTemplate,
-      footerTemplate,
-      landscape,
-    });
+    try {
+      await page.pdf({
+        path: pdfPath,
+        format: 'a4',
+        printBackground: true,
+        margin: browserMargins,
+        displayHeaderFooter: true,
+        headerTemplate,
+        footerTemplate,
+        landscape,
+        timeout: 45_000,
+      });
+    } catch (error: any) {
+      throw new Error(`Failed to print pdf: ${error.message || error}`);
+    } finally {
+      await page.close();
+      browser.disconnect();
+    }
 
-    await browser.close();
     return pdfPath;
   };
 
