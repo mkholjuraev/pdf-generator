@@ -11,6 +11,8 @@ export const replaceString = (string: string) => {
   return string.replace(/[-[\]{}()'`*+?.,\\^$|#]/g, '\\$&');
 };
 
+export const MaxWorkers = 2;
+
 export const processOrientationOption = (
   request: Request<unknown, unknown, PreviewReqBody, PreviewReqQuery>
 ) => {

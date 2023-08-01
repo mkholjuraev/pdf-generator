@@ -1,11 +1,13 @@
 import fs from 'fs';
 import { Router, Request } from 'express';
 import httpContext from 'express-http-context';
-
 import getTemplateData from '../data-access';
 import ServiceNames from '../../common/service-names';
 import renderTemplate from '../render-template';
-import { processOrientationOption } from '../../browser/helpers';
+import {
+  processOrientationOption,
+  TemplateConfig,
+} from '../../browser/helpers';
 import { SendingFailedError, PDFNotFoundError } from '../errors';
 import config from '../../common/config';
 import { PreviewReqBody, PreviewReqQuery } from '../../common/types';
@@ -40,14 +42,42 @@ export type PuppeteerBrowserRequest = Request<
   { service: ServiceNames; template: string }
 >;
 
+export type PdfRequestBody = {
+  url: string;
+  templateConfig: TemplateConfig;
+  templateData?: Record<string, unknown>;
+  orientationOption?: boolean;
+  rhIdentity: string;
+  dataOptions: Record<string, any>;
+};
+
 const router = Router();
+
+function getPdfRequestBody(
+  config: any,
+  req: GenerateHandlerRequest
+): PdfRequestBody {
+  const rhIdentity = httpContext.get(config?.IDENTITY_HEADER_KEY as string);
+  const orientationOption = processOrientationOption(req);
+  const service = req.body.service;
+  const template = req.body.template;
+  const dataOptions = req.body;
+  const url = `http://localhost:${config?.webPort}?template=${template}&service=${service}`;
+  return {
+    url,
+    rhIdentity,
+    templateConfig: {
+      service,
+      template,
+    },
+    orientationOption,
+    dataOptions,
+  };
+}
 
 // Middleware that activates on all routes, responsible for rendering the correct
 // template/component into html to the requester.
 router.use('^/$', async (req: PuppeteerBrowserRequest, res, _next) => {
-  if (req.path.includes('.woff')) {
-    res.sendFile(`./dist/${req.path}`);
-  }
   let service: ServiceNames = req.query.service;
   let template: string = req.query.template;
   if (!service) {
@@ -84,9 +114,9 @@ router.use('^/$', async (req: PuppeteerBrowserRequest, res, _next) => {
   } catch (error) {
     // render error to DOM to retrieve the error content from puppeteer
     res.send(
-      `<div id="error" data-error="${JSON.stringify(error)}">${JSON.stringify(
+      `<div id="report-error" data-error="${JSON.stringify(
         error
-      )}</div>`
+      )}">${error}</div>`
     );
   }
 });
@@ -98,33 +128,15 @@ router.get(`${config?.APIPrefix}/hello`, (_req, res) => {
 router.post(
   `${config?.APIPrefix}/generate`,
   async (req: GenerateHandlerRequest, res, next) => {
-    const rhIdentity = httpContext.get(config?.IDENTITY_HEADER_KEY as string);
-    const orientationOption = processOrientationOption(req);
-    const service = req.body.service;
-    const template = req.body.template;
-    const dataOptions = req.body;
-    const url = `http://localhost:${config?.webPort}?template=${template}&service=${service}`;
+    const pdfDetails = getPdfRequestBody(config, req);
+    console.log(pool.stats());
 
     try {
-      // Generate the pdf
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
       const pathToPdf = await pool.exec<(...args: any[]) => string>(
         'generatePdf',
-        [
-          {
-            url,
-            rhIdentity,
-            templateConfig: {
-              service,
-              template,
-            },
-            orientationOption,
-            dataOptions,
-          },
-        ]
+        [pdfDetails]
       );
 
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
       const pdfFileName = pathToPdf.split('/').pop();
 
       if (!fs.existsSync(pathToPdf)) {
@@ -137,27 +149,34 @@ router.post(
             err
           );
           res.status(500).send({
-            errors: [
-              {
-                status: 500,
-                statusText: 'Internal server error',
-                description: errorMessage,
-              },
-            ],
+            error: {
+              status: 500,
+              statusText: 'PDF could not be sent',
+              description: `${errorMessage}`,
+            },
           });
         }
       });
     } catch (error: any) {
       res.status(500).send({
-        errors: [
-          {
-            status: 500,
-            statusText: 'Internal server error',
-            description: error,
-          },
-        ],
+        error: {
+          status: 500,
+          statusText: 'Internal server error',
+          description: `${error}`,
+        },
       });
       next(`There was an error while generating a report: ${error}`);
+    } finally {
+      // To handle the edge case where a pool terminates while the queue isn't empty,
+      // we ensure that the queue is empty and all workers are idle.
+      const stats = pool.stats();
+      console.log(stats);
+      if (
+        stats.pendingTasks === 0 &&
+        stats.totalWorkers === stats.idleWorkers
+      ) {
+        await pool.terminate();
+      }
     }
   }
 );

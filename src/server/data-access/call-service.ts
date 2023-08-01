@@ -45,6 +45,7 @@ function prepareServiceCall<T = Record<string, unknown>>(
     return (headers, options) =>
       Promise.resolve(descriptor.mock(headers, options));
   }
+
   const { service, path, responseProcessor, request } = descriptor || {};
   const serviceConfig = config?.endpoints[getServiceEndpointMap(service)];
   if (!config?.IS_DEVELOPMENT && !serviceConfig) {
