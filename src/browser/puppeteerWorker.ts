@@ -42,7 +42,7 @@ const redirectFontFiles = async (request: puppeteer.HTTPRequest) => {
 
 const generateCache: {
   [cacheKey: string]: {
-    promiseLock: Promise<string>;
+    filename: string;
     expiration: number;
   };
 } = {};
@@ -59,12 +59,12 @@ function cleanStaleCache(cacheKey: string, fileName: string) {
   }, CACHE_TIMEOUT);
 }
 
-async function retrieveFilenameFromCache(cacheKey: string) {
+function retrieveFilenameFromCache(cacheKey: string) {
   const entry = generateCache[cacheKey];
   if (!entry) {
     return;
   }
-  const fileName = await entry.promiseLock;
+  const fileName = entry.filename;
   // do not return if file does not exist
   if (!fse.existsSync(fileName)) {
     return;
@@ -79,10 +79,10 @@ async function retrieveFilenameFromCache(cacheKey: string) {
     return;
   }
 
-  return entry.promiseLock;
+  return entry.filename;
 }
 
-function fillCache(cacheKey: string, promiseLock: Promise<string>) {
+function fillCache(cacheKey: string, filename: string) {
   const entry = generateCache[cacheKey];
   if (entry) {
     return;
@@ -91,12 +91,10 @@ function fillCache(cacheKey: string, promiseLock: Promise<string>) {
   const expiration = new Date(Date.now() + CACHE_TIMEOUT);
   generateCache[cacheKey] = {
     expiration: expiration.getTime(),
-    promiseLock,
+    filename,
   };
   // eslint-disable-next-line @typescript-eslint/no-floating-promises
-  promiseLock.then((filename) => {
-    cleanStaleCache(cacheKey, filename);
-  });
+  cleanStaleCache(cacheKey, filename);
 }
 
 const getNewPdfName = () => {
@@ -126,32 +124,29 @@ const generatePdf = async ({
     dataOptions,
   });
   try {
-    const fileName = await retrieveFilenameFromCache(cacheKey);
+    const fileName = retrieveFilenameFromCache(cacheKey);
     if (fileName) {
       console.log(`${fileName} found in cache. No new generation needed`);
       return fileName;
     }
   } catch (error) {
-    console.error(
-      `Unable to retrieve cache ${error}. Generating report from scratch.`
-    );
+    console.error(`Unable to retrieve cache ${error}.`);
   }
 
   const pdfPath = getNewPdfName();
   const createFilename = async () => {
-    const { browserMargins, landscape } = getViewportConfig(
-      templateConfig,
-      orientationOption
-    );
+    // We don't expect a browser on every run, but we try to connect to it
+    // incase one is left over. If we can connect to it, and successfully run,
+    // it will be cleaned up by the last worker in the pool.
     const browserUrl = 'http://127.0.0.1:29222';
     let browser: puppeteer.Browser;
     try {
       browser = await puppeteer.connect({
         browserURL: browserUrl,
       });
-      console.log(`reusing browser connection`);
+      console.log(`Reusing browser connection`);
     } catch (error) {
-      console.error(`could not fetch browser status; starting a new browser`);
+      console.error(`Could not fetch browser status; starting a new browser`);
       browser = await puppeteer.launch({
         headless: true,
         ...(config?.IS_PRODUCTION
@@ -220,7 +215,7 @@ const generatePdf = async ({
     const pageStatus = await page.goto(url, { waitUntil: 'networkidle2' });
     // get the error from DOM if it exists
     const error = await page.evaluate(() => {
-      const elem = document.getElementById('error');
+      const elem = document.getElementById('report-error');
       if (elem) {
         return elem.innerText;
       }
@@ -236,14 +231,17 @@ const generatePdf = async ({
         // fallback to initial error value
         response = error;
       }
-
-      throw response;
+      throw new Error(`${response}`);
     }
     if (!pageStatus?.ok()) {
       throw new Error(
         `Puppeteer error while loading the react app: ${pageStatus?.statusText()}`
       );
     }
+    const { browserMargins, landscape } = getViewportConfig(
+      templateConfig,
+      orientationOption
+    );
 
     const { headerTemplate, footerTemplate } =
       getHeaderAndFooterTemplates(templateConfig);
@@ -261,21 +259,42 @@ const generatePdf = async ({
         timeout: 45_000,
       });
     } catch (error: any) {
-      throw new Error(`Failed to print pdf: ${error.message || error}`);
+      throw new Error(`Failed to print pdf: ${JSON.stringify(error)}`);
     } finally {
       await page.close();
       browser.disconnect();
     }
-
     return pdfPath;
   };
 
-  const promiseLock = createFilename();
-  fillCache(cacheKey, promiseLock);
-  return promiseLock;
+  const filename = await createFilename()
+    .then((filename) => {
+      return filename;
+    })
+    .catch((error) => {
+      throw error;
+    });
+  fillCache(cacheKey, filename);
+  return filename;
+};
+
+const workerTerminated = (code: number | undefined) => {
+  if (typeof code === 'number') {
+    const workerResult = code > 0 ? `with error code ${code}` : `successfully`;
+    console.log(`Worker terminated ${workerResult}`);
+  } else {
+    console.log(
+      `A worker reached a termination issue and no code is available`
+    );
+  }
 };
 
 // register new worker to pool
-WP.worker({
-  generatePdf,
-});
+WP.worker(
+  {
+    generatePdf,
+  },
+  {
+    onTerminate: workerTerminated,
+  }
+);
