@@ -59,10 +59,10 @@ objects:
 parameters:
 - description: Cpu limit of service
   name: CPU_LIMIT
-  value: 1500m
+  value: 3000m
 - description: Cpu requests of service
   name: CPU_REQUESTS
-  value: 3000m
+  value: 1500m
 - description: memory limit of service
   name: MEMORY_LIMIT
   value: 2048Mi
