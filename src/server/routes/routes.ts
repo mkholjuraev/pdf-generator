@@ -151,7 +151,7 @@ router.post(
           res.status(500).send({
             error: {
               status: 500,
-              statusText: 'PDF could not be sent',
+              statusText: 'PDF was generated, but could not be sent',
               description: `${errorMessage}`,
             },
           });
@@ -230,6 +230,19 @@ router.get(`/preview`, async (req: PreviewHandlerRequest, res) => {
 
 router.get('/healthz', (_req, res, _next) => {
   return res.status(200).send('Build assets available');
+});
+
+router.get(`${config?.APIPrefix}/openapi.json`, (_req, res, _next) => {
+  fs.readFile('./docs/openapi.json', 'utf8', (err, data) => {
+    if (err) {
+      console.error(err);
+      return res
+        .status(500)
+        .send(`An error occurred while fetching the OpenAPI spec : ${err}`);
+    } else {
+      return res.json(JSON.parse(data));
+    }
+  });
 });
 
 export default router;
