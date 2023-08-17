@@ -78,6 +78,9 @@
               }
             }
           },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
           "403": {
             "$ref": "#/components/responses/Unauthorized"
           },
@@ -96,6 +99,16 @@
           "application/json": {
             "schema": {
               "$ref": "#/components/schemas/Error403"
+            }
+          }
+        }
+      },
+      "BadRequest": {
+        "description": "Bad Request",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error400"
             }
           }
         }
@@ -120,6 +133,25 @@
           },
           "message": {
             "type": "string"
+          }
+        }
+      },
+      "Error400": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "status": {
+                "type": "string"
+              },
+              "statusText": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              }
+            }
           }
         }
       },

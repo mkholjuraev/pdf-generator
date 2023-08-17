@@ -158,13 +158,24 @@ router.post(
         }
       });
     } catch (error: any) {
-      res.status(500).send({
-        error: {
-          status: 500,
-          statusText: 'Internal server error',
-          description: `${error}`,
-        },
-      });
+      const errStr = `${error}`;
+      if (errStr.includes('No API descriptor')) {
+        res.status(400).send({
+          error: {
+            status: 400,
+            statusText: 'Bad Request',
+            description: `${error}`,
+          },
+        });
+      } else {
+        res.status(500).send({
+          error: {
+            status: 500,
+            statusText: 'Internal server error',
+            description: `${error}`,
+          },
+        });
+      }
       next(`There was an error while generating a report: ${error}`);
     } finally {
       // To handle the edge case where a pool terminates while the queue isn't empty,
