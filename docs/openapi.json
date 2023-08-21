@@ -36,6 +36,7 @@
         "description": "Hello world endpoint",
         "responses": {
           "200": {
+            "description": "OK",
             "content": {
               "text/html": {
                 "schema": {
