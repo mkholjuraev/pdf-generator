@@ -7,8 +7,14 @@ import config from '../common/config';
 import ServiceNames from '../common/service-names';
 import templates from '../templates';
 
+export const SANITIZE_REGEX = /^(\.\.(\/|\\|$))+/;
+
 export const replaceString = (string: string) => {
   return string.replace(/[-[\]{}()'`*+?.,\\^$|#]/g, '\\$&');
+};
+
+export const sanitizeInput = (input: string) => {
+  return input.replace(SANITIZE_REGEX, '');
 };
 
 export const MaxWorkers = 2;
@@ -110,12 +116,3 @@ export const getViewportConfig = (
 };
 
 export type TemplateConfig = { service: ServiceNames; template: string };
-export function createCacheKey(cacheKeyObject: Record<string, any>) {
-  try {
-    return JSON.stringify(cacheKeyObject);
-  } catch (error) {
-    throw new Error(
-      `Unable to create cache key for ${cacheKeyObject}! ${error}`
-    );
-  }
-}
