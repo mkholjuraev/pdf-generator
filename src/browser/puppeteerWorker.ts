@@ -19,6 +19,9 @@ import config from '../common/config';
 // 10 minutes cache
 const CACHE_TIMEOUT = 10 * 60 * 10000;
 
+// Match the timeout on the gateway
+const BROWSER_TIMEOUT = 60_000;
+
 const redirectFontFiles = async (request: puppeteer.HTTPRequest) => {
   if (request.url().endsWith('.woff') || request.url().endsWith('.woff2')) {
     const modifiedUrl = request.url().replace(/^http:\/\/localhost:8000\//, '');
@@ -148,6 +151,7 @@ const generatePdf = async ({
     } catch (error) {
       console.error(`Could not fetch browser status; starting a new browser`);
       browser = await puppeteer.launch({
+        timeout: BROWSER_TIMEOUT,
         headless: true,
         ...(config?.IS_PRODUCTION
           ? {
@@ -256,7 +260,7 @@ const generatePdf = async ({
         headerTemplate,
         footerTemplate,
         landscape,
-        timeout: 45_000,
+        timeout: BROWSER_TIMEOUT,
       });
     } catch (error: any) {
       throw new Error(`Failed to print pdf: ${JSON.stringify(error)}`);
