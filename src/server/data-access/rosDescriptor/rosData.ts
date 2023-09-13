@@ -342,4 +342,5 @@ export const rosSystemFilters = {
   display_name: 'iqe',
   state: ['Waiting for data', 'Optimized'],
   os: ['9.0', '7.7'],
+  group_name: ['team-ros', 'team-ocp'],
 };

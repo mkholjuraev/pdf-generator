@@ -38,8 +38,9 @@ export const generateFilterText = (filters: typeof rosSystemFilters) => {
   const hasStateFilter = filters?.state?.length > 0;
   const hasNameFilter = filters?.display_name?.length > 0;
   const hasOsFilter = filters?.os?.length > 0;
+  const hasgroupFilter = filters?.group_name?.length > 0;
 
-  if (hasStateFilter || hasNameFilter || hasOsFilter) {
+  if (hasStateFilter || hasNameFilter || hasOsFilter || hasgroupFilter) {
     filterText = `Filters applied${filterSeparatorOnLine}`;
     filterText = hasNameFilter
       ? filterText.concat(
@@ -56,8 +57,11 @@ export const generateFilterText = (filters: typeof rosSystemFilters) => {
           `Operating System: ${filters.os
             .map((os) => `RHEL ${os}`)
             .sort()
-            .toString()}`
+            .toString()}${filterSeparatorOnLine}`
         )
+      : filterText;
+    filterText = hasgroupFilter
+      ? filterText.concat(`Groups: ${filters.group_name.toString()}`)
       : filterText;
   }
 
