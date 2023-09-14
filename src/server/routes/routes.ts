@@ -6,6 +6,7 @@ import ServiceNames from '../../common/service-names';
 import renderTemplate from '../render-template';
 import {
   processOrientationOption,
+  sanitizeInput,
   TemplateConfig,
 } from '../../browser/helpers';
 import { SendingFailedError, PDFNotFoundError } from '../errors';
@@ -13,6 +14,7 @@ import config from '../../common/config';
 import { PreviewReqBody, PreviewReqQuery } from '../../common/types';
 import previewPdf from '../../browser/previewPDF';
 import pool from '../workers';
+import { ReportCache } from '../cache';
 
 export type PreviewHandlerRequest = Request<
   unknown,
@@ -52,6 +54,7 @@ export type PdfRequestBody = {
 };
 
 const router = Router();
+const cache = new ReportCache();
 
 function getPdfRequestBody(
   config: any,
@@ -129,6 +132,26 @@ router.post(
   `${config?.APIPrefix}/generate`,
   async (req: GenerateHandlerRequest, res, next) => {
     const pdfDetails = getPdfRequestBody(config, req);
+    const cacheKey = cache.createCacheKey(pdfDetails);
+
+    // Check for a cached version of the pdf
+    const filePath = cache.fetch(sanitizeInput(cacheKey));
+    if (filePath) {
+      console.log(`{ No new generation needed ${filePath} found in cache. }`);
+      return res.status(200).sendFile(sanitizeInput(filePath), (err) => {
+        if (err) {
+          const errorMessage = new SendingFailedError(filePath, err);
+          res.status(500).send({
+            error: {
+              status: 500,
+              statusText: 'PDF was generated, but could not be sent',
+              description: `${errorMessage}`,
+            },
+          });
+        }
+      });
+    }
+
     console.log(pool.stats());
 
     try {
@@ -142,7 +165,8 @@ router.post(
       if (!fs.existsSync(pathToPdf)) {
         throw new PDFNotFoundError(pdfFileName as string);
       }
-      return res.status(200).sendFile(pathToPdf, (err) => {
+      cache.fill(cacheKey, pathToPdf);
+      return res.status(200).sendFile(sanitizeInput(pathToPdf), (err) => {
         if (err) {
           const errorMessage = new SendingFailedError(
             pdfFileName as string,

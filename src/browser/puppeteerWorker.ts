@@ -1,13 +1,11 @@
 import WP from 'workerpool';
 import puppeteer from 'puppeteer';
 import { v4 as uuidv4 } from 'uuid';
-import fse from 'fs-extra';
 import os from 'os';
 import fs from 'fs';
 import {
   CHROMIUM_PATH,
   TemplateConfig,
-  createCacheKey,
   getViewportConfig,
   pageHeight,
   pageWidth,
@@ -15,9 +13,6 @@ import {
 } from './helpers';
 import { getHeaderAndFooterTemplates } from '../server/render-template';
 import config from '../common/config';
-
-// 10 minutes cache
-const CACHE_TIMEOUT = 10 * 60 * 10000;
 
 // Match the timeout on the gateway
 const BROWSER_TIMEOUT = 60_000;
@@ -43,63 +38,6 @@ const redirectFontFiles = async (request: puppeteer.HTTPRequest) => {
   }
 };
 
-const generateCache: {
-  [cacheKey: string]: {
-    filename: string;
-    expiration: number;
-  };
-} = {};
-
-function cleanStaleCache(cacheKey: string, fileName: string) {
-  setTimeout(() => {
-    console.info('Calling clean stale cache for: ', fileName);
-    delete generateCache[cacheKey];
-    fse.unlink(fileName, (err) => {
-      if (err) {
-        console.info('warn', `Failed to unlink ${fileName}: ${err}`);
-      }
-    });
-  }, CACHE_TIMEOUT);
-}
-
-function retrieveFilenameFromCache(cacheKey: string) {
-  const entry = generateCache[cacheKey];
-  if (!entry) {
-    return;
-  }
-  const fileName = entry.filename;
-  // do not return if file does not exist
-  if (!fse.existsSync(fileName)) {
-    return;
-  }
-  if (entry.expiration < Date.now()) {
-    delete generateCache[cacheKey];
-    fse.unlink(fileName, (err) => {
-      if (err) {
-        console.info('warn', `Failed to unlink ${fileName}: ${err}`);
-      }
-    });
-    return;
-  }
-
-  return entry.filename;
-}
-
-function fillCache(cacheKey: string, filename: string) {
-  const entry = generateCache[cacheKey];
-  if (entry) {
-    return;
-  }
-  // add 10 minutes cache expiration
-  const expiration = new Date(Date.now() + CACHE_TIMEOUT);
-  generateCache[cacheKey] = {
-    expiration: expiration.getTime(),
-    filename,
-  };
-  // eslint-disable-next-line @typescript-eslint/no-floating-promises
-  cleanStaleCache(cacheKey, filename);
-}
-
 const getNewPdfName = () => {
   const pdfFilename = `report_${uuidv4()}.pdf`;
   return `${os.tmpdir()}/${pdfFilename}`;
@@ -119,23 +57,6 @@ const generatePdf = async ({
   rhIdentity: string;
   dataOptions: Record<string, any>;
 }) => {
-  const cacheKey = createCacheKey({
-    templateConfig,
-    orientationOption,
-    url,
-    rhIdentity,
-    dataOptions,
-  });
-  try {
-    const fileName = retrieveFilenameFromCache(cacheKey);
-    if (fileName) {
-      console.log(`${fileName} found in cache. No new generation needed`);
-      return fileName;
-    }
-  } catch (error) {
-    console.error(`Unable to retrieve cache ${error}.`);
-  }
-
   const pdfPath = getNewPdfName();
   const createFilename = async () => {
     // We don't expect a browser on every run, but we try to connect to it
@@ -278,7 +199,6 @@ const generatePdf = async ({
     .catch((error) => {
       throw error;
     });
-  fillCache(cacheKey, filename);
   return filename;
 };
 

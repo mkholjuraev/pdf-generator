@@ -2,7 +2,6 @@ import puppeteer from 'puppeteer';
 import {
   CHROMIUM_PATH,
   TemplateConfig,
-  createCacheKey,
   getViewportConfig,
   pageHeight,
   pageWidth,
@@ -13,57 +12,12 @@ import renderTemplate, {
   getHeaderAndFooterTemplates,
 } from '../server/render-template';
 
-const previewCache: {
-  [cacheKey: string]: {
-    promiseLock: Promise<Buffer>;
-    expiration: number;
-  };
-} = {};
-
-async function retrieveBufferFromCache(cacheKey: string) {
-  const entry = previewCache[cacheKey];
-  if (!entry) {
-    return;
-  }
-  if (entry.expiration < Date.now()) {
-    delete previewCache[cacheKey];
-    return;
-  }
-
-  return entry.promiseLock;
-}
-
-function fillCache(cacheKey: string, bufferLock: Promise<Buffer>) {
-  const entry = previewCache[cacheKey];
-  if (entry) {
-    return;
-  }
-  // add 10 minutes cache expiration
-  const expiration = new Date(Date.now() + 10 * 60 * 1000);
-  previewCache[cacheKey] = {
-    expiration: expiration.getTime(),
-    promiseLock: bufferLock,
-  };
-}
-
 const previewPdf = async (
   url: string,
   templateConfig: TemplateConfig,
   templateData: Record<string, unknown>,
   orientationOption?: boolean
 ) => {
-  const cacheKey = createCacheKey({ templateConfig, orientationOption });
-  try {
-    const cacheBuffer = await retrieveBufferFromCache(cacheKey);
-    if (cacheBuffer) {
-      return cacheBuffer;
-    }
-  } catch (error) {
-    console.error(
-      `Unable to retrieve cache ${error}. Generating report from scratch.`
-    );
-  }
-
   const createBuffer = async () => {
     const { browserMargins, landscape } = getViewportConfig(
       templateConfig,
@@ -122,7 +76,6 @@ const previewPdf = async (
   };
 
   const bufferLock = createBuffer();
-  fillCache(cacheKey, bufferLock);
   return await bufferLock;
 };
 
