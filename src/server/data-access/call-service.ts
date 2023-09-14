@@ -1,6 +1,7 @@
 import axios, { AxiosRequestHeaders, AxiosRequestConfig } from 'axios';
 import ServiceNames from '../../common/service-names';
 import config, { ServicesEndpoints } from '../../common/config';
+import { apiLogger } from '../../common/logging';
 
 export type APIDescriptor<T = any, R = unknown> = {
   service: ServiceNames;
@@ -56,7 +57,7 @@ function prepareServiceCall<T = Record<string, unknown>>(
   if (request) {
     return (headers, options) => {
       return request(headers, options).catch((error) => {
-        console.log(error);
+        apiLogger.error(`${error}`);
         return Promise.reject(error);
       });
     };
@@ -67,7 +68,7 @@ function prepareServiceCall<T = Record<string, unknown>>(
     try {
       data = await axios.get(URL, { ...options, headers });
     } catch (error) {
-      console.log('Unable to get report data: ', error);
+      apiLogger.error('Unable to get report data: ', error);
       return Promise.reject(error);
     }
     return responseProcessor(data);

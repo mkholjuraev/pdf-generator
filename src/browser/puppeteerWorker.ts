@@ -3,9 +3,10 @@ import puppeteer from 'puppeteer';
 import { v4 as uuidv4 } from 'uuid';
 import os from 'os';
 import fs from 'fs';
+import { TemplateConfig } from '../common/types';
+import { apiLogger } from '../common/logging';
 import {
   CHROMIUM_PATH,
-  TemplateConfig,
   getViewportConfig,
   pageHeight,
   pageWidth,
@@ -68,9 +69,9 @@ const generatePdf = async ({
       browser = await puppeteer.connect({
         browserURL: browserUrl,
       });
-      console.log(`Reusing browser connection`);
+      apiLogger.info(`Reusing browser connection`);
     } catch (error) {
-      console.error(`Could not fetch browser status; starting a new browser`);
+      apiLogger.info(`Could not fetch browser status; starting a new browser`);
       browser = await puppeteer.launch({
         timeout: BROWSER_TIMEOUT,
         headless: true,
@@ -104,7 +105,7 @@ const generatePdf = async ({
     await page.setViewport({ width: pageWidth, height: pageHeight });
 
     // Enables console logging in Headless mode - handy for debugging components
-    page.on('console', (msg) => console.log(`[Headless log] ${msg.text()}`));
+    page.on('console', (msg) => apiLogger.info(`[Headless log] ${msg.text()}`));
 
     await setWindowProperty(
       page,
@@ -205,9 +206,9 @@ const generatePdf = async ({
 const workerTerminated = (code: number | undefined) => {
   if (typeof code === 'number') {
     const workerResult = code > 0 ? `with error code ${code}` : `successfully`;
-    console.log(`Worker terminated ${workerResult}`);
+    apiLogger.info(`Worker terminated ${workerResult}`);
   } else {
-    console.log(
+    apiLogger.info(
       `A worker reached a termination issue and no code is available`
     );
   }

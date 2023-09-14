@@ -1,6 +1,8 @@
 import fse from 'fs-extra';
-import crypto from 'crypto';
 import { sanitizeInput } from '../browser/helpers';
+import { CacheKey } from '../common/types';
+import crypto from 'crypto';
+import { apiLogger } from '../common/logging';
 
 // 10 minutes cache
 const CACHE_TIMEOUT = 10 * 60 * 1000;
@@ -25,7 +27,7 @@ export class ReportCache {
   /**
    * Create a SHA1 hash of the template to condense entry sizes
    */
-  createCacheKey(cacheKeyObject: Record<string, any>) {
+  createCacheKey(cacheKeyObject: CacheKey) {
     try {
       return crypto
         .createHash('sha1')
@@ -43,11 +45,11 @@ export class ReportCache {
    */
   cleanStaleCache(hash: string, fileName: string) {
     setTimeout(() => {
-      console.info('Calling clean stale cache for: ', fileName);
+      apiLogger.info('Calling clean stale cache for: ', fileName);
       delete this.cache[hash];
       fse.unlink(sanitizeInput(fileName), (err) => {
         if (err) {
-          console.info('warn', `Failed to unlink ${fileName}: ${err}`);
+          apiLogger.warn(`Failed to unlink ${fileName}: ${err}`);
         }
       });
     }, CACHE_TIMEOUT);
@@ -60,7 +62,7 @@ export class ReportCache {
   fetch(hash: string) {
     const entry = this.cache[hash];
     if (!entry) {
-      console.log(`No such entry ${hash} in cache`);
+      apiLogger.info(`No such entry ${hash} in cache`);
       return;
     }
     const fileName = entry.filename;
@@ -72,7 +74,7 @@ export class ReportCache {
       delete this.cache[hash];
       fse.unlink(sanitizeInput(fileName), (err) => {
         if (err) {
-          console.info('warn', `Failed to unlink ${fileName}: ${err}`);
+          apiLogger.warn(`Failed to unlink ${fileName}: ${err}`);
         }
       });
       return;
@@ -87,7 +89,7 @@ export class ReportCache {
   fill(hash: string, filename: string) {
     const entry = this.cache[hash];
     if (entry) {
-      console.log(`found ${entry} in cache`);
+      apiLogger.debug(`found ${entry} in cache`);
       return;
     }
 
@@ -97,8 +99,10 @@ export class ReportCache {
       expiration: expiration.getTime(),
       filename,
     };
-    console.log(`Added ${hash} to cache`);
-    console.log(this.cache);
+    apiLogger.debug(`Added ${hash} to cache`);
+    apiLogger.debug(
+      `Current cache state ${JSON.stringify(this.cache, null, 2)}`
+    );
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     this.cleanStaleCache(hash, filename);
   }

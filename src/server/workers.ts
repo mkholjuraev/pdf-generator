@@ -1,8 +1,9 @@
 import WP from 'workerpool';
 import { MaxWorkers } from '../browser/helpers';
+import { apiLogger } from '../common/logging';
 
 const createWorker = () => {
-  console.log(`New worker created`);
+  apiLogger.info(`New worker created`);
 };
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-call
