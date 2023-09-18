@@ -114,5 +114,3 @@ export const getViewportConfig = (
     ),
   };
 };
-
-export type TemplateConfig = { service: ServiceNames; template: string };

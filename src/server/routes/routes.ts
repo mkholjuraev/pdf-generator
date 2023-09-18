@@ -1,57 +1,22 @@
 import fs from 'fs';
-import { Router, Request } from 'express';
+import { Router } from 'express';
 import httpContext from 'express-http-context';
 import getTemplateData from '../data-access';
 import ServiceNames from '../../common/service-names';
 import renderTemplate from '../render-template';
-import {
-  processOrientationOption,
-  sanitizeInput,
-  TemplateConfig,
-} from '../../browser/helpers';
+import { processOrientationOption, sanitizeInput } from '../../browser/helpers';
 import { SendingFailedError, PDFNotFoundError } from '../errors';
 import config from '../../common/config';
-import { PreviewReqBody, PreviewReqQuery } from '../../common/types';
 import previewPdf from '../../browser/previewPDF';
 import pool from '../workers';
 import { ReportCache } from '../cache';
-
-export type PreviewHandlerRequest = Request<
-  unknown,
-  unknown,
-  PreviewReqBody,
-  PreviewReqQuery
->;
-
-export type GenerateHandlerRequest = Request<
-  unknown,
-  unknown,
-  Record<string, any>,
-  { service: ServiceNames; template: string }
->;
-
-export type HelloHandlerRequest = Request<
-  unknown,
-  unknown,
-  unknown,
-  { policyId: string; totalHostCount: number }
->;
-
-export type PuppeteerBrowserRequest = Request<
-  unknown,
-  unknown,
-  unknown,
-  { service: ServiceNames; template: string }
->;
-
-export type PdfRequestBody = {
-  url: string;
-  templateConfig: TemplateConfig;
-  templateData?: Record<string, unknown>;
-  orientationOption?: boolean;
-  rhIdentity: string;
-  dataOptions: Record<string, any>;
-};
+import {
+  GenerateHandlerRequest,
+  PdfRequestBody,
+  PuppeteerBrowserRequest,
+  PreviewHandlerRequest,
+} from '../../common/types';
+import { apiLogger } from '../../common/logging';
 
 const router = Router();
 const cache = new ReportCache();
@@ -84,11 +49,11 @@ router.use('^/$', async (req: PuppeteerBrowserRequest, res, _next) => {
   let service: ServiceNames = req.query.service;
   let template: string = req.query.template;
   if (!service) {
-    console.info('Missing service, using "demo"');
+    apiLogger.info('Missing service, using "demo"');
     service = ServiceNames.demo;
   }
   if (!template) {
-    console.info('Missing template, using "demo"');
+    apiLogger.info('Missing template, using "demo"');
     template = 'demo';
   }
 
@@ -132,12 +97,19 @@ router.post(
   `${config?.APIPrefix}/generate`,
   async (req: GenerateHandlerRequest, res, next) => {
     const pdfDetails = getPdfRequestBody(config, req);
-    const cacheKey = cache.createCacheKey(pdfDetails);
+    const accountID = httpContext.get(config?.ACCOUNT_ID as string);
+    const cacheKey = cache.createCacheKey({
+      request: pdfDetails,
+      accountID: accountID,
+    });
+    apiLogger.debug(
+      `Generated new key ${cacheKey} with Account ID ${accountID}`
+    );
 
     // Check for a cached version of the pdf
     const filePath = cache.fetch(sanitizeInput(cacheKey));
     if (filePath) {
-      console.log(`{ No new generation needed ${filePath} found in cache. }`);
+      apiLogger.info(`No new generation needed ${filePath} found in cache.`);
       return res.status(200).sendFile(sanitizeInput(filePath), (err) => {
         if (err) {
           const errorMessage = new SendingFailedError(filePath, err);
@@ -152,7 +124,7 @@ router.post(
       });
     }
 
-    console.log(pool.stats());
+    apiLogger.info(JSON.stringify(pool.stats(), null, 2));
 
     try {
       const pathToPdf = await pool.exec<(...args: any[]) => string>(
@@ -184,6 +156,7 @@ router.post(
     } catch (error: any) {
       const errStr = `${error}`;
       if (errStr.includes('No API descriptor')) {
+        apiLogger.error(`Failed to generate a PDF: ${error}`);
         res.status(400).send({
           error: {
             status: 400,
@@ -192,6 +165,7 @@ router.post(
           },
         });
       } else {
+        apiLogger.error(`Internal Server error: ${error}`);
         res.status(500).send({
           error: {
             status: 500,
@@ -200,12 +174,12 @@ router.post(
           },
         });
       }
-      next(`There was an error while generating a report: ${error}`);
+      next();
     } finally {
       // To handle the edge case where a pool terminates while the queue isn't empty,
       // we ensure that the queue is empty and all workers are idle.
       const stats = pool.stats();
-      console.log(stats);
+      apiLogger.info(JSON.stringify(stats, null, 2));
       if (
         stats.pendingTasks === 0 &&
         stats.totalWorkers === stats.idleWorkers
@@ -255,8 +229,7 @@ router.get(`/preview`, async (req: PreviewHandlerRequest, res) => {
   } catch (error: unknown) {
     if (error instanceof Error) {
       // error.code is not part of the Error definition for TS inside of Node. Choices: delete the usage of code, or, force a new definition.
-      // console.info('error', `${error.code}: ${error.message}`);
-      console.info('error', `${error.message}`);
+      apiLogger.error(`${error.message}`);
       // res.status((error.code as number) || 500).send(error.message);
       res.status(500).send(error.message); // only here as example, we don't want to force a 500 every time.
     }
@@ -270,7 +243,7 @@ router.get('/healthz', (_req, res, _next) => {
 router.get(`${config?.APIPrefix}/openapi.json`, (_req, res, _next) => {
   fs.readFile('./docs/openapi.json', 'utf8', (err, data) => {
     if (err) {
-      console.error(err);
+      apiLogger.error(err);
       return res
         .status(500)
         .send(`An error occurred while fetching the OpenAPI spec : ${err}`);

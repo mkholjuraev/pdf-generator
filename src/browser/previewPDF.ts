@@ -1,7 +1,6 @@
 import puppeteer from 'puppeteer';
 import {
   CHROMIUM_PATH,
-  TemplateConfig,
   getViewportConfig,
   pageHeight,
   pageWidth,
@@ -11,6 +10,8 @@ import config from '../common/config';
 import renderTemplate, {
   getHeaderAndFooterTemplates,
 } from '../server/render-template';
+import { TemplateConfig } from '../common/types';
+import { apiLogger } from '../common/logging';
 
 const previewPdf = async (
   url: string,
@@ -38,7 +39,7 @@ const previewPdf = async (
     await page.setContent(renderTemplate(templateConfig, templateData));
 
     // // Enables console logging in Headless mode - handy for debugging components
-    page.on('console', (msg) => console.log(`[Headless log] ${msg.text()}`));
+    page.on('console', (msg) => apiLogger.info(`[Headless log] ${msg.text()}`));
     const { headerTemplate, footerTemplate } =
       getHeaderAndFooterTemplates(templateConfig);
 
@@ -46,7 +47,7 @@ const previewPdf = async (
       page,
       'customPuppeteerParams',
       JSON.stringify({
-        puppetteerParams: {
+        puppeteerParams: {
           pageWidth,
           pageHeight,
         },

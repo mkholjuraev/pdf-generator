@@ -23,6 +23,8 @@ const defaultConfig: {
   OPTIONS_HEADER_NAME: string;
   IDENTITY_CONTEXT_KEY: string;
   IDENTITY_HEADER_KEY: string;
+  ACCOUNT_ID: string;
+  LOG_LEVEL: string;
 } = {
   webPort: 8000,
   metricsPort: 8080,
@@ -34,6 +36,8 @@ const defaultConfig: {
   OPTIONS_HEADER_NAME: 'x-pdf-gen-options',
   IDENTITY_CONTEXT_KEY: 'identity',
   IDENTITY_HEADER_KEY: 'x-rh-identity',
+  ACCOUNT_ID: '',
+  LOG_LEVEL: process.env.LOG_LEVEL || 'info',
 };
 
 /**
@@ -62,7 +66,7 @@ function initializeConfig() {
       ...defaultConfig,
     };
     /**
-     * Has to be loaded like this because it crashes in dev enviroment because it does not have some files on filesystem
+     * Has to be loaded like this because it crashes in dev environment because it does not have some files on filesystem
      * TODO: Open issue over at https://github.com/RedHatInsights/app-common-js
      */
     // eslint-disable-next-line @typescript-eslint/no-var-requires
