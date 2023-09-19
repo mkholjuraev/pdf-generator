@@ -28,6 +28,7 @@ export class ReportCache {
    * Create a SHA1 hash of the template to condense entry sizes
    */
   createCacheKey(cacheKeyObject: CacheKey) {
+    apiLogger.debug(`Request to hash : ${JSON.stringify(cacheKeyObject)}`);
     try {
       return crypto
         .createHash('sha1')

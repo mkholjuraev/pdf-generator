@@ -97,14 +97,13 @@ router.post(
   `${config?.APIPrefix}/generate`,
   async (req: GenerateHandlerRequest, res, next) => {
     const pdfDetails = getPdfRequestBody(config, req);
+    const { rhIdentity: _, ...noIdentityHeader } = pdfDetails;
     const accountID = httpContext.get(config?.ACCOUNT_ID as string);
     const cacheKey = cache.createCacheKey({
-      request: pdfDetails,
+      request: noIdentityHeader,
       accountID: accountID,
     });
-    apiLogger.debug(
-      `Generated new key ${cacheKey} with Account ID ${accountID}`
-    );
+    apiLogger.debug(`Hashed key ${cacheKey} with Account ID ${accountID}`);
 
     // Check for a cached version of the pdf
     const filePath = cache.fetch(sanitizeInput(cacheKey));
