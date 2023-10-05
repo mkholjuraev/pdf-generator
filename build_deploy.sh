@@ -4,6 +4,7 @@ set -exv
 
 IMAGE="quay.io/cloudservices/crc-pdf-generator"
 IMAGE_TAG=$(git rev-parse --short=7 HEAD)
+SECURITY_COMPLIANCE_TAG="sc-$(date +%Y%m%d)-$(git rev-parse --short=7 HEAD)"
 SMOKE_TEST_TAG="latest"
 
 if [[ -z "$QUAY_USER" || -z "$QUAY_TOKEN" ]]; then
@@ -24,8 +25,8 @@ DOCKER_CONFIG=$DOCKER_CONF docker build -t "${IMAGE}:${IMAGE_TAG}" .
 DOCKER_CONFIG=$DOCKER_CONF docker push "${IMAGE}:${IMAGE_TAG}"
 
 if [[ $GIT_BRANCH == *"security-compliance"* ]]; then
-    docker --config="$DOCKER_CONF" tag "${IMAGE}:${IMAGE_TAG}" "${IMAGE}:security-compliance"
-    docker --config="$DOCKER_CONF" push "${IMAGE}:security-compliance"
+    docker --config="$DOCKER_CONF" tag "${IMAGE}:${IMAGE_TAG}" "${IMAGE}:${SECURITY_COMPLIANCE_TAG}"
+    docker --config="$DOCKER_CONF" push "${IMAGE}:${SECURITY_COMPLIANCE_TAG}"
 else
     DOCKER_CONFIG=$DOCKER_CONF docker tag "${IMAGE}:${IMAGE_TAG}" "${IMAGE}:${SMOKE_TEST_TAG}"
     DOCKER_CONFIG=$DOCKER_CONF docker push "${IMAGE}:${SMOKE_TEST_TAG}"
